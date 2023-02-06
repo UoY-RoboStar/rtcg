@@ -1,3 +1,3 @@
-module test-code-gen
+module rtcg
 
 go 1.20
