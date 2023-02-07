@@ -3,17 +3,15 @@
 package main
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
 	"rtcg/internal/cli"
-	"rtcg/internal/testlang"
 	"rtcg/internal/trace"
 )
 
 func main() {
-	cli.HandleError(run(), "INPUT-FILE")
+	cli.HandleError(run(), "[INPUT-FILE]")
 }
 
 func run() error {
@@ -28,11 +26,11 @@ func run() error {
 	}
 
 	suite := trace.ExpandAll(traces)
-	return dumpSuite(suite)
+	return suite.Write(os.Stdout)
 }
 
 func readTraces(fname string) ([]trace.Trace, error) {
-	f, err := os.Open(fname)
+	f, err := cli.OpenFileOrStdin(fname)
 	if err != nil {
 		return nil, err
 	}
@@ -42,14 +40,11 @@ func readTraces(fname string) ([]trace.Trace, error) {
 }
 
 func parseArgs(args []string) (string, error) {
-	if len(args) != 2 {
+	if len(args) == 1 {
+		return "-", nil // stdin
+	} else if len(args) == 2 {
+		return args[1], nil
+	} else {
 		return "", cli.ErrBadArgs
 	}
-	return args[1], nil
-}
-
-func dumpSuite(suite testlang.Suite) error {
-	w := json.NewEncoder(os.Stdout)
-	w.SetIndent("", "\t")
-	return w.Encode(suite)
 }

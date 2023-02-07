@@ -1,27 +1,23 @@
 {
-  "status": "inc",
-  "event": {
-    "channel": "batteryInfo",
-    "direction": "in",
-    "value": "{|percentage=BATTERY_MISSION_THRESHOLD+1|}"
-  },
-  "next": [{
+  "4a": {
     "status": "inc",
-    "event": {
-      "channel": "batteryStatus",
-      "direction": "out",
-      "value": "Ok"
-    },
-    "next": [{
-      "status": "pass",
-      "event": {
-        "channel": "batteryStatus",
-        "direction": "out",
-        "value": "Ok"
-      },
-      "next": [{
-        "status": "fail"
-      }]
-    }]
-  }]
+    "event": "batteryInfo.in.{|percentage=BATTERY_MISSION_THRESHOLD+1|}",
+    "next": [
+      {
+        "status": "inc",
+        "event": "batteryStatus.out.Ok",
+        "next": [
+          {
+            "status": "pass",
+            "event": "batteryStatus.out.Ok",
+            "next": [
+              {
+                "status": "fail"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 }

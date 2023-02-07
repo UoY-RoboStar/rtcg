@@ -1,17 +1,36 @@
-# Forbidden-trace test code generator
+# `rtcg`
 
-This program takes as input forbidden-trace tests, as generated from RoboChart
-models, and expands them into C 
+`rtcg` (RoboStar test code generation) is a series of tools for manipulating
+forbidden-trace tests, and using them to generate C code.
+
+`rtcg` is licenced under the MIT licence; see `LICENSE.md`.
+
 
 ## Requirements
 
-Building this tool requires [Go](https://go.dev) 1.20.
+Building `rtcg` requires [Go](https://go.dev) 1.20.
 All other dependencies are handled automatically using the `go` tool.
 
-## Usage
+To build all tools in one go, type `make`.  The tools will appear in `bin`.
 
-`rtcg TEMPLATE-DIR INPUT-FILE`
 
-## Licence
+## The tools
 
-MIT; see `LICENSE.md`.
+
+### `rtcg-read-traces`: convert traces to tests
+
+Usage: `rtcg-read-traces [INPUT-FILE]`
+
+This tool takes in a series of forbidden traces, one per line, and produces
+a `rtcg` test suite in JSON format on stdout.
+
+
+### `rtcg-gen`: generate C code
+
+Usage: `rtcg-gen TEMPLATE-DIR [INPUT-FILE]`
+
+**Tool under development**
+
+This tool takes in a `rtcg` test suite in JSON format (such as those produced
+by `rtcg-read-traces`), as well as some `text/template` templates for
+generating code, and emits automatically generated test code.

@@ -4,8 +4,17 @@ package cli
 import (
 	"errors"
 	"fmt"
+	"io"
 	"os"
 )
+
+// OpenFileOrStdin opens the file at path or, if it is '-', returns stdin instead.
+func OpenFileOrStdin(path string) (io.ReadCloser, error) {
+	if path == "-" {
+		return os.Stdin, nil
+	}
+	return os.Open(path)
+}
 
 // HandleError handles a top-level error err in the tool.
 //

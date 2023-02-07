@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	cli.HandleError(run(), "TEMPLATE-DIR INPUT-FILE")
+	cli.HandleError(run(), "TEMPLATE-DIR [INPUT-FILE]")
 }
 
 func run() error {
@@ -21,11 +21,16 @@ func run() error {
 }
 
 func parseArgs(args []string) (*gen.Generator, error) {
-	if len(args) != 3 {
+	var g gen.Generator
+
+	if len(args) == 2 {
+		g.InputFile = "-" // stdin
+	} else if len(args) == 3 {
+		g.InputFile = args[2]
+	} else {
 		return nil, cli.ErrBadArgs
 	}
-	return &gen.Generator{
-		TemplateDir: args[1],
-		InputFile:   args[2],
-	}, nil
+
+	g.TemplateDir = args[1]
+	return &g, nil
 }

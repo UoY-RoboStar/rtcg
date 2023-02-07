@@ -2,10 +2,9 @@
 package gen
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
-	"os"
+	"rtcg/internal/cli"
 	"rtcg/internal/testlang"
 )
 
@@ -16,18 +15,23 @@ type Generator struct {
 }
 
 func (g *Generator) Run() error {
-	f, err := os.Open(g.InputFile)
+	f, err := cli.OpenFileOrStdin(g.InputFile)
 	if err != nil {
-		return fmt.Errorf("couldn't open %s: %w", g.InputFile, err)
+		return fmt.Errorf("couldn't open %s: %w", g.inputFileName(), err)
 	}
 
-	j := json.NewDecoder(f)
+	_, err = testlang.ReadSuite(f)
+	return errors.Join(err, f.Close())
+}
 
-	var test testlang.Node
+func (g *Generator) isStdin() bool {
+	// This may become something more sophisticated eventually.
+	return g.InputFile == "-"
+}
 
-	if err = j.Decode(&test); err != nil {
-		return errors.Join(err, f.Close())
+func (g *Generator) inputFileName() any {
+	if g.isStdin() {
+		return "standard input"
 	}
-
-	return f.Close()
+	return g.InputFile
 }
