@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"test-code-gen/internal/testlang"
+	"rtcg/internal/testlang"
 )
 
 // Generator is the main engine for generating test code.

@@ -7,6 +7,7 @@ package trace
 import (
 	"encoding/csv"
 	"errors"
+	"fmt"
 	"io"
 	"rtcg/internal/testlang"
 )
@@ -15,6 +16,26 @@ import (
 type Trace struct {
 	Prefix []testlang.Event // Prefix is the sequence of events that must occur for the test to pass.
 	Forbid testlang.Event   // Forbid is the event that must not occur after Prefix.
+}
+
+// Expand expands a single Trace into a test.
+func (t *Trace) Expand() *testlang.Node {
+	// Work backwards through the trace, building the tree from the failure.
+	n := testlang.Pass(t.Forbid, testlang.Fail())
+	for i := len(t.Prefix) - 1; 0 <= i; i-- {
+		n = testlang.Inc(t.Prefix[i], n)
+	}
+	return &n
+}
+
+// ExpandAll expands a list of traces to a systematically-named, non-factorised test suite.
+func ExpandAll(traces []Trace) testlang.Suite {
+	suite := make(testlang.Suite)
+	for i, tr := range traces {
+		name := fmt.Sprintf("test%d", i)
+		suite[name] = tr.Expand()
+	}
+	return suite
 }
 
 // Read reads from r a list of traces.

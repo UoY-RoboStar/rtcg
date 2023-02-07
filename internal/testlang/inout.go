@@ -1,6 +1,7 @@
 package testlang
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"strings"
@@ -14,19 +15,19 @@ const (
 	Out InOut = true  // Out represents output.
 )
 
-func (i *InOut) MarshalText() (text []byte, err error) {
-	switch *i {
-	case In:
-		text = []byte("in")
-	case Out:
-		text = []byte("out")
+func (i *InOut) String() string {
+	if *i {
+		return "out"
 	}
-	// *i is a bool, so the above should be the only two allowed values
-	return
+	return "in"
+}
+
+func (i *InOut) MarshalText() (text []byte, err error) {
+	return []byte(i.String()), nil
 }
 
 func (i *InOut) UnmarshalText(text []byte) error {
-	textStr := string(text)
+	textStr := string(bytes.TrimSpace(text))
 	if strings.EqualFold(textStr, "in") {
 		*i = In
 	} else if strings.EqualFold(textStr, "out") {

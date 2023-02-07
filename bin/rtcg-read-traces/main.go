@@ -3,10 +3,12 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
 	"rtcg/internal/cli"
+	"rtcg/internal/testlang"
 	"rtcg/internal/trace"
 )
 
@@ -25,11 +27,8 @@ func run() error {
 		return fmt.Errorf("couldn't read traces from file %q: %w", fname, err)
 	}
 
-	for _, tr := range traces {
-		fmt.Println(tr)
-	}
-
-	return nil
+	suite := trace.ExpandAll(traces)
+	return dumpSuite(suite)
 }
 
 func readTraces(fname string) ([]trace.Trace, error) {
@@ -47,4 +46,10 @@ func parseArgs(args []string) (string, error) {
 		return "", cli.ErrBadArgs
 	}
 	return args[1], nil
+}
+
+func dumpSuite(suite testlang.Suite) error {
+	w := json.NewEncoder(os.Stdout)
+	w.SetIndent("", "\t")
+	return w.Encode(suite)
 }

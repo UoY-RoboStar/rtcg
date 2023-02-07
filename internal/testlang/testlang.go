@@ -1,6 +1,9 @@
 // Package testlang implements the testing language.
 package testlang
 
+// Suite is a test suite, with each test having a name.
+type Suite map[string]*Node
+
 // Node captures a test node of the form (inc -> evt -> X) or (pass -> evt -> X).
 type Node struct {
 	Status Status `json:"status"`          // IsPassing is true if the test should pass at this point.
