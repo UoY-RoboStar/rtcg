@@ -2,9 +2,11 @@
 package main
 
 import (
+	"errors"
+	"fmt"
 	"os"
 	"rtcg/internal/cli"
-	"rtcg/internal/gen"
+	"rtcg/internal/testlang"
 )
 
 func main() {
@@ -12,25 +14,45 @@ func main() {
 }
 
 func run() error {
-	g, err := parseArgs(os.Args)
+	args, err := parseArgs(os.Args)
 	if err != nil {
 		return err
 	}
 
-	return g.Run()
+	_, err = readSuite(args.inputFile)
+	if err != nil {
+		return fmt.Errorf("couldn't read test suite: %w", err)
+	}
+
+	return nil
 }
 
-func parseArgs(args []string) (*gen.Generator, error) {
-	var g gen.Generator
+func readSuite(path string) (testlang.Suite, error) {
+	f, err := cli.OpenFileOrStdin(path)
+	if err != nil {
+		return nil, err
+	}
+	suite, err := testlang.ReadSuite(f)
+	return suite, errors.Join(err, f.Close())
+}
 
-	if len(args) == 2 {
-		g.InputFile = "-" // stdin
-	} else if len(args) == 3 {
-		g.InputFile = args[2]
+func parseArgs(argv []string) (*args, error) {
+	var args args
+
+	argc := len(argv)
+	if argc == 2 {
+		args.inputFile = "-" // stdin
+	} else if argc == 3 {
+		args.inputFile = argv[2]
 	} else {
 		return nil, cli.ErrBadArgs
 	}
 
-	g.TemplateDir = args[1]
-	return &g, nil
+	args.templateDir = argv[1]
+	return &args, nil
+}
+
+type args struct {
+	templateDir string
+	inputFile   string
 }
