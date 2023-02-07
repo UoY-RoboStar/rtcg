@@ -22,15 +22,3 @@ func Inc(event Event, next ...Node) Node {
 func Fail() Node {
 	return Node{Status: StatFail}
 }
-
-// Event is the type of events in a trace.
-//
-// An event with an empty channel name is considered to be absent, which is only well-formed for fail nodes.
-type Event struct {
-	Channel   string `json:"channel,omitempty"`   // Channel is the name of the channel on which the event is occurring.
-	Direction InOut  `json:"direction,omitempty"` // InOut is the direction of the event.
-	Value     Value  `json:"value,omitempty"`     // Value is the value, if any, carried by this event.
-}
-
-// Value is the lowest common denominator for our encoding of RoboChart/CSP values.
-type Value any
