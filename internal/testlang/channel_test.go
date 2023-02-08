@@ -1,6 +1,7 @@
 package testlang_test
 
 import (
+	"errors"
 	"reflect"
 	"rtcg/internal/testlang"
 	"testing"
@@ -12,10 +13,6 @@ func TestChannel_MarshalText(t *testing.T) {
 		input testlang.Channel
 		want  string
 	}{
-		"empty": {
-			input: testlang.Channel{},
-			want:  "",
-		},
 		"in": {
 			input: testlang.Channel{Name: "foo", Direction: testlang.In},
 			want:  "foo.in",
@@ -45,14 +42,15 @@ func TestChannel_UnmarshalText(t *testing.T) {
 	for name, test := range map[string]struct {
 		input string
 		want  testlang.Channel
+		err   error
 	}{
 		"empty": {
 			input: "",
-			want:  testlang.Channel{},
+			err:   testlang.BadEventFieldCountError{Got: 1},
 		},
 		"space": {
 			input: "  ",
-			want:  testlang.Channel{},
+			err:   testlang.BadEventFieldCountError{Got: 1},
 		},
 		"in": {
 			input: "foo.in",
@@ -82,12 +80,17 @@ func TestChannel_UnmarshalText(t *testing.T) {
 	} {
 		input := test.input
 		want := test.want
+		wantErr := test.err
 		t.Run(name, func(t *testing.T) {
 			var got testlang.Channel
-			if err := got.UnmarshalText([]byte(input)); err != nil {
+			err := got.UnmarshalText([]byte(input))
+			if err != nil && !errors.Is(err, wantErr) {
 				t.Fatalf("unexpected unmarshalling error: %s", err)
 			}
-			if !reflect.DeepEqual(got, want) {
+			if err == nil && wantErr != nil {
+				t.Fatalf("expected unmarshalling error %q, but got none", wantErr)
+			}
+			if wantErr == nil && !reflect.DeepEqual(got, want) {
 				t.Fatalf("got %s (%v), want %s (%v)", &got, got, &want, want)
 			}
 		})

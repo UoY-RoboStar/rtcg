@@ -34,10 +34,6 @@ func (e *Event) MarshalText() (text []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	// The only valid Event with an empty channel is an empty Event, which marshals to an empty string.
-	if len(channel) == 0 {
-		return []byte{}, nil
-	}
 
 	fields := [][]byte{channel}
 
@@ -53,9 +49,6 @@ func (e *Event) MarshalText() (text []byte, err error) {
 }
 
 func (e *Event) String() string {
-	if e.Channel.IsEmpty() {
-		return "(no event)"
-	}
 	ch := e.Channel.String()
 	if e.Value.IsEmpty() {
 		return ch
@@ -69,8 +62,8 @@ func (e *Event) UnmarshalText(text []byte) error {
 		return fmt.Errorf("couldn't unmarshal channel of event: %w", err)
 	}
 
-	if e.Channel.IsEmpty() || val == nil {
-		// Either there is no value to unmarshal, or this is an empty event (so we shouldn't unmarshal it anyway).
+	if val == nil {
+		// No value in this event.
 		return nil
 	}
 
@@ -80,6 +73,7 @@ func (e *Event) UnmarshalText(text []byte) error {
 	return nil
 }
 
+// EventSep is the separator used for event fields.
 var EventSep = []byte(".")
 
 // BadEventFieldCountError is an error type arising when the number of '.' delimited fields in an Event is not valid.

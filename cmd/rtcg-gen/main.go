@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"rtcg/internal/cli"
+	"rtcg/internal/stm"
 	"rtcg/internal/testlang"
 )
 
@@ -19,21 +20,19 @@ func run() error {
 		return err
 	}
 
-	_, err = readSuite(args.inputFile)
+	s, err := readSuite(args.inputFile)
 	if err != nil {
 		return fmt.Errorf("couldn't read test suite: %w", err)
 	}
 
-	return nil
-}
+	var sb stm.Builder
+	stms := sb.BuildSuite(s)
 
-func readSuite(path string) (testlang.Suite, error) {
-	f, err := cli.OpenFileOrStdin(path)
-	if err != nil {
-		return nil, err
+	for k, v := range stms {
+		fmt.Println(k, "=", v)
 	}
-	suite, err := testlang.ReadSuite(f)
-	return suite, errors.Join(err, f.Close())
+
+	return nil
 }
 
 func parseArgs(argv []string) (*args, error) {
@@ -55,4 +54,13 @@ func parseArgs(argv []string) (*args, error) {
 type args struct {
 	templateDir string
 	inputFile   string
+}
+
+func readSuite(path string) (testlang.Suite, error) {
+	f, err := cli.OpenFileOrStdin(path)
+	if err != nil {
+		return nil, err
+	}
+	suite, err := testlang.ReadSuite(f)
+	return suite, errors.Join(err, f.Close())
 }

@@ -19,6 +19,11 @@ func (c *Channel) IsEmpty() bool {
 	return c.Name == ""
 }
 
+// Equals gets whether this channel equals another channel.
+func (c *Channel) Equals(other Channel) bool {
+	return c.Name == other.Name && c.Direction == other.Direction
+}
+
 func (c *Channel) MarshalText() (text []byte, err error) {
 	name := []byte(c.Name)
 	// The only valid Channel with an empty name is an empty one, which marshals to an empty string.
@@ -47,13 +52,6 @@ func (c *Channel) String() string {
 }
 
 func (c *Channel) unmarshalTextWithRemainder(text []byte) ([]byte, error) {
-	text = bytes.TrimSpace(text)
-	// Empty strings denote empty channels.
-	if len(text) == 0 {
-		*c = Channel{}
-		return []byte{}, nil
-	}
-
 	fields := bytes.SplitN(text, EventSep, 3)
 	numFields := len(fields)
 	if numFields < 2 || 3 < numFields {
