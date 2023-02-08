@@ -104,7 +104,7 @@ func TestEvent_UnmarshalText(t *testing.T) {
 				t.Fatalf("unexpected unmarshalling error: %s", err)
 			}
 			if !reflect.DeepEqual(got, want) {
-				t.Fatalf("got %v, want %v", got, want)
+				t.Fatalf("got %s (%v), want %s (%v)", &got, got, &want, want)
 			}
 		})
 	}

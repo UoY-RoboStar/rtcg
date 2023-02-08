@@ -36,6 +36,13 @@ func (v *Value) MarshalText() (text []byte, err error) {
 	return v.Content.MarshalText()
 }
 
+func (v *Value) String() string {
+	if v.IsEmpty() {
+		return "(empty value)"
+	}
+	return v.Content.String()
+}
+
 func (v *Value) UnmarshalText(text []byte) error {
 	text = bytes.TrimSpace(text)
 
@@ -61,6 +68,7 @@ func (v *Value) UnmarshalText(text []byte) error {
 type Valuable interface {
 	encoding.TextMarshaler
 	encoding.TextUnmarshaler
+	fmt.Stringer
 }
 
 func tryUnmarshal[V Valuable](tmp V, text []byte) Valuable {
@@ -83,8 +91,8 @@ func (i *IntValue) UnmarshalText(text []byte) error {
 	return err
 }
 
-func (r *IntValue) String() string {
-	return fmt.Sprintf("int!%d", int64(*r))
+func (i *IntValue) String() string {
+	return fmt.Sprintf("int!%d", int64(*i))
 }
 
 // Int constructs an integer Value.
