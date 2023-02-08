@@ -15,18 +15,25 @@ const (
 	StatPass               // StatPass is the passing status.
 )
 
-func (s *Status) MarshalText() (text []byte, err error) {
+func (s *Status) String() string {
 	switch *s {
 	case StatInc:
-		text = []byte("inc")
+		return "inc"
 	case StatFail:
-		text = []byte("fail")
+		return "fail"
 	case StatPass:
-		text = []byte("pass")
+		return "pass"
 	default:
-		err = fmt.Errorf("%w: code %d", ErrBadStatus, *s)
+		return "unknown"
 	}
-	return
+}
+
+func (s *Status) MarshalText() (text []byte, err error) {
+	str := s.String()
+	if str == "unknown" {
+		return nil, fmt.Errorf("%w: code %d", ErrBadStatus, *s)
+	}
+	return []byte(str), nil
 }
 
 func (s *Status) UnmarshalText(text []byte) error {
