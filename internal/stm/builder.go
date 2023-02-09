@@ -45,10 +45,11 @@ func (s *Stack[T]) Clear() {
 }
 
 // BuildSuite builds a test suite s into a map of state machines.
-func (b *Builder) BuildSuite(s testlang.Suite) map[string]Stm {
-	result := make(map[string]Stm, len(s))
+func (b *Builder) BuildSuite(s testlang.Suite) Suite {
+	result := make(Suite, len(s))
 	for k, v := range s {
-		result[k] = b.Build(k, v)
+		m := b.Build(k, v)
+		result[k] = &m
 	}
 	return result
 }
@@ -71,8 +72,8 @@ func (b *Builder) Build(name string, testRoot *testlang.Node) Stm {
 			continue
 		}
 
-		sn := b.buildNode(n)
-		result.Nodes = append(result.Nodes, sn)
+		sn := b.buildState(n)
+		result.States = append(result.States, sn)
 
 		for _, x := range n.Next {
 			b.stack.Push(&x)
@@ -82,21 +83,15 @@ func (b *Builder) Build(name string, testRoot *testlang.Node) Stm {
 	return result
 }
 
-func (b *Builder) buildNode(n *testlang.Node) Node {
-	result := Node{ID: n.ID, Fails: map[string]bool{}}
+func (b *Builder) buildState(n *testlang.Node) State {
+	result := State{ID: n.ID, Fails: map[string]bool{}}
 
 	for _, x := range n.Next {
 		// For failing transitions, we don't emit a destination or value; we just log that this node has failed.
-		if x.Status == testlang.StatFail {
-			result.IsFail = true
-			for _, t := range x.Tests {
-				result.Fails[t] = true
-			}
-			continue
+		result.MarkFailuresFromNode(x)
+		if !result.IsFail {
+			result.AddTransitionToNode(&x)
 		}
-
-		tr := Transition{Status: x.Status, Value: x.Event.Value, Next: x.ID}
-		result.AddTransition(x.Event.Channel, tr)
 	}
 
 	return result
@@ -118,11 +113,12 @@ func (b *Builder) ensureNodeID(n *testlang.Node) {
 }
 
 func (b *Builder) initStm(name string, n *testlang.Node) Stm {
+	// Ideally, we wouldn't do this, and, instead, we'd just create a special prefix node and put that in the stack.
+	// However, that would require us to copy n into its Next list.
 	b.ensureNodeID(n)
 
-	initial := Node{ID: testlang.NodeID(name)}
-	tr := Transition{Status: n.Status, Value: n.Event.Value, Next: n.ID}
-	initial.AddTransition(n.Event.Channel, tr)
+	initial := State{ID: testlang.NodeID(name)}
+	initial.AddTransitionToNode(n)
 
-	return Stm{Nodes: []Node{initial}}
+	return Stm{States: []State{initial}}
 }
