@@ -83,13 +83,13 @@ func (b *Builder) Build(name string, testRoot *testlang.Node) Stm {
 	return result
 }
 
-func (b *Builder) buildState(n *testlang.Node) State {
-	result := State{ID: n.ID, Fails: map[string]bool{}}
+func (b *Builder) buildState(n *testlang.Node) *State {
+	result := NewState(n.ID)
 
 	for _, x := range n.Next {
 		// For failing transitions, we don't emit a destination or value; we just log that this node has failed.
-		result.MarkFailuresFromNode(x)
-		if !result.IsFail {
+		result.AddVerdictsFromNode(x)
+		if !result.Fail().IsObserved {
 			result.AddTransitionToNode(&x)
 		}
 	}
@@ -117,8 +117,8 @@ func (b *Builder) initStm(name string, n *testlang.Node) Stm {
 	// However, that would require us to copy n into its Next list.
 	b.ensureNodeID(n)
 
-	initial := State{ID: testlang.NodeID(name)}
+	initial := NewState(testlang.NodeID(name))
 	initial.AddTransitionToNode(n)
 
-	return Stm{States: []State{initial}}
+	return Stm{States: []*State{initial}}
 }

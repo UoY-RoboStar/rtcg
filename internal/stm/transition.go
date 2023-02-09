@@ -23,12 +23,11 @@ func (t TransitionSet) String() string {
 
 // Transition is a transition from one state to another.
 type Transition struct {
-	Value  testlang.Value  // Value is the value that must be observed or sent for this transition to occur.
-	Status testlang.Status // Status is the status before taking this transition.
-	Next   testlang.NodeID // Next is the next node ID to jump to in the state machine.
+	Value testlang.Value  // Value is the value that must be observed or sent for this transition to occur.
+	Next  testlang.NodeID // Next is the next node ID to jump to in the state machine.
 	// TODO: record which test this transition is from
 }
 
 func (t Transition) String() string {
-	return fmt.Sprintf("%s -[%s]-> %s", &t.Status, &t.Value, t.Next)
+	return fmt.Sprintf("-[%s]-> %s", &t.Value, t.Next)
 }

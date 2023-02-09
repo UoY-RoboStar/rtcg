@@ -16,5 +16,5 @@ type Stm struct {
 	// States is the list of states in this state machine.
 	//
 	// Conventionally, the first state in the machine is the initial state.
-	States []State
+	States []*State
 }

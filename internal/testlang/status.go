@@ -10,10 +10,14 @@ import (
 type Status uint8
 
 const (
-	StatInc  Status = iota // StatInc is the inconclusive status.
-	StatFail               // StatFail is the failing status.
-	StatPass               // StatPass is the passing status.
+	StatInc   Status = iota // StatInc is the inconclusive status.
+	StatFail                // StatFail is the failing status.
+	StatPass                // StatPass is the passing status.
+	NumStatus               // NumStatus is the number of valid status entries.
 )
+
+// AllStatuses contains every possible test status in order.
+var AllStatuses = [NumStatus]Status{StatInc, StatFail, StatPass}
 
 func (s *Status) String() string {
 	switch *s {
