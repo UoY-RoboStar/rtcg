@@ -4,11 +4,11 @@ package main
 import (
 	"errors"
 	"fmt"
+	"github.com/UoY-RoboStar/rtcg/internal/cli"
+	"github.com/UoY-RoboStar/rtcg/internal/gen"
+	"github.com/UoY-RoboStar/rtcg/internal/stm"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 	"os"
-	"rtcg/internal/cli"
-	"rtcg/internal/gen"
-	"rtcg/internal/stm"
-	"rtcg/internal/testlang"
 )
 
 func main() {

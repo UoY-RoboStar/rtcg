@@ -5,9 +5,9 @@ package main
 import (
 	"errors"
 	"fmt"
+	"github.com/UoY-RoboStar/rtcg/internal/cli"
+	"github.com/UoY-RoboStar/rtcg/internal/trace"
 	"os"
-	"rtcg/internal/cli"
-	"rtcg/internal/trace"
 )
 
 func main() {

@@ -5,10 +5,10 @@ import (
 	"embed"
 	"errors"
 	"fmt"
+	"github.com/UoY-RoboStar/rtcg/internal/stm"
 	"io/fs"
 	"os"
 	"path/filepath"
-	"rtcg/internal/stm"
 	"text/template"
 )
 

@@ -1,8 +1,8 @@
 package testlang_test
 
 import (
+	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 	"reflect"
-	"rtcg/internal/testlang"
 	"testing"
 )
 

@@ -2,7 +2,7 @@ package stm
 
 import (
 	"fmt"
-	"rtcg/internal/testlang"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 	"strings"
 )
 

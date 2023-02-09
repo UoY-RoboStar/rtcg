@@ -8,8 +8,8 @@ import (
 	"encoding/csv"
 	"errors"
 	"fmt"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 	"io"
-	"rtcg/internal/testlang"
 )
 
 // Trace is the type of 'flat' forbidden-trace tests.
