@@ -5,13 +5,19 @@ package main
 import (
 	"errors"
 	"fmt"
+	"os"
+
 	"github.com/UoY-RoboStar/rtcg/internal/cli"
 	"github.com/UoY-RoboStar/rtcg/internal/trace"
-	"os"
+)
+
+const (
+	usage            = "[INPUT-FILE]"
+	numAnonymousArgs = 1
 )
 
 func main() {
-	cli.HandleError(run(), "[INPUT-FILE]")
+	cli.HandleError(run(), usage)
 }
 
 func run() error {
@@ -26,25 +32,30 @@ func run() error {
 	}
 
 	suite := trace.ExpandAll(traces)
-	return suite.Write(os.Stdout)
+
+	if err := suite.Write(os.Stdout); err != nil {
+		return fmt.Errorf("couldn't write expanded traces: %w", err)
+	}
+
+	return nil
 }
 
 func readTraces(fname string) ([]trace.Trace, error) {
-	f, err := cli.OpenFileOrStdin(fname)
+	file, err := cli.OpenFileOrStdin(fname)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("couldn't open input: %w", err)
 	}
 
-	traces, err := trace.Read(f)
-	return traces, errors.Join(err, f.Close())
+	traces, err := trace.Read(file)
+
+	return traces, errors.Join(err, file.Close())
 }
 
 func parseArgs(args []string) (string, error) {
-	if len(args) == 1 {
-		return "-", nil // stdin
-	} else if len(args) == 2 {
-		return args[1], nil
-	} else {
-		return "", cli.ErrBadArgs
+	path, err := cli.ParseFileArgument(args, numAnonymousArgs+1)
+	if err != nil {
+		return "", fmt.Errorf("couldn't parse args: %w", err)
 	}
+
+	return path, nil
 }

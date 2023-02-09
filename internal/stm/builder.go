@@ -2,6 +2,7 @@ package stm
 
 import (
 	"fmt"
+
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 )
 
@@ -9,6 +10,7 @@ import (
 type Builder struct {
 	nodeNum uint64                // nodeNum is a monotonically increasing counter for naming unnamed nodes.
 	stack   Stack[*testlang.Node] // stack is a stack used for in-order test traversal.
+	current Stm                   // current is the state machine currently being built.
 }
 
 // Stack is a(n inefficient) implementation of a stack.
@@ -30,6 +32,7 @@ func (s *Stack[T]) Pop() T {
 	item := s.items[s.count-1]
 	s.items = s.items[:s.count-1]
 	s.count--
+
 	return item
 }
 
@@ -46,63 +49,59 @@ func (s *Stack[T]) Clear() {
 
 // BuildSuite builds a test suite s into a map of state machines.
 func (b *Builder) BuildSuite(s testlang.Suite) Suite {
-	result := make(Suite, len(s))
+	suite := make(Suite, len(s))
+
 	for k, v := range s {
 		m := b.Build(k, v)
-		result[k] = &m
+		suite[k] = &m
 	}
-	return result
+
+	return suite
 }
 
 // Build builds a single test from testRoot onwards.
 func (b *Builder) Build(name string, testRoot *testlang.Node) Stm {
 	// We don't reset nodeNum, in case we're building a whole suite.
-
-	result := b.initStm(name, testRoot)
+	b.initStm(name, testRoot)
 
 	b.stack.Clear()
 	b.stack.Push(testRoot)
 
 	for !b.stack.IsEmpty() {
-		n := b.stack.Pop()
-		b.ensureNodeIDs(n)
+		node := b.stack.Pop()
 
 		// We don't emit failing states.
-		if n.Status == testlang.StatFail {
-			continue
-		}
-
-		sn := b.buildState(n)
-		result.States = append(result.States, sn)
-
-		for _, x := range n.Next {
-			b.stack.Push(&x)
+		if node.Status != testlang.StatusFail {
+			b.processNode(node)
 		}
 	}
 
-	return result
+	return b.current
 }
 
-func (b *Builder) buildState(n *testlang.Node) *State {
-	result := NewState(n.ID)
+func (b *Builder) processNode(node *testlang.Node) {
+	sn := b.buildState(node)
+	b.current.States = append(b.current.States, sn)
 
-	for _, x := range n.Next {
+	for i := range node.Next {
+		b.stack.Push(&node.Next[i])
+	}
+}
+
+func (b *Builder) buildState(node *testlang.Node) *State {
+	b.ensureNodeID(node)
+	result := NewState(node.ID)
+
+	for i, n := range node.Next {
 		// For failing transitions, we don't emit a destination or value; we just log that this node has failed.
-		result.AddVerdictsFromNode(x)
+		result.AddVerdictsFromNode(n)
+
 		if !result.Fail().IsObserved {
-			result.AddTransitionToNode(&x)
+			result.AddTransitionToNode(&node.Next[i])
 		}
 	}
 
 	return result
-}
-
-// ensureNodeIDs makes sure that n and all of its immediate descendants have NodeIDs defined.
-func (b *Builder) ensureNodeIDs(n *testlang.Node) {
-	b.ensureNodeID(n)
-	for i := range n.Next {
-		b.ensureNodeID(&n.Next[i])
-	}
 }
 
 func (b *Builder) ensureNodeID(n *testlang.Node) {
@@ -112,13 +111,13 @@ func (b *Builder) ensureNodeID(n *testlang.Node) {
 	}
 }
 
-func (b *Builder) initStm(name string, n *testlang.Node) Stm {
+func (b *Builder) initStm(name string, node *testlang.Node) {
 	// Ideally, we wouldn't do this, and, instead, we'd just create a special prefix node and put that in the stack.
-	// However, that would require us to copy n into its Next list.
-	b.ensureNodeID(n)
+	// However, that would require us to copy node into its Next list.
+	b.ensureNodeID(node)
 
 	initial := NewState(testlang.NodeID(name))
-	initial.AddTransitionToNode(n)
+	initial.AddTransitionToNode(node)
 
-	return Stm{States: []*State{initial}}
+	b.current = Stm{States: []*State{initial}}
 }

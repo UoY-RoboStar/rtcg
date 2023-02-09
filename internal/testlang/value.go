@@ -16,8 +16,10 @@ type Value struct {
 	Content Valuable // Content is the content of the value.
 }
 
-// NoValue is syntactic sugar for the absence of a value.
-var NoValue = Value{}
+// NoValue returns an empty value.
+func NoValue() Value {
+	return Value{Content: nil}
+}
 
 // IsPresent checks whether v is non-empty.
 func (v *Value) IsPresent() bool {
@@ -29,38 +31,48 @@ func (v *Value) IsEmpty() bool {
 	return v.Content == nil
 }
 
-func (v *Value) MarshalText() (text []byte, err error) {
+func (v *Value) MarshalText() ([]byte, error) {
 	if v.IsEmpty() {
 		return nil, ErrMarshallAbsentValue
 	}
-	return v.Content.MarshalText()
+
+	output, err := v.Content.MarshalText()
+	if err != nil {
+		return nil, fmt.Errorf("couldn't marshal internal representation of value: %w", err)
+	}
+
+	return output, nil
 }
 
 func (v *Value) String() string {
 	if v.IsEmpty() {
 		return "(empty value)"
 	}
+
 	return v.Content.String()
 }
 
 func (v *Value) UnmarshalText(text []byte) error {
 	text = bytes.TrimSpace(text)
 
-	for _, f := range []func() Valuable{
+	for _, parser := range []func() Valuable{
 		func() Valuable {
 			tmp := IntValue(0)
+
 			return tryUnmarshal(&tmp, text)
 		},
 		func() Valuable {
 			tmp := RawValue("")
+
 			return tryUnmarshal(&tmp, text)
 		},
 	} {
-		v.Content = f()
+		v.Content = parser()
 		if v.Content != nil {
 			return nil
 		}
 	}
+
 	return fmt.Errorf("%w: input %q", ErrUnsupportedValueType, string(text))
 }
 
@@ -75,20 +87,29 @@ func tryUnmarshal[V Valuable](tmp V, text []byte) Valuable {
 	if err := tmp.UnmarshalText(text); err != nil {
 		return nil
 	}
+
 	return tmp
 }
 
 // IntValue is a value that is an integer.
 type IntValue int64
 
-func (i *IntValue) MarshalText() (text []byte, err error) {
-	return strconv.AppendInt(text, int64(*i), 10), nil
+// intValueBase encodes the base used for parsing and emitting integer values.
+const intValueBase = 10
+
+func (i *IntValue) MarshalText() ([]byte, error) {
+	return strconv.AppendInt([]byte{}, int64(*i), intValueBase), nil
 }
 
 func (i *IntValue) UnmarshalText(text []byte) error {
 	var err error
-	*((*int64)(i)), err = strconv.ParseInt(string(text), 10, 64)
-	return err
+	*((*int64)(i)), err = strconv.ParseInt(string(text), intValueBase, 64)
+
+	if err != nil {
+		return fmt.Errorf("couldn't parse %q as int: %w", string(text), err)
+	}
+
+	return nil
 }
 
 func (i *IntValue) String() string {
@@ -96,8 +117,9 @@ func (i *IntValue) String() string {
 }
 
 // Int constructs an integer Value.
-func Int(int int64) Value {
-	c := IntValue(int)
+func Int(i int64) Value {
+	c := IntValue(i)
+
 	return Value{Content: &c}
 }
 
@@ -105,7 +127,7 @@ func Int(int int64) Value {
 // This usually suggests that the parser has given up trying to parse it as something else.
 type RawValue string
 
-func (r *RawValue) MarshalText() (text []byte, err error) {
+func (r *RawValue) MarshalText() ([]byte, error) {
 	// TODO: escape anything that could make this a non-raw value?
 	return []byte(*r), nil
 }
@@ -113,6 +135,7 @@ func (r *RawValue) MarshalText() (text []byte, err error) {
 func (r *RawValue) UnmarshalText(text []byte) error {
 	// TODO: refuse anything that could make this a non-raw value?
 	*r = RawValue(text)
+
 	return nil
 }
 
@@ -120,11 +143,14 @@ func (r *RawValue) String() string {
 	return fmt.Sprintf("raw!%q", string(*r))
 }
 
-// Raw constructs an unintepreted Value.
+// Raw constructs an uninterpreted Value.
 func Raw(contents string) Value {
 	c := RawValue(contents)
+
 	return Value{Content: &c}
 }
 
-var ErrMarshallAbsentValue = errors.New("tried to marshal an absent Value")
-var ErrUnsupportedValueType = errors.New("value type not supported")
+var (
+	ErrMarshallAbsentValue  = errors.New("tried to marshal an absent Value")
+	ErrUnsupportedValueType = errors.New("value type not supported")
+)

@@ -4,15 +4,21 @@ package main
 import (
 	"errors"
 	"fmt"
+	"os"
+
 	"github.com/UoY-RoboStar/rtcg/internal/cli"
 	"github.com/UoY-RoboStar/rtcg/internal/gen"
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
-	"os"
+)
+
+const (
+	usage            = "TEMPLATE-DIR [INPUT-FILE]"
+	numAnonymousArgs = 2
 )
 
 func main() {
-	cli.HandleError(run(), "TEMPLATE-DIR [INPUT-FILE]")
+	cli.HandleError(run(), usage)
 }
 
 func run() error {
@@ -20,23 +26,24 @@ func run() error {
 	if err != nil {
 		return err
 	}
+
 	return a.run()
 }
 
 func parseArgs(argv []string) (*genAction, error) {
-	var a genAction
+	var (
+		action genAction
+		err    error
+	)
 
-	argc := len(argv)
-	if argc == 2 {
-		a.inputFile = "-" // stdin
-	} else if argc == 3 {
-		a.inputFile = argv[2]
-	} else {
-		return nil, cli.ErrBadArgs
+	action.templateDir = argv[1]
+
+	action.inputFile, err = cli.ParseFileArgument(argv, numAnonymousArgs+1)
+	if err != nil {
+		return nil, fmt.Errorf("couldn't parse args: %w", err)
 	}
 
-	a.templateDir = argv[1]
-	return &a, nil
+	return &action, nil
 }
 
 type genAction struct {
@@ -57,24 +64,33 @@ func (a *genAction) run() error {
 }
 
 func (a *genAction) readSuite() (testlang.Suite, error) {
-	f, err := cli.OpenFileOrStdin(a.inputFile)
+	file, err := cli.OpenFileOrStdin(a.inputFile)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("couldn't open input: %w", err)
 	}
-	suite, err := testlang.ReadSuite(f)
-	return suite, errors.Join(err, f.Close())
+
+	suite, err := testlang.ReadSuite(file)
+
+	return suite, errors.Join(err, file.Close())
 }
 
 func (a *genAction) buildStms(tests testlang.Suite) stm.Suite {
 	var bs stm.Builder
+
 	return bs.BuildSuite(tests)
 }
 
 func (a *genAction) generate(stms stm.Suite) error {
 	tmpls := os.DirFS(a.templateDir)
+
 	g, err := gen.New(tmpls, "out") // for now
 	if err != nil {
 		return fmt.Errorf("couldn't create generator: %w", err)
 	}
-	return g.Generate(stms)
+
+	if err := g.Generate(stms); err != nil {
+		return fmt.Errorf("couldn't generate: %w", err)
+	}
+
+	return nil
 }

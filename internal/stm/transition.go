@@ -2,8 +2,9 @@ package stm
 
 import (
 	"fmt"
-	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 	"strings"
+
+	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 )
 
 // TransitionSet is a set of transitions for a given channel.

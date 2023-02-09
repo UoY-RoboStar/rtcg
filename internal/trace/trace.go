@@ -8,8 +8,9 @@ import (
 	"encoding/csv"
 	"errors"
 	"fmt"
-	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 	"io"
+
+	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 )
 
 // Trace is the type of 'flat' forbidden-trace tests.
@@ -25,16 +26,19 @@ func (t *Trace) Expand(name string) *testlang.Node {
 	for i := len(t.Prefix) - 1; 0 <= i; i-- {
 		n = testlang.Inc(t.Prefix[i], n).From(name)
 	}
+
 	return &n
 }
 
 // ExpandAll expands a list of traces to a systematically-named, non-factorised test suite.
 func ExpandAll(traces []Trace) testlang.Suite {
 	suite := make(testlang.Suite)
+
 	for i, tr := range traces {
 		name := fmt.Sprintf("test%d", i)
 		suite[name] = tr.Expand(name)
 	}
+
 	return suite
 }
 
@@ -43,13 +47,15 @@ func Read(r io.Reader) ([]Trace, error) {
 	cr := newReader(r)
 
 	var traces []Trace
+
 	for {
 		row, err := cr.Read()
 		if errors.Is(err, io.EOF) {
 			return traces, nil
 		}
+
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("error reading trace row: %w", err)
 		}
 
 		trace, err := parseRow(row)
@@ -66,6 +72,7 @@ func newReader(r io.Reader) *csv.Reader {
 	cr.FieldsPerRecord = -1
 	cr.Comment = '#'
 	cr.TrimLeadingSpace = true
+
 	return cr
 }
 
@@ -78,18 +85,24 @@ func parseRow(row []string) (Trace, error) {
 	}
 
 	trace.Prefix = make([]testlang.Event, prefixLen)
-	for i, ev := range row {
-		var ptr *testlang.Event
-		if i == prefixLen {
-			ptr = &trace.Forbid
-		} else {
-			ptr = &trace.Prefix[i]
-		}
-		if err := ptr.UnmarshalText([]byte(ev)); err != nil {
-			return trace, err
+
+	for cellIndex, cell := range row {
+		ptr := selectEvent(cellIndex, prefixLen, trace)
+
+		if err := ptr.UnmarshalText([]byte(cell)); err != nil {
+			return trace, fmt.Errorf("couldn't parse trace cell: %w", err)
 		}
 	}
+
 	return trace, nil
+}
+
+func selectEvent(index int, prefixLen int, trace Trace) *testlang.Event {
+	if index == prefixLen {
+		return &trace.Forbid
+	}
+
+	return &trace.Prefix[index]
 }
 
 var ErrNeedOneEvent = errors.New("each trace must have at least one event")

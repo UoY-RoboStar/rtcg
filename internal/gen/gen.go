@@ -5,11 +5,12 @@ import (
 	"embed"
 	"errors"
 	"fmt"
-	"github.com/UoY-RoboStar/rtcg/internal/stm"
 	"io/fs"
 	"os"
 	"path/filepath"
 	"text/template"
+
+	"github.com/UoY-RoboStar/rtcg/internal/stm"
 )
 
 //go:embed embed/templates/*.c.tmpl
@@ -23,37 +24,47 @@ type Generator struct {
 
 // New creates a new Generator by reading all templates from inFS, and outputting to outDir.
 func New(inFS fs.FS, outDir string) (*Generator, error) {
-	g := Generator{OutputDir: outDir}
+	generator := Generator{OutputDir: outDir, Template: nil}
 
 	base, err := template.ParseFS(baseTemplates, "embed/templates/*.c.tmpl")
 	if err != nil {
 		return nil, fmt.Errorf("couldn't open base templates: %w", err)
 	}
 
-	g.Template, err = base.ParseFS(inFS, "*.c.tmpl")
+	generator.Template, err = base.ParseFS(inFS, "*.c.tmpl")
+	if err != nil {
+		return nil, fmt.Errorf("couldn't open user templates: %w", err)
+	}
 
-	return &g, err
+	return &generator, nil
 }
 
-func (g *Generator) Generate(stms stm.Suite) error {
-	if err := os.MkdirAll(g.OutputDir, 0754); err != nil {
+// outputDirPerms is the permissions to use when generating the output directory.
+const outputDirPerms = 0o754
+
+func (g *Generator) Generate(suite stm.Suite) error {
+	if err := os.MkdirAll(g.OutputDir, outputDirPerms); err != nil {
 		return fmt.Errorf("couldn't make test directory: %w", err)
 	}
 
-	for k, v := range stms {
+	for k, v := range suite {
 		if err := g.generateStm(k, v); err != nil {
 			return fmt.Errorf("couldn't generate test %s: %w", k, err)
 		}
 	}
+
 	return nil
 }
 
-func (g *Generator) generateStm(name string, s *stm.Stm) error {
+func (g *Generator) generateStm(name string, body *stm.Stm) error {
 	path := filepath.Join(g.OutputDir, name+".c")
-	w, err := os.Create(path)
+
+	file, err := os.Create(path)
 	if err != nil {
-		return err
+		return fmt.Errorf("couldn't create output file for test %q: %w", name, err)
 	}
-	err = g.Template.ExecuteTemplate(w, "top.c.tmpl", s)
-	return errors.Join(err, w.Close())
+
+	err = g.Template.ExecuteTemplate(file, "top.c.tmpl", body)
+
+	return errors.Join(err, file.Close())
 }

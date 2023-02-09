@@ -10,47 +10,52 @@ import (
 type Status uint8
 
 const (
-	StatInc   Status = iota // StatInc is the inconclusive status.
-	StatFail                // StatFail is the failing status.
-	StatPass                // StatPass is the passing status.
-	NumStatus               // NumStatus is the number of valid status entries.
-)
+	StatusInc  Status = iota // StatusInc is the inconclusive status.
+	StatusFail               // StatusFail is the failing status.
+	StatusPass               // StatusPass is the passing status.
 
-// AllStatuses contains every possible test status in order.
-var AllStatuses = [NumStatus]Status{StatInc, StatFail, StatPass}
+	FirstStatus = StatusInc  // FirstStatus is the first status.
+	LastStatus  = StatusPass // LastStatus is the last status.
+
+	NumStatus = uint8(LastStatus) + 1 // NumStatus is the number of valid status entries.
+)
 
 func (s *Status) String() string {
 	switch *s {
-	case StatInc:
+	case StatusInc:
 		return "inc"
-	case StatFail:
+	case StatusFail:
 		return "fail"
-	case StatPass:
+	case StatusPass:
 		return "pass"
 	default:
 		return "unknown"
 	}
 }
 
-func (s *Status) MarshalText() (text []byte, err error) {
+func (s *Status) MarshalText() ([]byte, error) {
 	str := s.String()
 	if str == "unknown" {
 		return nil, fmt.Errorf("%w: code %d", ErrBadStatus, *s)
 	}
+
 	return []byte(str), nil
 }
 
 func (s *Status) UnmarshalText(text []byte) error {
 	textStr := string(text)
-	if strings.EqualFold(textStr, "inc") {
-		*s = StatInc
-	} else if strings.EqualFold(textStr, "fail") {
-		*s = StatFail
-	} else if strings.EqualFold(textStr, "pass") {
-		*s = StatPass
-	} else {
+
+	switch {
+	case strings.EqualFold(textStr, "inc"):
+		*s = StatusInc
+	case strings.EqualFold(textStr, "fail"):
+		*s = StatusFail
+	case strings.EqualFold(textStr, "pass"):
+		*s = StatusPass
+	default:
 		return fmt.Errorf("%w: got %q", ErrBadStatus, textStr)
 	}
+
 	return nil
 }
 

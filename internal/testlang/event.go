@@ -1,7 +1,6 @@
 package testlang
 
 import (
-	"bytes"
 	"fmt"
 	"strings"
 )
@@ -15,37 +14,36 @@ type Event struct {
 }
 
 // NewEvent is shorthand for constructing an Event with channel ch, direction d, and value v.
-func NewEvent(ch string, d InOut, v Value) Event {
+func NewEvent(ch string, d Direction, v Value) Event {
 	return Event{Channel: Channel{Name: ch, Direction: d}, Value: v}
 }
 
-// Input is shorthand for constructing an Event with direction In, channel ch, and value v.
+// Input is shorthand for constructing an Event with direction DirIn, channel ch, and value v.
 func Input(ch string, v Value) Event {
-	return NewEvent(ch, In, v)
+	return NewEvent(ch, DirIn, v)
 }
 
-// Output is shorthand for constructing an Event with direction In, channel ch, and value v.
+// Output is shorthand for constructing an Event with direction DirIn, channel ch, and value v.
 func Output(ch string, v Value) Event {
-	return NewEvent(ch, Out, v)
+	return NewEvent(ch, DirOut, v)
 }
 
-func (e *Event) MarshalText() (text []byte, err error) {
+func (e *Event) MarshalText() ([]byte, error) {
 	channel, err := e.Channel.MarshalText()
 	if err != nil {
 		return nil, err
 	}
 
-	fields := [][]byte{channel}
-
-	if e.Value.IsPresent() {
-		value, err := e.Value.MarshalText()
-		if err != nil {
-			return nil, fmt.Errorf("couldn't marshal value of event: %w", err)
-		}
-		fields = append(fields, value)
+	if e.Value.IsEmpty() {
+		return channel, nil
 	}
 
-	return bytes.Join(fields, EventSep), nil
+	value, err := e.Value.MarshalText()
+	if err != nil {
+		return nil, fmt.Errorf("couldn't marshal value of event: %w", err)
+	}
+
+	return eventSepJoin(channel, value), nil
 }
 
 func (e *Event) String() string {
@@ -53,7 +51,8 @@ func (e *Event) String() string {
 	if e.Value.IsEmpty() {
 		return ch
 	}
-	return strings.Join([]string{ch, e.Value.String()}, ".")
+
+	return strings.Join([]string{ch, e.Value.String()}, eventSep)
 }
 
 func (e *Event) UnmarshalText(text []byte) error {
@@ -70,11 +69,9 @@ func (e *Event) UnmarshalText(text []byte) error {
 	if err := e.Value.UnmarshalText(val); err != nil {
 		return fmt.Errorf("couldn't unmarshal value of event: %w", err)
 	}
+
 	return nil
 }
-
-// EventSep is the separator used for event fields.
-var EventSep = []byte(".")
 
 // BadEventFieldCountError is an error type arising when the number of '.' delimited fields in an Event is not valid.
 type BadEventFieldCountError struct {
@@ -82,5 +79,5 @@ type BadEventFieldCountError struct {
 }
 
 func (b BadEventFieldCountError) Error() string {
-	return fmt.Sprintf("an event must have three %q delimited fields, got %d", string(EventSep), b.Got)
+	return fmt.Sprintf("an event must have three %q delimited fields, got %d", eventSep, b.Got)
 }

@@ -3,6 +3,7 @@ package testlang
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 )
 
@@ -11,17 +12,26 @@ type Suite map[string]*Node
 
 // ReadSuite reads a test suite from JSON in reader r.
 func ReadSuite(r io.Reader) (Suite, error) {
+	var suite Suite
+
 	j := json.NewDecoder(r)
-	var s Suite
-	err := j.Decode(&s)
-	return s, err
+	if err := j.Decode(&suite); err != nil {
+		return nil, fmt.Errorf("json decoding error for test suite: %w", err)
+	}
+
+	return suite, nil
 }
 
 // Write pretty-prints a test suite, as JSON, into writer w.
 func (s *Suite) Write(w io.Writer) error {
 	j := json.NewEncoder(w)
 	j.SetIndent("", "\t")
-	return j.Encode(s)
+
+	if err := j.Encode(s); err != nil {
+		return fmt.Errorf("json encoding error for test suite: %w", err)
+	}
+
+	return nil
 }
 
 // Node captures a test node of the form (inc -> evt -> X) or (pass -> evt -> X).
@@ -36,22 +46,30 @@ type Node struct {
 
 // Pass constructs a valid passing test node.
 func Pass(event Event, next ...Node) Node {
-	return Node{Status: StatPass, Event: &event, Next: next}
+	return NewNode(StatusPass, &event, next...)
 }
 
 // Inc constructs a valid inconclusive test node.
 func Inc(event Event, next ...Node) Node {
-	return Node{Status: StatInc, Event: &event, Next: next}
+	return NewNode(StatusInc, &event, next...)
 }
 
 // Fail constructs a valid failing test node.
 func Fail() Node {
-	return Node{Status: StatFail}
+	return NewNode(StatusFail, nil)
+}
+
+// NewNode constructs a new node with the given status, event, and next nodes.
+//
+// The node does not have an assigned ID or test list; set these afterwards if desired.
+func NewNode(status Status, event *Event, next ...Node) Node {
+	return Node{ID: "", Tests: nil, Status: status, Event: event, Next: next}
 }
 
 // From replaces the Tests field of this Node inline with the contents of tests.
 func (n Node) From(tests ...string) Node {
 	n.Tests = tests
+
 	return n
 }
 

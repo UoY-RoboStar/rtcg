@@ -19,7 +19,7 @@ type Verdict struct {
 
 // NewVerdict constructs a new Verdict.
 func NewVerdict() *Verdict {
-	return &Verdict{Tests: map[string]bool{}}
+	return &Verdict{Tests: map[string]bool{}, IsObserved: false}
 }
 
 // Add adds each test in tests into the affected list for Verdict v, and sets it to active.
@@ -32,18 +32,21 @@ func (v *Verdict) Add(tests ...string) {
 
 // TestList get the list of affected tests from Verdict v.
 func (v *Verdict) TestList() []string {
-	tl := make([]string, 0, len(v.Tests))
+	testList := make([]string, 0, len(v.Tests))
+
 	for t, b := range v.Tests {
 		if b {
-			tl = append(tl, t)
+			testList = append(testList, t)
 		}
 	}
-	return tl
+
+	return testList
 }
 
 func (v *Verdict) String() string {
 	if !v.IsObserved {
 		return "none"
 	}
+
 	return fmt.Sprintf("[%s]", strings.Join(v.TestList(), ", "))
 }
