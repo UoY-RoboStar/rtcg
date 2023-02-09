@@ -5,10 +5,8 @@
 package trace
 
 import (
-	"encoding/csv"
-	"errors"
 	"fmt"
-	"io"
+	"strings"
 
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 )
@@ -19,8 +17,25 @@ type Trace struct {
 	Forbid testlang.Event   // Forbid is the event that must not occur after Prefix.
 }
 
+// New constructs a trace with forbidden event forbid and prefix after.
+func New(forbid testlang.Event, after ...testlang.Event) Trace {
+	return Trace{Prefix: after, Forbid: forbid}
+}
+
+func (t Trace) String() string {
+	prefixStrs := make([]string, len(t.Prefix))
+
+	for i, p := range t.Prefix {
+		prefixStrs[i] = p.String()
+	}
+
+	prefixStr := strings.Join(prefixStrs, ", ")
+
+	return fmt.Sprintf("<%s>!%s", prefixStr, &t.Forbid)
+}
+
 // Expand expands a single Trace into a test, tagged throughout with name.
-func (t *Trace) Expand(name string) *testlang.Node {
+func (t Trace) Expand(name string) *testlang.Node {
 	// Work backwards through the trace, building the tree from the failure.
 	n := testlang.Pass(t.Forbid, testlang.Fail().From(name)).From(name)
 	for i := len(t.Prefix) - 1; 0 <= i; i-- {
@@ -41,68 +56,3 @@ func ExpandAll(traces []Trace) testlang.Suite {
 
 	return suite
 }
-
-// Read reads from r a list of traces.
-func Read(r io.Reader) ([]Trace, error) {
-	cr := newReader(r)
-
-	var traces []Trace
-
-	for {
-		row, err := cr.Read()
-		if errors.Is(err, io.EOF) {
-			return traces, nil
-		}
-
-		if err != nil {
-			return nil, fmt.Errorf("error reading trace row: %w", err)
-		}
-
-		trace, err := parseRow(row)
-		if err != nil {
-			return nil, err
-		}
-
-		traces = append(traces, trace)
-	}
-}
-
-func newReader(r io.Reader) *csv.Reader {
-	cr := csv.NewReader(r)
-	cr.FieldsPerRecord = -1
-	cr.Comment = '#'
-	cr.TrimLeadingSpace = true
-
-	return cr
-}
-
-func parseRow(row []string) (Trace, error) {
-	var trace Trace
-
-	prefixLen := len(row) - 1
-	if prefixLen < 0 {
-		return trace, ErrNeedOneEvent
-	}
-
-	trace.Prefix = make([]testlang.Event, prefixLen)
-
-	for cellIndex, cell := range row {
-		ptr := selectEvent(cellIndex, prefixLen, trace)
-
-		if err := ptr.UnmarshalText([]byte(cell)); err != nil {
-			return trace, fmt.Errorf("couldn't parse trace cell: %w", err)
-		}
-	}
-
-	return trace, nil
-}
-
-func selectEvent(index int, prefixLen int, trace Trace) *testlang.Event {
-	if index == prefixLen {
-		return &trace.Forbid
-	}
-
-	return &trace.Prefix[index]
-}
-
-var ErrNeedOneEvent = errors.New("each trace must have at least one event")
