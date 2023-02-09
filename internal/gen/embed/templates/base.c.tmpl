@@ -26,13 +26,14 @@ int
 main(int argc, char** argv)
 {
 {{ block "body" . }}
+    outcome_t outcome = INC;
+
     /* Initialisation code */
 {{   block "init" . }}
 {{   end }}
 
     /* Test code */
 {{   block "test" . }}
-{{     template "base_test" .Test }}
 {{   end }}
 {{ end }}
 }

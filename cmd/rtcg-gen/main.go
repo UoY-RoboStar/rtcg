@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"rtcg/internal/cli"
+	"rtcg/internal/gen"
 	"rtcg/internal/stm"
 	"rtcg/internal/testlang"
 )
@@ -15,52 +16,65 @@ func main() {
 }
 
 func run() error {
-	args, err := parseArgs(os.Args)
+	a, err := parseArgs(os.Args)
 	if err != nil {
 		return err
 	}
-
-	s, err := readSuite(args.inputFile)
-	if err != nil {
-		return fmt.Errorf("couldn't read test suite: %w", err)
-	}
-
-	var sb stm.Builder
-	stms := sb.BuildSuite(s)
-
-	for k, v := range stms {
-		fmt.Println(k, "=", v)
-	}
-
-	return nil
+	return a.run()
 }
 
-func parseArgs(argv []string) (*args, error) {
-	var args args
+func parseArgs(argv []string) (*genAction, error) {
+	var a genAction
 
 	argc := len(argv)
 	if argc == 2 {
-		args.inputFile = "-" // stdin
+		a.inputFile = "-" // stdin
 	} else if argc == 3 {
-		args.inputFile = argv[2]
+		a.inputFile = argv[2]
 	} else {
 		return nil, cli.ErrBadArgs
 	}
 
-	args.templateDir = argv[1]
-	return &args, nil
+	a.templateDir = argv[1]
+	return &a, nil
 }
 
-type args struct {
+type genAction struct {
 	templateDir string
 	inputFile   string
 }
 
-func readSuite(path string) (testlang.Suite, error) {
-	f, err := cli.OpenFileOrStdin(path)
+func (a *genAction) run() error {
+	s, err := a.readSuite()
+	if err != nil {
+		return fmt.Errorf("couldn't read test suite: %w", err)
+	}
+
+	stms := a.buildStms(s)
+	// TODO: consider split STM building and generation?
+
+	return a.generate(stms)
+}
+
+func (a *genAction) readSuite() (testlang.Suite, error) {
+	f, err := cli.OpenFileOrStdin(a.inputFile)
 	if err != nil {
 		return nil, err
 	}
 	suite, err := testlang.ReadSuite(f)
 	return suite, errors.Join(err, f.Close())
+}
+
+func (a *genAction) buildStms(tests testlang.Suite) stm.Suite {
+	var bs stm.Builder
+	return bs.BuildSuite(tests)
+}
+
+func (a *genAction) generate(stms stm.Suite) error {
+	tmpls := os.DirFS(a.templateDir)
+	g, err := gen.New(tmpls, "out") // for now
+	if err != nil {
+		return fmt.Errorf("couldn't create generator: %w", err)
+	}
+	return g.Generate(stms)
 }
