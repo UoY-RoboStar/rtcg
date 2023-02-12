@@ -39,10 +39,21 @@ func (s *State) Fail() *Verdict {
 	return s.Verdicts[testlang.StatusFail]
 }
 
+// AddOutgoingNode handles all bookkeeping for logging verdicts and producing transitions from s to the state for node.
+func (s *State) AddOutgoingNode(node *testlang.Node) {
+	s.AddVerdictsFromNode(node)
+	s.AddTransitionToNode(node)
+}
+
 // AddTransitionToNode adds a transition from this state to the given test-tree node.
 //
 // We assume the node has already been assigned an ID.
 func (s *State) AddTransitionToNode(node *testlang.Node) {
+	// We don't add transitions to failing nodes; they are just sentinels with no test content.
+	if node.Status == testlang.StatusFail {
+		return
+	}
+
 	tr := Transition{Value: node.Event.Value, Next: node.ID}
 	s.AddTransition(node.Event.Channel, tr)
 }
@@ -67,7 +78,7 @@ func (s *State) AddTransition(channel testlang.Channel, transition Transition) {
 }
 
 // AddVerdictsFromNode adds the test verdicts from n into s.
-func (s *State) AddVerdictsFromNode(node testlang.Node) {
+func (s *State) AddVerdictsFromNode(node *testlang.Node) {
 	for st := testlang.FirstStatus; st <= testlang.LastStatus; st++ {
 		if node.Status == st {
 			s.Verdicts[st].Add(node.Tests...)

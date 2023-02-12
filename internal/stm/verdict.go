@@ -3,6 +3,8 @@ package stm
 import (
 	"fmt"
 	"strings"
+
+	"github.com/UoY-RoboStar/rtcg/internal/structure"
 )
 
 // Verdict contains information about a potential test verdict.
@@ -14,33 +16,20 @@ type Verdict struct {
 	IsObserved bool
 
 	// Tests is the set of names of tests that are known to be affected by this verdict.
-	Tests map[string]bool
+	Tests structure.Set[string]
 }
 
 // NewVerdict constructs a new Verdict.
 func NewVerdict() *Verdict {
-	return &Verdict{Tests: map[string]bool{}, IsObserved: false}
+	return &Verdict{Tests: structure.Set[string]{}, IsObserved: false}
 }
 
 // Add adds each test in tests into the affected list for Verdict v, and sets it to active.
 func (v *Verdict) Add(tests ...string) {
 	v.IsObserved = true
 	for _, t := range tests {
-		v.Tests[t] = true
+		v.Tests.Add(t)
 	}
-}
-
-// TestList get the list of affected tests from Verdict v.
-func (v *Verdict) TestList() []string {
-	testList := make([]string, 0, len(v.Tests))
-
-	for t, b := range v.Tests {
-		if b {
-			testList = append(testList, t)
-		}
-	}
-
-	return testList
 }
 
 func (v *Verdict) String() string {
@@ -48,5 +37,5 @@ func (v *Verdict) String() string {
 		return "none"
 	}
 
-	return fmt.Sprintf("[%s]", strings.Join(v.TestList(), ", "))
+	return fmt.Sprintf("[%s]", strings.Join(v.Tests.Values(), ", "))
 }

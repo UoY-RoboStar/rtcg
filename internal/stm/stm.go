@@ -8,6 +8,8 @@
 // - information about which tests have been failed, or are about to pass, is centralised in each state.
 package stm
 
+import "github.com/UoY-RoboStar/rtcg/internal/structure"
+
 // Suite is a test suite, in state machine format.
 type Suite map[string]*Stm
 
@@ -17,4 +19,7 @@ type Stm struct {
 	//
 	// Conventionally, the first state in the machine is the initial state.
 	States []*State
+
+	// Tests is the set of names of tests being captured by this state machine.
+	Tests structure.Set[string]
 }

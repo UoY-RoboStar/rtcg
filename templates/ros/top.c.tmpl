@@ -1,5 +1,5 @@
 {{ define "system_includes" }}
-#include <ros/ros.h>
+// #include <ros/ros.h>
 {{ end }}
 
-{{- template "base.c.tmpl" -}}
+{{- template "base.c.tmpl" . -}}

@@ -3,48 +3,15 @@ package stm
 import (
 	"fmt"
 
+	"github.com/UoY-RoboStar/rtcg/internal/structure"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 )
 
 // Builder builds state machines from tests.
 type Builder struct {
-	nodeNum uint64                // nodeNum is a monotonically increasing counter for naming unnamed nodes.
-	stack   Stack[*testlang.Node] // stack is a stack used for in-order test traversal.
-	current Stm                   // current is the state machine currently being built.
-}
-
-// Stack is a(n inefficient) implementation of a stack.
-type Stack[T any] struct {
-	items []T
-	count int
-}
-
-// Push pushes item onto the stack.
-func (s *Stack[T]) Push(item T) {
-	s.items = append(s.items, item)
-	s.count++
-}
-
-// Pop pops an item from s.
-//
-// It does not check to see if the stack is empty.
-func (s *Stack[T]) Pop() T {
-	item := s.items[s.count-1]
-	s.items = s.items[:s.count-1]
-	s.count--
-
-	return item
-}
-
-// IsEmpty is true iff the stack is empty.
-func (s *Stack[T]) IsEmpty() bool {
-	return s.count == 0
-}
-
-// Clear empties stack s.
-func (s *Stack[T]) Clear() {
-	s.items = []T{}
-	s.count = 0
+	nodeNum uint64                          // nodeNum is a monotonically increasing counter for naming unnamed nodes.
+	stack   structure.Stack[*testlang.Node] // stack is a stack used for in-order test traversal.
+	stm     Stm                             // stm is the state machine currently being built.
 }
 
 // BuildSuite builds a test suite s into a map of state machines.
@@ -76,12 +43,12 @@ func (b *Builder) Build(name string, testRoot *testlang.Node) Stm {
 		}
 	}
 
-	return b.current
+	return b.stm
 }
 
 func (b *Builder) processNode(node *testlang.Node) {
 	sn := b.buildState(node)
-	b.current.States = append(b.current.States, sn)
+	b.stm.States = append(b.stm.States, sn)
 
 	for i := range node.Next {
 		b.stack.Push(&node.Next[i])
@@ -92,13 +59,11 @@ func (b *Builder) buildState(node *testlang.Node) *State {
 	b.ensureNodeID(node)
 	result := NewState(node.ID)
 
-	for i, n := range node.Next {
-		// For failing transitions, we don't emit a destination or value; we just log that this node has failed.
-		result.AddVerdictsFromNode(n)
+	for i := range node.Next {
+		np := &node.Next[i]
 
-		if !result.Fail().IsObserved {
-			result.AddTransitionToNode(&node.Next[i])
-		}
+		b.stm.Tests.Add(np.Tests...)
+		result.AddOutgoingNode(np)
 	}
 
 	return result
@@ -119,5 +84,6 @@ func (b *Builder) initStm(name string, node *testlang.Node) {
 	initial := NewState(testlang.NodeID(name))
 	initial.AddTransitionToNode(node)
 
-	b.current = Stm{States: []*State{initial}}
+	b.stm = Stm{States: []*State{initial}, Tests: structure.Set[string]{}}
+	b.stm.Tests.Add(node.Tests...)
 }
