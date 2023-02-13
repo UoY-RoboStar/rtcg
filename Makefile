@@ -1,9 +1,24 @@
-.PHONY: all bin/rtcg-gen bin/rtcg-read-traces
+.POSIX:
+GO         = go
+INPUT_DIR  = ./cmd
+OUTPUT_DIR = bin
 
-all: bin/rtcg-gen bin/rtcg-read-traces
+.PHONY: \
+  all \
+  rtcg-gen \
+  rtcg-make-stms \
+  rtcg-read-traces
 
-bin/rtcg-gen:
-	go build -o bin/ ./cmd/rtcg-gen
+all: \
+  rtcg-gen \
+  rtcg-make-stms \
+  rtcg-read-traces
 
-bin/rtcg-read-traces:
-	go build -o bin/ ./cmd/rtcg-read-traces
+rtcg-gen:
+	$(GO) build -o $(OUTPUT_DIR)/ $(INPUT_DIR)/rtcg-gen
+
+rtcg-make-stms:
+	$(GO) build -o $(OUTPUT_DIR)/ $(INPUT_DIR)/rtcg-make-stms
+
+rtcg-read-traces:
+	$(GO) build -o $(OUTPUT_DIR)/ $(INPUT_DIR)/rtcg-read-traces

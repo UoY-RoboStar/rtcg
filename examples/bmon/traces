@@ -1,3 +1,9 @@
+#
+# Tests for the battery monitor
+#
+# Last updated 2023-02-13
+#
+
 # The monitor can’t report that the battery is OK before receiving a battery reading.
 batteryStatus.out.Ok
 

@@ -1,4 +1,4 @@
-// Program rtcg-gen performs test code generation given JSON input.
+// Program rtcg-gen performs test code generation given a JSON representation of a state machine suite.
 package main
 
 import (
@@ -9,11 +9,10 @@ import (
 	"github.com/UoY-RoboStar/rtcg/internal/cli"
 	"github.com/UoY-RoboStar/rtcg/internal/gen"
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
-	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 )
 
 const (
-	usage            = "TEMPLATE-DIR [INPUT-FILE]"
+	usage            = "TEMPLATE-DIR [STM-FILE]"
 	numAnonymousArgs = 2
 )
 
@@ -52,32 +51,23 @@ type genAction struct {
 }
 
 func (a *genAction) run() error {
-	s, err := a.readSuite()
+	stms, err := a.readSuite()
 	if err != nil {
-		return fmt.Errorf("couldn't read test suite: %w", err)
+		return fmt.Errorf("couldn't read state machine suite: %w", err)
 	}
-
-	stms := a.buildStms(s)
-	// TODO: consider split STM building and generation?
 
 	return a.generate(stms)
 }
 
-func (a *genAction) readSuite() (testlang.Suite, error) {
+func (a *genAction) readSuite() (stm.Suite, error) {
 	file, err := cli.OpenFileOrStdin(a.inputFile)
 	if err != nil {
 		return nil, fmt.Errorf("couldn't open input: %w", err)
 	}
 
-	suite, err := testlang.ReadSuite(file)
+	suite, err := stm.ReadSuite(file)
 
 	return suite, errors.Join(err, file.Close())
-}
-
-func (a *genAction) buildStms(tests testlang.Suite) stm.Suite {
-	var bs stm.Builder
-
-	return bs.BuildSuite(tests)
 }
 
 func (a *genAction) generate(stms stm.Suite) error {
