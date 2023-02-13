@@ -9,10 +9,17 @@ import (
 
 // State is a state machine state (with attached transitions).
 type State struct {
-	ID             testlang.NodeID // ID is the identifier of the State.
-	TransitionSets []TransitionSet // TransitionSets is the list of transition sets out of this state.
+	// ID is the identifier of the State.
+	//
+	// Unlike test trees, each state machine state MUST have an identifier.
+	ID testlang.NodeID `json:"id"`
 
-	Verdicts [testlang.NumStatus]*Verdict // Verdict gives information about which test verdicts this state reports.
+	// TransitionSets is the list of transition sets out of this state.
+	//
+	// Each transition set maps a particular channel to a list of transitions predicated on that channel's value.
+	TransitionSets []TransitionSet `json:"transition_sets,omitempty"`
+
+	Verdicts [testlang.NumStatus]*Verdict `json:"verdicts"` // Verdict holds the test verdicts that this state reports.
 }
 
 // NewState creates a new State with the given id.

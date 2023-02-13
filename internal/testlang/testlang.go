@@ -2,8 +2,8 @@
 package testlang
 
 import (
-	"encoding/json"
 	"fmt"
+	"github.com/UoY-RoboStar/rtcg/internal/serial"
 	"io"
 )
 
@@ -14,9 +14,8 @@ type Suite map[string]*Node
 func ReadSuite(r io.Reader) (Suite, error) {
 	var suite Suite
 
-	j := json.NewDecoder(r)
-	if err := j.Decode(&suite); err != nil {
-		return nil, fmt.Errorf("json decoding error for test suite: %w", err)
+	if err := serial.ReadJSON(r, &suite); err != nil {
+		return nil, fmt.Errorf("couldn't read test suite: %w", err)
 	}
 
 	return suite, nil
@@ -24,11 +23,8 @@ func ReadSuite(r io.Reader) (Suite, error) {
 
 // Write pretty-prints a test suite, as JSON, into writer w.
 func (s *Suite) Write(w io.Writer) error {
-	j := json.NewEncoder(w)
-	j.SetIndent("", "\t")
-
-	if err := j.Encode(s); err != nil {
-		return fmt.Errorf("json encoding error for test suite: %w", err)
+	if err := serial.WriteJSON(w, s); err != nil {
+		return fmt.Errorf("couldn't write test suite: %w", err)
 	}
 
 	return nil

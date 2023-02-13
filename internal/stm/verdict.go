@@ -13,10 +13,10 @@ type Verdict struct {
 	//
 	// The test itself may not be in Tests (for example, if the test tree isn't tracking which node came from which
 	// test).
-	IsObserved bool
+	IsObserved bool `json:"is_observed"`
 
 	// Tests is the set of names of tests that are known to be affected by this verdict.
-	Tests structure.Set[string]
+	Tests structure.Set[string] `json:"tests,omitempty"`
 }
 
 // NewVerdict constructs a new Verdict.

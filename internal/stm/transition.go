@@ -9,8 +9,8 @@ import (
 
 // TransitionSet is a set of transitions for a given channel.
 type TransitionSet struct {
-	Channel     testlang.Channel // Channel is the channel at the head of this transition set.
-	Transitions []Transition     // Transitions is the list of transitions.
+	Channel     testlang.Channel `json:"channel"`               // Channel is the channel at the head of this transition set.
+	Transitions []Transition     `json:"transitions,omitempty"` // Transitions is the list of transitions.
 }
 
 func (t TransitionSet) String() string {
@@ -24,8 +24,8 @@ func (t TransitionSet) String() string {
 
 // Transition is a transition from one state to another.
 type Transition struct {
-	Value testlang.Value  // Value is the value that must be observed or sent for this transition to occur.
-	Next  testlang.NodeID // Next is the next node ID to jump to in the state machine.
+	Value testlang.Value  `json:"value,omitempty"` // Value is the value that must be observed or sent for this transition to occur.
+	Next  testlang.NodeID `json:"next,omitempty"`  // Next is the next node ID to jump to in the state machine.
 	// TODO: record which test this transition is from
 }
 
