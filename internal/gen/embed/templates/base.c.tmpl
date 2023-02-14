@@ -82,10 +82,8 @@ state_index_t
 {{ .ID }}(outcome_t *outcomes) {
 {{- block "test" . }}
 {{- range $s, $ts := .Verdicts }}
-{{- if $ts.IsObserved }}
 {{- range $ts.Tests.Values }}
     set_outcome(outcomes, OUTCOME_{{ . }}, "{{ . }}", {{ $s }});
-{{- end }}
 {{- end }}
 {{- end }}
 

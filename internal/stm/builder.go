@@ -82,8 +82,7 @@ func (b *Builder) initStm(name string, node *testlang.Node) {
 	b.ensureNodeID(node)
 
 	initial := NewState(testlang.NodeID(name))
-	initial.AddTransitionToNode(node)
+	initial.AddOutgoingNode(node)
 
-	b.stm = Stm{States: []*State{initial}, Tests: structure.Set[string]{}}
-	b.stm.Tests.Add(node.Tests...)
+	b.stm = Stm{States: []*State{initial}, Tests: structure.NewSet[string](node.Tests...)}
 }

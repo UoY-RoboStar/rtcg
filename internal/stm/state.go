@@ -19,7 +19,7 @@ type State struct {
 	// Each transition set maps a particular channel to a list of transitions predicated on that channel's value.
 	TransitionSets []TransitionSet `json:"transition_sets,omitempty"`
 
-	Verdicts [testlang.NumStatus]*Verdict `json:"verdicts"` // Verdict holds the test verdicts that this state reports.
+	Verdicts *VerdictSet `json:"verdicts,omitempty"` // Verdicts holds the test verdicts that this state reports.
 }
 
 // NewState creates a new State with the given id.
@@ -27,23 +27,8 @@ func NewState(id testlang.NodeID) *State {
 	return &State{
 		ID:             id,
 		TransitionSets: nil,
-		Verdicts:       [testlang.NumStatus]*Verdict{NewVerdict(), NewVerdict(), NewVerdict()},
+		Verdicts:       &VerdictSet{},
 	}
-}
-
-// Inc is shorthand for getting the inconclusive verdict information.
-func (s *State) Inc() *Verdict {
-	return s.Verdicts[testlang.StatusInc]
-}
-
-// Pass is shorthand for getting the passing verdict information.
-func (s *State) Pass() *Verdict {
-	return s.Verdicts[testlang.StatusPass]
-}
-
-// Fail is shorthand for getting the failing verdict information.
-func (s *State) Fail() *Verdict {
-	return s.Verdicts[testlang.StatusFail]
 }
 
 // AddOutgoingNode handles all bookkeeping for logging verdicts and producing transitions from s to the state for node.
@@ -86,13 +71,7 @@ func (s *State) AddTransition(channel testlang.Channel, transition Transition) {
 
 // AddVerdictsFromNode adds the test verdicts from n into s.
 func (s *State) AddVerdictsFromNode(node *testlang.Node) {
-	for st := testlang.FirstStatus; st <= testlang.LastStatus; st++ {
-		if node.Status == st {
-			s.Verdicts[st].Add(node.Tests...)
-
-			return
-		}
-	}
+	s.Verdicts.Add(node.Status, node.Tests...)
 }
 
 func (s *State) String() string {
@@ -102,7 +81,7 @@ func (s *State) String() string {
 func (s *State) verdictString() string {
 	vsets := make([]string, testlang.NumStatus)
 	for st := testlang.FirstStatus; st <= testlang.LastStatus; st++ {
-		vsets[st] = fmt.Sprintf("%s %s", &st, s.Verdicts[st])
+		vsets[st] = fmt.Sprintf("%s %s", &st, (*s.Verdicts)[st])
 	}
 
 	return strings.Join(vsets, ", ")
