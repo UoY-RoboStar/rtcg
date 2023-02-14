@@ -33,27 +33,31 @@ func NewState(id testlang.NodeID) *State {
 
 // AddOutgoingNode handles all bookkeeping for logging verdicts and producing transitions from s to the state for node.
 func (s *State) AddOutgoingNode(node *testlang.Node) {
-	s.AddVerdictsFromNode(node)
-	s.AddTransitionToNode(node)
+	s.addVerdictsFromNode(node)
+	s.addTransitionToNode(node)
 }
 
 // AddTransitionToNode adds a transition from this state to the given test-tree node.
 //
 // We assume the node has already been assigned an ID.
-func (s *State) AddTransitionToNode(node *testlang.Node) {
+func (s *State) addTransitionToNode(node *testlang.Node) {
 	// We don't add transitions to failing nodes; they are just sentinels with no test content.
 	if node.Status == testlang.StatusFail {
 		return
 	}
 
+	if node.ID == "" {
+		panic("should have assigned an ID to node")
+	}
+
 	tr := Transition{Value: node.Event.Value, Next: node.ID}
-	s.AddTransition(node.Event.Channel, tr)
+	s.addTransition(node.Event.Channel, tr)
 }
 
 // AddTransition adds transition onto the transition set for channel.
 //
 // If no such transition set exists, one is created.
-func (s *State) AddTransition(channel testlang.Channel, transition Transition) {
+func (s *State) addTransition(channel testlang.Channel, transition Transition) {
 	// Try merging onto an existing channel set.
 	for i := range s.TransitionSets {
 		ts := &s.TransitionSets[i]
@@ -70,7 +74,7 @@ func (s *State) AddTransition(channel testlang.Channel, transition Transition) {
 }
 
 // AddVerdictsFromNode adds the test verdicts from n into s.
-func (s *State) AddVerdictsFromNode(node *testlang.Node) {
+func (s *State) addVerdictsFromNode(node *testlang.Node) {
 	s.Verdicts.Add(node.Status, node.Tests...)
 }
 

@@ -28,7 +28,7 @@ func (b *Builder) BuildSuite(s testlang.Suite) Suite {
 
 // Build builds a single test from testRoot onwards.
 func (b *Builder) Build(name string, testRoot *testlang.Node) Stm {
-	// We don't reset nodeNum, in case we're building a whole suite.
+	b.nodeNum = 0
 	b.initStm(name, testRoot)
 
 	b.stack.Clear()
@@ -56,12 +56,12 @@ func (b *Builder) processNode(node *testlang.Node) {
 }
 
 func (b *Builder) buildState(node *testlang.Node) *State {
-	b.ensureNodeID(node)
 	result := NewState(node.ID)
 
 	for i := range node.Next {
 		np := &node.Next[i]
 
+		b.ensureNodeID(np)
 		b.stm.Tests.Add(np.Tests...)
 		result.AddOutgoingNode(np)
 	}
