@@ -15,6 +15,7 @@ type Set[T comparable] struct {
 func NewSet[T comparable](values ...T) Set[T] {
 	result := Set[T]{contents: map[T]bool{}}
 	result.Add(values...)
+
 	return result
 }
 
@@ -40,7 +41,12 @@ func (s *Set[T]) Values() []T {
 
 // MarshalJSON marshals a Set as its Values slice.
 func (s *Set[T]) MarshalJSON() ([]byte, error) {
-	return json.Marshal(s.Values())
+	bs, err := json.Marshal(s.Values())
+	if err != nil {
+		return nil, fmt.Errorf("couldn't marshal values for set: %w", err)
+	}
+
+	return bs, nil
 }
 
 // UnmarshalJSON unmarshals a Set as if it were a Values slice, omitting duplicates.

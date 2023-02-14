@@ -1,11 +1,12 @@
 package stm_test
 
 import (
+	"reflect"
+	"testing"
+
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 	"github.com/UoY-RoboStar/rtcg/internal/trace"
-	"reflect"
-	"testing"
 )
 
 // Tests the building of a state machine relating to a tree with only one (failing) event.
@@ -21,12 +22,12 @@ func TestBuilder_Build_EmptyPrefixTrace(t *testing.T) {
 
 	gotTests := mach.Tests.Values()
 	wantTests := []string{"test"}
+
 	if !reflect.DeepEqual(gotTests, wantTests) {
 		t.Errorf("incorrect tests: got %v, wanted %v", gotTests, wantTests)
 	}
 
 	emptyPrefixTraceStates(t, mach)
-
 }
 
 func emptyPrefixTraceStates(t *testing.T, mach stm.Stm) {
@@ -34,6 +35,7 @@ func emptyPrefixTraceStates(t *testing.T, mach stm.Stm) {
 
 	if len(mach.States) != 2 {
 		t.Errorf("incorrect number of states: got %d (%v), wanted 2", len(mach.States), mach.States)
+
 		return
 	}
 
@@ -49,15 +51,9 @@ func emptyPrefixTraceNode1(t *testing.T, state *stm.State) {
 		t.Errorf("expected first state to have name of test-tree, got %q", state.ID)
 	}
 
-	if state.Verdicts.IsInc() {
-		t.Error("first state should not be inconclusive")
-	}
-	if state.Verdicts.IsFail() {
-		t.Error("first state should not be failing")
-	}
-	if !state.Verdicts.IsPass() {
-		t.Error("first state should be passing")
-	}
+	assertVerdict(t, state.Verdicts, testlang.StatusInc, false)
+	assertVerdict(t, state.Verdicts, testlang.StatusFail, false)
+	assertVerdict(t, state.Verdicts, testlang.StatusPass, true)
 }
 
 func emptyPrefixTraceNode2(t *testing.T, state *stm.State) {
@@ -72,13 +68,23 @@ func emptyPrefixTraceNode2(t *testing.T, state *stm.State) {
 		t.Errorf("second state should have no transition sets, got %d", nsets)
 	}
 
-	if state.Verdicts.IsInc() {
-		t.Error("first state should not be inconclusive")
+	assertVerdict(t, state.Verdicts, testlang.StatusInc, false)
+	assertVerdict(t, state.Verdicts, testlang.StatusFail, true)
+	assertVerdict(t, state.Verdicts, testlang.StatusPass, false)
+}
+
+func assertVerdict(t *testing.T, verdicts *stm.VerdictSet, status testlang.Status, want bool) {
+	t.Helper()
+
+	if verdicts.Is(status) != want {
+		t.Errorf("state should%s be %s", verdictFailSuffix(want), &status)
 	}
-	if !state.Verdicts.IsFail() {
-		t.Error("first state should be failing")
+}
+
+func verdictFailSuffix(exist bool) string {
+	if exist {
+		return "n't"
 	}
-	if state.Verdicts.IsPass() {
-		t.Error("first state should not be passing")
-	}
+
+	return ""
 }

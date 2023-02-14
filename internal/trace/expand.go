@@ -2,6 +2,7 @@ package trace
 
 import (
 	"fmt"
+
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 )
 

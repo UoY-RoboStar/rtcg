@@ -10,9 +10,10 @@ package stm
 
 import (
 	"fmt"
+	"io"
+
 	"github.com/UoY-RoboStar/rtcg/internal/serial"
 	"github.com/UoY-RoboStar/rtcg/internal/structure"
-	"io"
 )
 
 // Suite is a test suite, in state machine format.

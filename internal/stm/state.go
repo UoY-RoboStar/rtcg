@@ -17,7 +17,7 @@ type State struct {
 	// TransitionSets is the list of transition sets out of this state.
 	//
 	// Each transition set maps a particular channel to a list of transitions predicated on that channel's value.
-	TransitionSets []TransitionSet `json:"transition_sets,omitempty"`
+	TransitionSets []TransitionSet `json:"transitionSets,omitempty"`
 
 	Verdicts *VerdictSet `json:"verdicts,omitempty"` // Verdicts holds the test verdicts that this state reports.
 }

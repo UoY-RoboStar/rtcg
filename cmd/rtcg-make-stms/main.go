@@ -55,7 +55,11 @@ func (a *makeStmAction) run() error {
 
 	stms := a.buildStms(s)
 
-	return stms.Write(os.Stdout)
+	if err := stms.Write(os.Stdout); err != nil {
+		return fmt.Errorf("couldn't write state machines: %w", err)
+	}
+
+	return nil
 }
 
 func (a *makeStmAction) readSuite() (testlang.Suite, error) {

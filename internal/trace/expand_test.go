@@ -1,10 +1,11 @@
 package trace_test
 
 import (
-	"github.com/UoY-RoboStar/rtcg/internal/testlang"
-	"github.com/UoY-RoboStar/rtcg/internal/trace"
 	"reflect"
 	"testing"
+
+	"github.com/UoY-RoboStar/rtcg/internal/testlang"
+	"github.com/UoY-RoboStar/rtcg/internal/trace"
 )
 
 // TestTrace_Expand tests expansion of traces to trees.

@@ -3,6 +3,7 @@ package stm
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/UoY-RoboStar/rtcg/internal/structure"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 )
@@ -11,8 +12,7 @@ type VerdictSet map[testlang.Status]*Verdict
 
 // IsInc gets whether there are any inconclusive tests in this verdict set.
 func (v *VerdictSet) IsInc() bool {
-	_, ok := (*v)[testlang.StatusInc]
-	return ok
+	return v.Is(testlang.StatusInc)
 }
 
 // Inc is shorthand for getting the inconclusive verdicts from this verdict set.
@@ -22,8 +22,7 @@ func (v *VerdictSet) Inc() *Verdict {
 
 // IsPass gets whether there are any passing tests in this verdict set.
 func (v *VerdictSet) IsPass() bool {
-	_, ok := (*v)[testlang.StatusPass]
-	return ok
+	return v.Is(testlang.StatusPass)
 }
 
 // Pass is shorthand for getting the passing verdicts from this verdict set.
@@ -33,7 +32,13 @@ func (v *VerdictSet) Pass() *Verdict {
 
 // IsFail gets whether there are any passing tests in this verdict set.
 func (v *VerdictSet) IsFail() bool {
-	_, ok := (*v)[testlang.StatusFail]
+	return v.Is(testlang.StatusFail)
+}
+
+// Is gets whether there are any tests in this verdict set with the given status.
+func (v *VerdictSet) Is(status testlang.Status) bool {
+	_, ok := (*v)[status]
+
 	return ok
 }
 
@@ -59,7 +64,12 @@ func (v *VerdictSet) MarshalJSON() ([]byte, error) {
 		strMap[k.String()] = v
 	}
 
-	return json.Marshal(strMap)
+	bs, err := json.Marshal(strMap)
+	if err != nil {
+		return nil, fmt.Errorf("couldn't marshal verdict set: %w", err)
+	}
+
+	return bs, nil
 }
 
 // UnmarshalJSON marshals a VerdictSet by first parsing each status from its string.

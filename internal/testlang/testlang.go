@@ -3,8 +3,9 @@ package testlang
 
 import (
 	"fmt"
-	"github.com/UoY-RoboStar/rtcg/internal/serial"
 	"io"
+
+	"github.com/UoY-RoboStar/rtcg/internal/serial"
 )
 
 // Suite is a test suite, with each test having a name.
