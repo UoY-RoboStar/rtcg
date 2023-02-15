@@ -17,7 +17,7 @@ func TestStatus_String(t *testing.T) {
 		{input: testlang.StatusInc, want: "inc"},
 		{input: testlang.StatusFail, want: "fail"},
 		{input: testlang.StatusPass, want: "pass"},
-		{input: testlang.StatusPass + 1, want: "unknown"},
+		{input: testlang.StatusPass + 1, want: "Status(3)"},
 	} {
 		input := test.input
 		want := test.want

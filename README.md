@@ -6,12 +6,22 @@ forbidden-trace tests, and using them to generate C code.
 `rtcg` is licenced under the MIT licence; see `LICENSE.md`.
 
 
-## Requirements
+## How to build
 
 Building `rtcg` requires [Go](https://go.dev) 1.20.
 All other dependencies are handled automatically using the `go` tool.
 
 To build all tools in one go, type `make`.  The tools will appear in `bin`.
+
+
+### Regenerating `go generate` code
+
+This project makes use of the following `go generate` tools.  Usually, you
+won't need them installed, as we check in the results of the last time we
+applied them.  However, you may want to update the generated code after making
+changes to the source:
+
+- [go-enum](https://github.com/abice/go-enum)
 
 
 ## The tools

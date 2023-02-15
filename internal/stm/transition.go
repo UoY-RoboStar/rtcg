@@ -4,13 +4,15 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/comm"
+
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 )
 
 // TransitionSet is a set of transitions for a given channel.
 type TransitionSet struct {
-	Channel     testlang.Channel `json:"channel"`               // Channel is the channel at the head of this set.
-	Transitions []Transition     `json:"transitions,omitempty"` // Transitions is the list of transitions.
+	Channel     comm.Channel `json:"channel"`               // Channel is the channel at the head of this set.
+	Transitions []Transition `json:"transitions,omitempty"` // Transitions is the list of transitions.
 }
 
 func (t TransitionSet) String() string {

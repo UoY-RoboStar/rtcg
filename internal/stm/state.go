@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/comm"
 )
 
 // State is a state machine state (with attached transitions).
@@ -57,7 +58,7 @@ func (s *State) addTransitionToNode(node *testlang.Node) {
 // AddTransition adds transition onto the transition set for channel.
 //
 // If no such transition set exists, one is created.
-func (s *State) addTransition(channel testlang.Channel, transition Transition) {
+func (s *State) addTransition(channel comm.Channel, transition Transition) {
 	// Try merging onto an existing channel set.
 	for i := range s.TransitionSets {
 		ts := &s.TransitionSets[i]

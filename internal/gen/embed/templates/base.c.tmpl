@@ -81,28 +81,7 @@ typedef state_index_t (*state_t)(outcome_t *outcomes);
 state_index_t
 {{ .ID }}(outcome_t *outcomes) {
 {{- block "test" . }}
-{{- range $s, $ts := .Verdicts }}
-{{- range $ts.Tests.Values }}
-    set_outcome(outcomes, OUTCOME_{{ . }}, "{{ . }}", {{ $s }});
-{{- end }}
-{{- end }}
-
-{{- range .TransitionSets }}
-    /* TODO: transition set {{ .Channel }} */
-    int value = 1;
-{{- range .Transitions }}
-    if (value == 1) /* TODO: value == {{ .Value }} */ {
-        return STATE_{{ .Next }};
-    }
-{{- end }}
-
-    /* TODO: fell off without reaching a transition, do something useful here */
-    return STATE_FAIL;
-{{- else }}
-    /* no transitions remaining */
-    /* TODO: make sure we don't spot something here */
-    return STATE_TIMEOUT;
-{{- end }}
+{{- template "test.c.tmpl" . -}}
 {{- end }}
 }
 {{- end }}
