@@ -17,7 +17,7 @@ func TestPass(t *testing.T) {
 	want := testlang.Node{
 		ID:     "",
 		Tests:  nil,
-		Status: testlang.StatusPass,
+		Status: testlang.OutcomePass,
 		Event:  &event,
 		Next:   nil,
 	}
@@ -35,7 +35,7 @@ func TestInc(t *testing.T) {
 	want := testlang.Node{
 		ID:     "",
 		Tests:  nil,
-		Status: testlang.StatusInc,
+		Status: testlang.OutcomeInc,
 		Event:  &event,
 		Next:   nil,
 	}
@@ -51,7 +51,7 @@ func TestFail(t *testing.T) {
 	want := testlang.Node{
 		ID:     "",
 		Tests:  nil,
-		Status: testlang.StatusFail,
+		Status: testlang.OutcomeFail,
 		Event:  nil,
 		Next:   nil,
 	}

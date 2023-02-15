@@ -1,0 +1,9 @@
+{{- define "system_includes" }}
+// #include <ros/ros.h>
+{{- end }}
+
+{{- define "log" -}}
+  /* {{ . }} */ printf
+{{- end -}}
+
+{{- template "base.cpp.tmpl" . -}}

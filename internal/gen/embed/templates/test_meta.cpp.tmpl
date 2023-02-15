@@ -1,0 +1,20 @@
+{{/*
+test_meta.cpp.tmpl expands into various bits of test metadata.
+
+It expects a slice of test ID strings as its dot.
+*/}}
+// A numerical identifier for each test captured by this test case.
+enum class Test {
+{{- range $i, $v := . }}
+  {{ cppEnumField $v }} = {{ $i }},
+{{- end }}
+};
+const size_t NUM_TESTS = {{ len . }};
+
+// Names for each test.
+const static std::array<const char*, NUM_TESTS> TEST_NAMES =
+{
+{{- range . }}
+  "{{ . }}", // {{ cppTestEnum . }}
+{{- end }}
+};

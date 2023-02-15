@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/UoY-RoboStar/rtcg/internal/testlang/comm"
-
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/comm"
 )
 
 // TransitionSet is a set of transitions for a given channel.

@@ -1,0 +1,40 @@
+{{/*
+stm.cpp.tmpl expands into the state machine for the tester.
+
+It expects the state machine's state list as its dot.
+*/}}
+// Indices of states in the state machine.
+enum class State
+{
+// Special states:
+  TIMEOUT = -2,
+  FAIL = -1,
+
+// Test states:
+{{- range $i, $s := .}}
+  {{ cppEnumField $s.ID }} = {{ $i }},
+{{- end }}
+};
+const static size_t NUM_STATES = {{ len .}};
+
+// Type of state functions
+typedef State (*StateFn)(Verdict&);
+
+// State machine functions, starting with test entry:
+
+{{- range . }}
+
+static State {{ .ID }}(Verdict& verdict)
+{
+{{- block "test" . }}
+{{- template "test.cpp.tmpl" . -}}
+{{- end }}
+}
+{{- end }}
+
+// Jump-table for all states in the test, indexed by State.
+const static std::array<StateFn, NUM_STATES> STATES {
+{{- range . }}
+    {{ .ID }},
+{{- end }}
+};

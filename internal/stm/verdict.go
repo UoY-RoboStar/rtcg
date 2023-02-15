@@ -8,35 +8,35 @@ import (
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 )
 
-type VerdictSet map[testlang.Status]*Verdict
+type VerdictSet map[testlang.Outcome]*Verdict
 
 // IsInc gets whether there are any inconclusive tests in this verdict set.
 func (v *VerdictSet) IsInc() bool {
-	return v.Is(testlang.StatusInc)
+	return v.Is(testlang.OutcomeInc)
 }
 
 // Inc is shorthand for getting the inconclusive verdicts from this verdict set.
 func (v *VerdictSet) Inc() *Verdict {
-	return (*v)[testlang.StatusInc]
+	return (*v)[testlang.OutcomeInc]
 }
 
 // IsPass gets whether there are any passing tests in this verdict set.
 func (v *VerdictSet) IsPass() bool {
-	return v.Is(testlang.StatusPass)
+	return v.Is(testlang.OutcomePass)
 }
 
 // Pass is shorthand for getting the passing verdicts from this verdict set.
 func (v *VerdictSet) Pass() *Verdict {
-	return (*v)[testlang.StatusPass]
+	return (*v)[testlang.OutcomePass]
 }
 
 // IsFail gets whether there are any passing tests in this verdict set.
 func (v *VerdictSet) IsFail() bool {
-	return v.Is(testlang.StatusFail)
+	return v.Is(testlang.OutcomeFail)
 }
 
 // Is gets whether there are any tests in this verdict set with the given status.
-func (v *VerdictSet) Is(status testlang.Status) bool {
+func (v *VerdictSet) Is(status testlang.Outcome) bool {
 	_, ok := (*v)[status]
 
 	return ok
@@ -44,11 +44,11 @@ func (v *VerdictSet) Is(status testlang.Status) bool {
 
 // Fail is shorthand for getting the failing verdicts from this verdict set.
 func (v *VerdictSet) Fail() *Verdict {
-	return (*v)[testlang.StatusFail]
+	return (*v)[testlang.OutcomeFail]
 }
 
 // Add adds each test in tests into the affected list for Verdict v, and sets it to active.
-func (v *VerdictSet) Add(status testlang.Status, tests ...string) {
+func (v *VerdictSet) Add(status testlang.Outcome, tests ...string) {
 	if s, ok := (*v)[status]; ok {
 		s.Tests.Add(tests...)
 	} else {
@@ -83,7 +83,7 @@ func (v *VerdictSet) UnmarshalJSON(bs []byte) error {
 	*v = make(VerdictSet, len(strMap))
 
 	for k, ver := range strMap {
-		var status testlang.Status
+		var status testlang.Outcome
 
 		if err := status.UnmarshalText([]byte(k)); err != nil {
 			return fmt.Errorf("couldn't unmarshal status %q: %w", k, err)

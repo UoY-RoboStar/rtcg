@@ -43,7 +43,7 @@ func (s *State) AddOutgoingNode(node *testlang.Node) {
 // We assume the node has already been assigned an ID.
 func (s *State) addTransitionToNode(node *testlang.Node) {
 	// We don't add transitions to failing nodes; they are just sentinels with no test content.
-	if node.Status == testlang.StatusFail {
+	if node.Status == testlang.OutcomeFail {
 		return
 	}
 
@@ -85,7 +85,7 @@ func (s *State) String() string {
 
 func (s *State) verdictString() string {
 	vsets := make([]string, testlang.NumStatus)
-	for st := testlang.FirstStatus; st <= testlang.LastStatus; st++ {
+	for st := testlang.FirstOutcome; st <= testlang.LastStatus; st++ {
 		vsets[st] = fmt.Sprintf("%s %s", &st, (*s.Verdicts)[st])
 	}
 

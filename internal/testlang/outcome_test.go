@@ -6,18 +6,18 @@ import (
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 )
 
-// TestStatus_String tests the stringification of Status.
+// TestStatus_String tests the stringification of Outcome.
 func TestStatus_String(t *testing.T) {
 	t.Parallel()
 
 	for _, test := range []struct {
-		input testlang.Status
+		input testlang.Outcome
 		want  string
 	}{
-		{input: testlang.StatusInc, want: "inc"},
-		{input: testlang.StatusFail, want: "fail"},
-		{input: testlang.StatusPass, want: "pass"},
-		{input: testlang.StatusPass + 1, want: "Status(3)"},
+		{input: testlang.OutcomeInc, want: "inc"},
+		{input: testlang.OutcomeFail, want: "fail"},
+		{input: testlang.OutcomePass, want: "pass"},
+		{input: testlang.OutcomePass + 1, want: "Outcome(3)"},
 	} {
 		input := test.input
 		want := test.want
