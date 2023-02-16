@@ -71,7 +71,7 @@ func (b *Builder) buildState(node *testlang.Node) *State {
 
 func (b *Builder) ensureNodeID(n *testlang.Node) {
 	if n.ID == "" {
-		n.ID = testlang.NodeID(fmt.Sprintf("node_%d", b.nodeNum))
+		n.ID = testlang.NodeID(fmt.Sprintf("node%d", b.nodeNum))
 		b.nodeNum++
 	}
 }

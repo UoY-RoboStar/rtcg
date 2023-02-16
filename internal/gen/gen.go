@@ -31,6 +31,7 @@ func New(inFS fs.FS, outDir string) (*Generator, error) {
 	base := template.New("").Funcs(template.FuncMap{
 		"cppEnumField":   cppfunc.EnumField,
 		"cppOutcomeEnum": cppfunc.OutcomeEnum,
+		"cppStateEntry":  cppfunc.StateEntry,
 		"cppStateEnum":   cppfunc.StateEnum,
 		"cppTestEnum":    cppfunc.TestEnum,
 	})

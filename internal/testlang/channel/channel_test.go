@@ -1,11 +1,11 @@
-package comm_test
+package channel_test
 
 import (
 	"errors"
 	"reflect"
 	"testing"
 
-	"github.com/UoY-RoboStar/rtcg/internal/testlang/comm"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/channel"
 )
 
 // TestChannel_MarshalText tests event text marshaling in several circumstances.
@@ -13,11 +13,11 @@ func TestChannel_MarshalText(t *testing.T) {
 	t.Parallel()
 
 	for name, test := range map[string]struct {
-		input comm.Channel
+		input channel.Channel
 		want  string
 	}{
-		"in":  {input: comm.Channel{Name: "foo", Kind: comm.KindIn}, want: "foo.in"},
-		"out": {input: comm.Channel{Name: "bar", Kind: comm.KindOut}, want: "bar.out"},
+		"in":  {input: channel.Channel{Name: "foo", Kind: channel.KindIn}, want: "foo.in"},
+		"out": {input: channel.Channel{Name: "bar", Kind: channel.KindOut}, want: "bar.out"},
 	} {
 		input := test.input
 		want := test.want
@@ -44,23 +44,23 @@ func TestChannel_UnmarshalText(t *testing.T) {
 
 	for name, test := range map[string]struct {
 		input string
-		want  comm.Channel
+		want  channel.Channel
 		err   error
 	}{
-		"empty": {input: "", err: comm.BadFieldCountError{Got: 1}},
-		"space": {input: "  ", err: comm.BadFieldCountError{Got: 1}},
-		"in":    {input: "foo.in", want: comm.Channel{Name: "foo", Kind: comm.KindIn}},
-		"out":   {input: "bar.out", want: comm.Channel{Name: "bar", Kind: comm.KindOut}},
+		"empty": {input: "", err: channel.BadFieldCountError{Got: 1}},
+		"space": {input: "  ", err: channel.BadFieldCountError{Got: 1}},
+		"in":    {input: "foo.in", want: channel.Channel{Name: "foo", Kind: channel.KindIn}},
+		"out":   {input: "bar.out", want: channel.Channel{Name: "bar", Kind: channel.KindOut}},
 		// String trimming tests
-		"left-pad-ch":  {input: "  foo.in", want: comm.Channel{Name: "foo", Kind: comm.KindIn}},
-		"right-pad-ch": {input: "foo  .in", want: comm.Channel{Name: "foo", Kind: comm.KindIn}},
+		"left-pad-ch":  {input: "  foo.in", want: channel.Channel{Name: "foo", Kind: channel.KindIn}},
+		"right-pad-ch": {input: "foo  .in", want: channel.Channel{Name: "foo", Kind: channel.KindIn}},
 		"left-pad-dir": {
 			input: "foo.  in",
-			want:  comm.Channel{Name: "foo", Kind: comm.KindIn},
+			want:  channel.Channel{Name: "foo", Kind: channel.KindIn},
 		},
 		"right-pad-dir": {
 			input: "foo.in  ",
-			want:  comm.Channel{Name: "foo", Kind: comm.KindIn},
+			want:  channel.Channel{Name: "foo", Kind: channel.KindIn},
 		},
 	} {
 		input := test.input
@@ -70,7 +70,7 @@ func TestChannel_UnmarshalText(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			var got comm.Channel
+			var got channel.Channel
 			err := got.UnmarshalText([]byte(input))
 			if err != nil && !errors.Is(err, wantErr) {
 				t.Fatalf("unexpected unmarshalling error: %s", err)

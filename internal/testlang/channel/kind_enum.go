@@ -4,7 +4,7 @@
 // Build Date: 2023-01-30T01:49:43Z
 // Built By: goreleaser
 
-package comm
+package channel
 
 import (
 	"errors"

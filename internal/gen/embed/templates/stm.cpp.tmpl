@@ -1,40 +1,112 @@
 {{/*
 stm.cpp.tmpl expands into the state machine for the tester.
 
-It expects the state machine's state list as its dot.
+It expects the state machine as its dot.
 */}}
+// Statuses of a test-case.
+enum class Status
+{
+  RUNNING    = 0, // Test is still running.
+  OFF_SCRIPT = 1, // We saw something that didn't match a transition.
+  TIMEOUT    = 2, // We timed out waiting for something to happen.
+  FAIL       = 3, // We failed a test.
+  BUG        = 4, // Something went internally wrong inside the test.
+};
+
+// Returns a (static) description of a status.
+static const char* explain(Status why) {
+  switch (why) {
+  case Status::RUNNING:
+    return "running";
+  case Status::OFF_SCRIPT:
+    return "event happened that took the test off-script";
+  case Status::TIMEOUT:
+    return "no new events happening within the allotted timeframe";
+  case Status::FAIL:
+    return "an unwanted behaviour occurring";
+  case Status::BUG:
+    return "internal error";
+  default:
+    return "unknown (this should not occur)";
+  }
+}
+
+
 // Indices of states in the state machine.
 enum class State
 {
-// Special states:
-  TIMEOUT = -2,
-  FAIL = -1,
-
-// Test states:
-{{- range $i, $s := .}}
+{{- range $i, $s := .States }}
   {{ cppEnumField $s.ID }} = {{ $i }},
 {{- end }}
 };
-const static size_t NUM_STATES = {{ len .}};
+static const size_t NUM_STATES = {{ len .States }};
 
-// Type of state functions
-typedef State (*StateFn)(Verdict&);
-
-// State machine functions, starting with test entry:
-
-{{- range . }}
-
-static State {{ .ID }}(Verdict& verdict)
+// The main testing state machine.
+class StateMachine
 {
-{{- block "test" . }}
-{{- template "test.cpp.tmpl" . -}}
+public:
+  Status getStatus();
+  void dumpVerdict();
+
+private:
+  Verdict verdict;
+  State state = {{ (index .States 0).ID | cppStateEnum }};
+  Status status = Status::RUNNING;
+
+  // Callbacks
+{{- range .TransitionSets }}{{ if not .Channel.IsIn }}
+  void {{ .Channel.Name }}Callback({{ template "callback_arg_type" }} value);
+{{- end }}{{ end }}
+
+  // State entry functions
+{{- range .States }}
+  void {{ cppStateEntry .ID }}();
+{{- end }}
+
+  void end(Status why);
+};
+
+Status StateMachine::getStatus()
+{
+  return status;
+}
+
+void StateMachine::end(Status why)
+{
+  status = why;
+{{- block "end" . }}
+{{- end }}
+}
+
+void StateMachine::dumpVerdict()
+{
+  verdict.dump();
+}
+
+//
+// Callback functions
+//
+
+{{- range .TransitionSets }}{{ if not .Channel.IsIn }}
+void StateMachine::{{ .Channel.Name }}Callback({{ template "callback_arg_type" }} value)
+{
+{{- block "callback" . }}
+{{-   template "callback.cpp.tmpl" . }}
+{{- end }}
+}
+{{- end }}{{ end }}
+
+
+//
+// State machine entry functions
+//
+
+{{- range .States }}
+
+void StateMachine::{{ cppStateEntry .ID }}()
+{
+{{- block "state" . }}
+{{- template "state.cpp.tmpl" . -}}
 {{- end }}
 }
 {{- end }}
-
-// Jump-table for all states in the test, indexed by State.
-const static std::array<StateFn, NUM_STATES> STATES {
-{{- range . }}
-    {{ .ID }},
-{{- end }}
-};

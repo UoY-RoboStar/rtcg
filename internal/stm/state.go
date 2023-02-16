@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/UoY-RoboStar/rtcg/internal/stm/transition"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
-	"github.com/UoY-RoboStar/rtcg/internal/testlang/comm"
 )
 
 // State is a state machine state (with attached transitions).
@@ -18,7 +18,7 @@ type State struct {
 	// TransitionSets is the list of transition sets out of this state.
 	//
 	// Each transition set maps a particular channel to a list of transitions predicated on that channel's value.
-	TransitionSets []TransitionSet `json:"transitionSets,omitempty"`
+	TransitionSets []transition.Set `json:"transitionSets,omitempty"`
 
 	Verdicts *VerdictSet `json:"verdicts,omitempty"` // Verdicts holds the test verdicts that this state reports.
 }
@@ -38,7 +38,7 @@ func (s *State) AddOutgoingNode(node *testlang.Node) {
 	s.addTransitionToNode(node)
 }
 
-// AddTransitionToNode adds a transition from this state to the given test-tree node.
+// addTransitionToNode adds a transition from this state to the given test-tree node.
 //
 // We assume the node has already been assigned an ID.
 func (s *State) addTransitionToNode(node *testlang.Node) {
@@ -51,30 +51,15 @@ func (s *State) addTransitionToNode(node *testlang.Node) {
 		panic("should have assigned an ID to node")
 	}
 
-	tr := Transition{Value: node.Event.Value, Next: node.ID}
-	s.addTransition(node.Event.Channel, tr)
+	tr := transition.Transition{Value: node.Event.Value, Next: node.ID}
+	s.TransitionSets = transition.AddToSets(s.TransitionSets, node.Event.Channel, tr)
 }
 
-// AddTransition adds transition onto the transition set for channel.
+// addTransition adds trans onto the transition set for channel.
 //
 // If no such transition set exists, one is created.
-func (s *State) addTransition(channel comm.Channel, transition Transition) {
-	// Try merging onto an existing channel set.
-	for i := range s.TransitionSets {
-		ts := &s.TransitionSets[i]
-		if ts.Channel.Equals(channel) {
-			ts.Transitions = append(ts.Transitions, transition)
 
-			return
-		}
-	}
-	// No transition set with this channel exists yet.
-	s.TransitionSets = append(s.TransitionSets, TransitionSet{
-		Channel: channel, Transitions: []Transition{transition},
-	})
-}
-
-// AddVerdictsFromNode adds the test verdicts from n into s.
+// addVerdictsFromNode adds the test verdicts from n into s.
 func (s *State) addVerdictsFromNode(node *testlang.Node) {
 	s.Verdicts.Add(node.Status, node.Tests...)
 }

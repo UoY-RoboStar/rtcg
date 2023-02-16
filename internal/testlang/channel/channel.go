@@ -1,4 +1,7 @@
-package comm
+// Package channel describes communication channels in the testing language.
+//
+// These are effectively the CSP encoding of the RoboChart communications model.
+package channel
 
 import (
 	"bytes"
@@ -10,6 +13,43 @@ import (
 type Channel struct {
 	Name string `json:"name"` // Name is the name of the channel.
 	Kind Kind   `json:"kind"` // Kind is the direction of the channel.
+}
+
+// New is shorthand for constructing a Channel with the given name and kind.
+func New(name string, kind Kind) Channel {
+	return Channel{Name: name, Kind: kind}
+}
+
+// In constructs an input Channel.
+func In(name string) Channel {
+	return New(name, KindIn)
+}
+
+// IsIn gets whether this Channel is an input.
+func (c *Channel) IsIn() bool {
+	return c.Kind == KindIn
+}
+
+// Out constructs an output Channel.
+func Out(name string) Channel {
+	return New(name, KindOut)
+}
+
+// IsOut gets whether this Channel is an output.
+//
+// Note that this predicate does not count channels with KindCall as outputs.
+func (c *Channel) IsOut() bool {
+	return c.Kind == KindOut
+}
+
+// Call constructs an operation call Channel.
+func Call(name string) Channel {
+	return New(name, KindCall)
+}
+
+// IsCall gets whether this Channel is a call.
+func (c *Channel) IsCall() bool {
+	return c.Kind == KindCall
 }
 
 // IsEmpty gets whether the channel is considered empty.

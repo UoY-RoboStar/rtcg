@@ -8,6 +8,11 @@ import (
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 )
 
+// StateEntry gets the name of the entry method for the state with the given id.
+func StateEntry(id testlang.NodeID) string {
+	return string(id) + "Entry"
+}
+
 // OutcomeEnum gets a reference to the enum member for outcome.
 func OutcomeEnum(outcome testlang.Outcome) string {
 	return enumName(outcomeEnumName, outcome)

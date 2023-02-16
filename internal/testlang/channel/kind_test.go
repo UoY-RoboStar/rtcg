@@ -1,10 +1,10 @@
-package comm_test
+package channel_test
 
 import (
 	"reflect"
 	"testing"
 
-	"github.com/UoY-RoboStar/rtcg/internal/testlang/comm"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/channel"
 )
 
 // TestKind_MarshalText tests kind marshaling in several circumstances.
@@ -12,12 +12,12 @@ func TestKind_MarshalText(t *testing.T) {
 	t.Parallel()
 
 	for name, test := range map[string]struct {
-		input comm.Kind
+		input channel.Kind
 		want  string
 	}{
-		"in":   {input: comm.KindIn, want: "in"},
-		"out":  {input: comm.KindOut, want: "out"},
-		"call": {input: comm.KindCall, want: "call"},
+		"in":   {input: channel.KindIn, want: "in"},
+		"out":  {input: channel.KindOut, want: "out"},
+		"call": {input: channel.KindCall, want: "call"},
 	} {
 		input := test.input
 		want := test.want
@@ -42,14 +42,14 @@ func TestKind_UnmarshalText(t *testing.T) {
 
 	for name, test := range map[string]struct {
 		input string
-		want  comm.Kind
+		want  channel.Kind
 	}{
-		"in":   {input: "in", want: comm.KindIn},
-		"out":  {input: "out", want: comm.KindOut},
-		"call": {input: "call", want: comm.KindCall},
-		"IN":   {input: "IN", want: comm.KindIn},
-		"OUT":  {input: "OUT", want: comm.KindOut},
-		"CALL": {input: "CALL", want: comm.KindCall},
+		"in":   {input: "in", want: channel.KindIn},
+		"out":  {input: "out", want: channel.KindOut},
+		"call": {input: "call", want: channel.KindCall},
+		"IN":   {input: "IN", want: channel.KindIn},
+		"OUT":  {input: "OUT", want: channel.KindOut},
+		"CALL": {input: "CALL", want: channel.KindCall},
 	} {
 		input := test.input
 		want := test.want
@@ -57,7 +57,7 @@ func TestKind_UnmarshalText(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			var got comm.Kind
+			var got channel.Kind
 			if err := got.UnmarshalText([]byte(input)); err != nil {
 				t.Fatalf("unexpected unmarshalling error: %s", err)
 			}

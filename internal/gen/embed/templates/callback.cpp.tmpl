@@ -1,0 +1,17 @@
+{{/*
+callback.cpp.tmpl expands into the body of a state function.
+
+It expects the aggregate transition set as its dot.
+
+Base indent is set at 2, as we are inside a top-level function.
+*/}}
+  switch (state)
+  {
+{{- range $s, $ts := .States }}
+  case {{ cppStateEnum $s }}:
+    break;
+{{- end }}
+  default:
+    {{ template "log" "error" }}("unexpected state %d", state);
+    end(Status::BUG);
+  }

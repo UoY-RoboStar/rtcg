@@ -20,6 +20,14 @@
 {{- end }}
 
 //
+// CONSTANTS
+//
+
+{{ block "constants" . }}
+{{- end }}
+
+
+//
 // OUTCOMES
 //
 
@@ -61,42 +69,29 @@ const char* outstr(Outcome o)
 //
 // STATE MACHINE
 //
-{{ template "stm.cpp.tmpl" .Stm.States }}
+{{ template "stm.cpp.tmpl" .Stm }}
 
-
-//
-// DRIVER
-//
 
 int main(int argc, char** argv)
 {
 {{- block "body" . }}
   // Initialisation code
 {{-   block "init" . }}
-  auto* verdict = new Verdict();
-  auto current_state = {{ cppStateEnum (index .Stm.States 0).ID }};
+  auto* stm = new StateMachine();
 {{-   end }}
 
   // Test code
 {{-   block "tester" . }}
-  while (State::FAIL < current_state)
-    current_state = STATES[static_cast<size_t>(current_state)](*verdict);
+{{ template "spin" . }}
 {{-   end }}
 
   // Teardown code
 {{-   block "aftermath" . }}
-  if (current_state == State::FAIL)
-  {
-    printf("test aborted due to failure\n");
-  }
-  else if (current_state == State::TIMEOUT)
-  {
-    printf("test timed out\n");
-  }
+  {{ template "log" "info" }}("test finished due to %s\n", explain(stm->getStatus()));
 
-  verdict->dump();
+  stm->dumpVerdict();
 
-  delete verdict;
+  delete stm;
 {{-   end }}
 {{- end }}
 }

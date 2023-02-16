@@ -59,7 +59,7 @@ func emptyPrefixTraceNode1(t *testing.T, state *stm.State) {
 func emptyPrefixTraceNode2(t *testing.T, state *stm.State) {
 	t.Helper()
 
-	if state.ID != "node_0" {
+	if state.ID != "node0" {
 		t.Errorf("expected second state to have generated name, got %q", state.ID)
 	}
 

@@ -1,9 +1,29 @@
 {{- define "system_includes" }}
 // #include <ros/ros.h>
-{{- end }}
+{{- end -}}
+
+{{- define "constants" }}
+constexpr int MAX_SPINS = 1;
+{{- end -}}
 
 {{- define "log" -}}
   /* {{ . }} */ printf
+{{- end -}}
+
+{{- define "callback_arg_type" -}}
+  const char*
+{{- end -}}
+
+{{/*
+Placed in the test driver as the body of the 'while' loop that is waiting
+for results to come in from callbacks.
+
+Should have an indent of 2, and has the state machine as dot.
+*/}}
+{{- define "spin" }}
+  while (stm->getStatus() == Status::RUNNING)
+  {
+  }
 {{- end -}}
 
 {{- template "base.cpp.tmpl" . -}}

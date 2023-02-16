@@ -13,6 +13,7 @@ import (
 	"io"
 
 	"github.com/UoY-RoboStar/rtcg/internal/serial"
+	"github.com/UoY-RoboStar/rtcg/internal/stm/transition"
 	"github.com/UoY-RoboStar/rtcg/internal/structure"
 )
 
@@ -48,4 +49,17 @@ type Stm struct {
 
 	// Tests is the set of names of tests being captured by this state machine.
 	Tests structure.Set[string]
+}
+
+// TransitionSets calculates all aggregate transition sets across the whole state machine.
+func (s *Stm) TransitionSets() []transition.AggregateSet {
+	var result []transition.AggregateSet
+
+	for _, st := range s.States {
+		for _, ts := range st.TransitionSets {
+			result = transition.AddToAggregateSets(result, st.ID, ts)
+		}
+	}
+
+	return result
 }

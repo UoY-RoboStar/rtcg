@@ -1,4 +1,4 @@
-package comm
+package channel
 
 //go:generate go-enum --marshal -nocase
 

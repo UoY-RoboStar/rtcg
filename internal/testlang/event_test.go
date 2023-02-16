@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
-	"github.com/UoY-RoboStar/rtcg/internal/testlang/comm"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/channel"
 )
 
 // TestEvent_MarshalText tests event text marshaling in several circumstances.
@@ -57,8 +57,8 @@ func TestEvent_UnmarshalText(t *testing.T) {
 		want  testlang.Event
 		err   error
 	}{
-		"empty":     {input: "", err: comm.BadFieldCountError{Got: 1}},
-		"space":     {input: "  ", err: comm.BadFieldCountError{Got: 1}},
+		"empty":     {input: "", err: channel.BadFieldCountError{Got: 1}},
+		"space":     {input: "  ", err: channel.BadFieldCountError{Got: 1}},
 		"no-value":  {input: "foo.in", want: testlang.Input("foo", testlang.NoValue())},
 		"int-value": {input: "foo.in.42", want: testlang.Input("foo", testlang.Int(42))},
 		"raw-value": {input: "bar.out.Ok", want: testlang.Output("bar", testlang.Raw("Ok"))},
