@@ -37,7 +37,7 @@ func run() error {
 	return nil
 }
 
-func readTraces(fname string) ([]trace.Trace, error) {
+func readTraces(fname string) ([]trace.Forbidden, error) {
 	file, err := cli.OpenFileOrStdin(fname)
 	if err != nil {
 		return nil, fmt.Errorf("couldn't open input: %w", err)

@@ -6,8 +6,8 @@ import (
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 )
 
-// Expand expands a single Trace into a test, tagged throughout with name.
-func (t Trace) Expand(name string) *testlang.Node {
+// Expand expands a single Forbidden trace into a test, tagged throughout with name.
+func (t Forbidden) Expand(name string) *testlang.Node {
 	// Work backwards through the trace, building the tree from the failure.
 	n := testlang.Pass(t.Forbid, testlang.Fail().From(name)).From(name)
 	for i := len(t.Prefix) - 1; 0 <= i; i-- {
@@ -17,8 +17,8 @@ func (t Trace) Expand(name string) *testlang.Node {
 	return &n
 }
 
-// ExpandAll expands a list of traces to a systematically-named, non-factorised test suite.
-func ExpandAll(traces []Trace) testlang.Suite {
+// ExpandAll expands a list of Forbidden traces to a systematically-named, non-factorised test suite.
+func ExpandAll(traces []Forbidden) testlang.Suite {
 	suite := make(testlang.Suite)
 
 	for i, tr := range traces {

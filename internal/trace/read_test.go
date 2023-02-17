@@ -32,7 +32,7 @@ func TestRead(t *testing.T) {
 	fooIn := testlang.Input("foo", testlang.NoValue())
 	bazOut := testlang.Output("baz", testlang.Int(2))
 
-	want := []trace.Trace{
+	want := []trace.Forbidden{
 		trace.New(barOut),
 		trace.New(barOut, fooIn),
 		trace.New(barOut, fooIn, bazOut, fooIn),

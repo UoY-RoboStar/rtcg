@@ -10,10 +10,10 @@ import (
 )
 
 // Read reads from r a list of traces.
-func Read(r io.Reader) ([]Trace, error) {
+func Read(r io.Reader) ([]Forbidden, error) {
 	cr := newReader(r)
 
-	var traces []Trace
+	var traces []Forbidden
 
 	for {
 		row, err := cr.Read()
@@ -43,8 +43,8 @@ func newReader(r io.Reader) *csv.Reader {
 	return cr
 }
 
-func parseRow(row []string) (Trace, error) {
-	var trace Trace
+func parseRow(row []string) (Forbidden, error) {
+	var trace Forbidden
 
 	prefixLen := len(row) - 1
 	if prefixLen < 0 {
@@ -67,7 +67,7 @@ func parseRow(row []string) (Trace, error) {
 	return trace, nil
 }
 
-func selectEvent(index int, prefixLen int, trace *Trace) *testlang.Event {
+func selectEvent(index int, prefixLen int, trace *Forbidden) *testlang.Event {
 	if index == prefixLen {
 		return &trace.Forbid
 	}

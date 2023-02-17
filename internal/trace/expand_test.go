@@ -16,7 +16,7 @@ func TestTrace_Expand(t *testing.T) {
 	event2 := testlang.Output("bar", testlang.Raw("baz"))
 
 	for name, test := range map[string]struct {
-		input trace.Trace
+		input trace.Forbidden
 		want  testlang.Node
 	}{
 		"no-prefix": {
