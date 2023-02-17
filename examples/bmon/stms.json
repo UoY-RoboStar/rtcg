@@ -9,7 +9,7 @@
 						"transitions": [
 							{
 								"value": "Ok",
-								"next": "node_0"
+								"next": "node0"
 							}
 						]
 					}
@@ -23,7 +23,7 @@
 				}
 			},
 			{
-				"id": "node_0",
+				"id": "node0",
 				"verdicts": {
 					"fail": {
 						"tests": [
@@ -47,7 +47,7 @@
 						"transitions": [
 							{
 								"value": "MissionCritical",
-								"next": "node_0"
+								"next": "node0"
 							}
 						]
 					}
@@ -61,7 +61,7 @@
 				}
 			},
 			{
-				"id": "node_0",
+				"id": "node0",
 				"verdicts": {
 					"fail": {
 						"tests": [
@@ -85,7 +85,7 @@
 						"transitions": [
 							{
 								"value": "{| percentage=BATTERY_SAFETY_THRESHOLD |}",
-								"next": "node_0"
+								"next": "node0"
 							}
 						]
 					}
@@ -99,14 +99,14 @@
 				}
 			},
 			{
-				"id": "node_0",
+				"id": "node0",
 				"transitionSets": [
 					{
 						"channel": "batteryStatus.out",
 						"transitions": [
 							{
 								"value": "Ok",
-								"next": "node_1"
+								"next": "node1"
 							}
 						]
 					}
@@ -120,7 +120,7 @@
 				}
 			},
 			{
-				"id": "node_1",
+				"id": "node1",
 				"verdicts": {
 					"fail": {
 						"tests": [
@@ -144,7 +144,7 @@
 						"transitions": [
 							{
 								"value": "{| percentage=BATTERY_SAFETY_THRESHOLD |}",
-								"next": "node_0"
+								"next": "node0"
 							}
 						]
 					}
@@ -158,14 +158,14 @@
 				}
 			},
 			{
-				"id": "node_0",
+				"id": "node0",
 				"transitionSets": [
 					{
 						"channel": "batteryStatus.out",
 						"transitions": [
 							{
 								"value": "MissionCritical",
-								"next": "node_1"
+								"next": "node1"
 							}
 						]
 					}
@@ -179,7 +179,7 @@
 				}
 			},
 			{
-				"id": "node_1",
+				"id": "node1",
 				"verdicts": {
 					"fail": {
 						"tests": [
@@ -203,7 +203,7 @@
 						"transitions": [
 							{
 								"value": "{| percentage=BATTERY_MISSION_THRESHOLD+1 |}",
-								"next": "node_0"
+								"next": "node0"
 							}
 						]
 					}
@@ -217,14 +217,14 @@
 				}
 			},
 			{
-				"id": "node_0",
+				"id": "node0",
 				"transitionSets": [
 					{
 						"channel": "batteryStatus.out",
 						"transitions": [
 							{
 								"value": "Ok",
-								"next": "node_1"
+								"next": "node1"
 							}
 						]
 					}
@@ -238,14 +238,14 @@
 				}
 			},
 			{
-				"id": "node_1",
+				"id": "node1",
 				"transitionSets": [
 					{
 						"channel": "batteryStatus.out",
 						"transitions": [
 							{
 								"value": "Ok",
-								"next": "node_2"
+								"next": "node2"
 							}
 						]
 					}
@@ -259,7 +259,7 @@
 				}
 			},
 			{
-				"id": "node_2",
+				"id": "node2",
 				"verdicts": {
 					"fail": {
 						"tests": [
@@ -283,7 +283,7 @@
 						"transitions": [
 							{
 								"value": "{| percentage=BATTERY_MISSION_THRESHOLD+1 |}",
-								"next": "node_0"
+								"next": "node0"
 							}
 						]
 					}
@@ -297,14 +297,14 @@
 				}
 			},
 			{
-				"id": "node_0",
+				"id": "node0",
 				"transitionSets": [
 					{
 						"channel": "batteryStatus.out",
 						"transitions": [
 							{
 								"value": "Ok",
-								"next": "node_1"
+								"next": "node1"
 							}
 						]
 					}
@@ -318,14 +318,14 @@
 				}
 			},
 			{
-				"id": "node_1",
+				"id": "node1",
 				"transitionSets": [
 					{
 						"channel": "batteryStatus.out",
 						"transitions": [
 							{
 								"value": "MissionCritical",
-								"next": "node_2"
+								"next": "node2"
 							}
 						]
 					}
@@ -339,7 +339,7 @@
 				}
 			},
 			{
-				"id": "node_2",
+				"id": "node2",
 				"verdicts": {
 					"fail": {
 						"tests": [
@@ -363,7 +363,7 @@
 						"transitions": [
 							{
 								"value": "{| percentage=BATTERY_MISSION_THRESHOLD+1 |}",
-								"next": "node_0"
+								"next": "node0"
 							}
 						]
 					}
@@ -377,14 +377,14 @@
 				}
 			},
 			{
-				"id": "node_0",
+				"id": "node0",
 				"transitionSets": [
 					{
 						"channel": "batteryStatus.out",
 						"transitions": [
 							{
 								"value": "Ok",
-								"next": "node_1"
+								"next": "node1"
 							}
 						]
 					}
@@ -398,14 +398,14 @@
 				}
 			},
 			{
-				"id": "node_1",
+				"id": "node1",
 				"transitionSets": [
 					{
 						"channel": "batteryStatus.out",
 						"transitions": [
 							{
 								"value": "SafetyCritical",
-								"next": "node_2"
+								"next": "node2"
 							}
 						]
 					}
@@ -419,7 +419,7 @@
 				}
 			},
 			{
-				"id": "node_2",
+				"id": "node2",
 				"verdicts": {
 					"fail": {
 						"tests": [
@@ -443,7 +443,7 @@
 						"transitions": [
 							{
 								"value": "{| percentage=BATTERY_MISSION_THRESHOLD |}",
-								"next": "node_0"
+								"next": "node0"
 							}
 						]
 					}
@@ -457,14 +457,14 @@
 				}
 			},
 			{
-				"id": "node_0",
+				"id": "node0",
 				"transitionSets": [
 					{
 						"channel": "batteryStatus.out",
 						"transitions": [
 							{
 								"value": "MissionCritical",
-								"next": "node_1"
+								"next": "node1"
 							}
 						]
 					}
@@ -478,14 +478,14 @@
 				}
 			},
 			{
-				"id": "node_1",
+				"id": "node1",
 				"transitionSets": [
 					{
 						"channel": "batteryStatus.out",
 						"transitions": [
 							{
 								"value": "Ok",
-								"next": "node_2"
+								"next": "node2"
 							}
 						]
 					}
@@ -499,7 +499,7 @@
 				}
 			},
 			{
-				"id": "node_2",
+				"id": "node2",
 				"verdicts": {
 					"fail": {
 						"tests": [
@@ -523,7 +523,7 @@
 						"transitions": [
 							{
 								"value": "{| percentage=BATTERY_MISSION_THRESHOLD |}",
-								"next": "node_0"
+								"next": "node0"
 							}
 						]
 					}
@@ -537,14 +537,14 @@
 				}
 			},
 			{
-				"id": "node_0",
+				"id": "node0",
 				"transitionSets": [
 					{
 						"channel": "batteryStatus.out",
 						"transitions": [
 							{
 								"value": "MissionCritical",
-								"next": "node_1"
+								"next": "node1"
 							}
 						]
 					}
@@ -558,14 +558,14 @@
 				}
 			},
 			{
-				"id": "node_1",
+				"id": "node1",
 				"transitionSets": [
 					{
 						"channel": "batteryStatus.out",
 						"transitions": [
 							{
 								"value": "MissionCritical",
-								"next": "node_2"
+								"next": "node2"
 							}
 						]
 					}
@@ -579,7 +579,7 @@
 				}
 			},
 			{
-				"id": "node_2",
+				"id": "node2",
 				"verdicts": {
 					"fail": {
 						"tests": [
@@ -603,7 +603,7 @@
 						"transitions": [
 							{
 								"value": "{| percentage=BATTERY_MISSION_THRESHOLD |}",
-								"next": "node_0"
+								"next": "node0"
 							}
 						]
 					}
@@ -617,14 +617,14 @@
 				}
 			},
 			{
-				"id": "node_0",
+				"id": "node0",
 				"transitionSets": [
 					{
 						"channel": "batteryStatus.out",
 						"transitions": [
 							{
 								"value": "MissionCritical",
-								"next": "node_1"
+								"next": "node1"
 							}
 						]
 					}
@@ -638,14 +638,14 @@
 				}
 			},
 			{
-				"id": "node_1",
+				"id": "node1",
 				"transitionSets": [
 					{
 						"channel": "batteryStatus.out",
 						"transitions": [
 							{
 								"value": "SafetyCritical",
-								"next": "node_2"
+								"next": "node2"
 							}
 						]
 					}
@@ -659,7 +659,7 @@
 				}
 			},
 			{
-				"id": "node_2",
+				"id": "node2",
 				"verdicts": {
 					"fail": {
 						"tests": [
@@ -683,7 +683,7 @@
 						"transitions": [
 							{
 								"value": "{| percentage=BATTERY_SAFETY_THRESHOLD |}",
-								"next": "node_0"
+								"next": "node0"
 							}
 						]
 					}
@@ -697,14 +697,14 @@
 				}
 			},
 			{
-				"id": "node_0",
+				"id": "node0",
 				"transitionSets": [
 					{
 						"channel": "batteryStatus.out",
 						"transitions": [
 							{
 								"value": "SafetyCritical",
-								"next": "node_1"
+								"next": "node1"
 							}
 						]
 					}
@@ -718,14 +718,14 @@
 				}
 			},
 			{
-				"id": "node_1",
+				"id": "node1",
 				"transitionSets": [
 					{
 						"channel": "batteryStatus.out",
 						"transitions": [
 							{
 								"value": "Ok",
-								"next": "node_2"
+								"next": "node2"
 							}
 						]
 					}
@@ -739,7 +739,7 @@
 				}
 			},
 			{
-				"id": "node_2",
+				"id": "node2",
 				"verdicts": {
 					"fail": {
 						"tests": [
@@ -763,7 +763,7 @@
 						"transitions": [
 							{
 								"value": "{| percentage=BATTERY_SAFETY_THRESHOLD |}",
-								"next": "node_0"
+								"next": "node0"
 							}
 						]
 					}
@@ -777,14 +777,14 @@
 				}
 			},
 			{
-				"id": "node_0",
+				"id": "node0",
 				"transitionSets": [
 					{
 						"channel": "batteryStatus.out",
 						"transitions": [
 							{
 								"value": "SafetyCritical",
-								"next": "node_1"
+								"next": "node1"
 							}
 						]
 					}
@@ -798,14 +798,14 @@
 				}
 			},
 			{
-				"id": "node_1",
+				"id": "node1",
 				"transitionSets": [
 					{
 						"channel": "batteryStatus.out",
 						"transitions": [
 							{
 								"value": "MissionCritical",
-								"next": "node_2"
+								"next": "node2"
 							}
 						]
 					}
@@ -819,7 +819,7 @@
 				}
 			},
 			{
-				"id": "node_2",
+				"id": "node2",
 				"verdicts": {
 					"fail": {
 						"tests": [
@@ -843,7 +843,7 @@
 						"transitions": [
 							{
 								"value": "SafetyCritical",
-								"next": "node_0"
+								"next": "node0"
 							}
 						]
 					}
@@ -857,7 +857,7 @@
 				}
 			},
 			{
-				"id": "node_0",
+				"id": "node0",
 				"verdicts": {
 					"fail": {
 						"tests": [
@@ -881,7 +881,7 @@
 						"transitions": [
 							{
 								"value": "{| percentage=BATTERY_MISSION_THRESHOLD+1 |}",
-								"next": "node_0"
+								"next": "node0"
 							}
 						]
 					}
@@ -895,14 +895,14 @@
 				}
 			},
 			{
-				"id": "node_0",
+				"id": "node0",
 				"transitionSets": [
 					{
 						"channel": "batteryInfo.in",
 						"transitions": [
 							{
 								"value": "{| percentage=BATTERY_MISSION_THRESHOLD+1 |}",
-								"next": "node_1"
+								"next": "node1"
 							}
 						]
 					}
@@ -916,7 +916,7 @@
 				}
 			},
 			{
-				"id": "node_1",
+				"id": "node1",
 				"verdicts": {
 					"fail": {
 						"tests": [
@@ -940,7 +940,7 @@
 						"transitions": [
 							{
 								"value": "{| percentage=BATTERY_MISSION_THRESHOLD   |}",
-								"next": "node_0"
+								"next": "node0"
 							}
 						]
 					}
@@ -954,14 +954,14 @@
 				}
 			},
 			{
-				"id": "node_0",
+				"id": "node0",
 				"transitionSets": [
 					{
 						"channel": "batteryInfo.in",
 						"transitions": [
 							{
 								"value": "{| percentage=BATTERY_MISSION_THRESHOLD   |}",
-								"next": "node_1"
+								"next": "node1"
 							}
 						]
 					}
@@ -975,7 +975,7 @@
 				}
 			},
 			{
-				"id": "node_1",
+				"id": "node1",
 				"verdicts": {
 					"fail": {
 						"tests": [
@@ -999,7 +999,7 @@
 						"transitions": [
 							{
 								"value": "{| percentage=BATTERY_SAFETY_THRESHOLD    |}",
-								"next": "node_0"
+								"next": "node0"
 							}
 						]
 					}
@@ -1013,14 +1013,14 @@
 				}
 			},
 			{
-				"id": "node_0",
+				"id": "node0",
 				"transitionSets": [
 					{
 						"channel": "batteryInfo.in",
 						"transitions": [
 							{
 								"value": "{| percentage=BATTERY_SAFETY_THRESHOLD    |}",
-								"next": "node_1"
+								"next": "node1"
 							}
 						]
 					}
@@ -1034,7 +1034,7 @@
 				}
 			},
 			{
-				"id": "node_1",
+				"id": "node1",
 				"verdicts": {
 					"fail": {
 						"tests": [
@@ -1058,7 +1058,7 @@
 						"transitions": [
 							{
 								"value": "{| percentage=BATTERY_MISSION_THRESHOLD+1 |}",
-								"next": "node_0"
+								"next": "node0"
 							}
 						]
 					}
@@ -1072,14 +1072,14 @@
 				}
 			},
 			{
-				"id": "node_0",
+				"id": "node0",
 				"transitionSets": [
 					{
 						"channel": "batteryStatus.out",
 						"transitions": [
 							{
 								"value": "MissionCritical",
-								"next": "node_1"
+								"next": "node1"
 							}
 						]
 					}
@@ -1093,7 +1093,7 @@
 				}
 			},
 			{
-				"id": "node_1",
+				"id": "node1",
 				"verdicts": {
 					"fail": {
 						"tests": [
@@ -1117,7 +1117,7 @@
 						"transitions": [
 							{
 								"value": "{| percentage=BATTERY_MISSION_THRESHOLD+1 |}",
-								"next": "node_0"
+								"next": "node0"
 							}
 						]
 					}
@@ -1131,14 +1131,14 @@
 				}
 			},
 			{
-				"id": "node_0",
+				"id": "node0",
 				"transitionSets": [
 					{
 						"channel": "batteryStatus.out",
 						"transitions": [
 							{
 								"value": "SafetyCritical",
-								"next": "node_1"
+								"next": "node1"
 							}
 						]
 					}
@@ -1152,7 +1152,7 @@
 				}
 			},
 			{
-				"id": "node_1",
+				"id": "node1",
 				"verdicts": {
 					"fail": {
 						"tests": [
@@ -1176,7 +1176,7 @@
 						"transitions": [
 							{
 								"value": "{| percentage=BATTERY_MISSION_THRESHOLD |}",
-								"next": "node_0"
+								"next": "node0"
 							}
 						]
 					}
@@ -1190,14 +1190,14 @@
 				}
 			},
 			{
-				"id": "node_0",
+				"id": "node0",
 				"transitionSets": [
 					{
 						"channel": "batteryStatus.out",
 						"transitions": [
 							{
 								"value": "Ok",
-								"next": "node_1"
+								"next": "node1"
 							}
 						]
 					}
@@ -1211,7 +1211,7 @@
 				}
 			},
 			{
-				"id": "node_1",
+				"id": "node1",
 				"verdicts": {
 					"fail": {
 						"tests": [
@@ -1235,7 +1235,7 @@
 						"transitions": [
 							{
 								"value": "{| percentage=BATTERY_MISSION_THRESHOLD |}",
-								"next": "node_0"
+								"next": "node0"
 							}
 						]
 					}
@@ -1249,14 +1249,14 @@
 				}
 			},
 			{
-				"id": "node_0",
+				"id": "node0",
 				"transitionSets": [
 					{
 						"channel": "batteryStatus.out",
 						"transitions": [
 							{
 								"value": "SafetyCritical",
-								"next": "node_1"
+								"next": "node1"
 							}
 						]
 					}
@@ -1270,7 +1270,7 @@
 				}
 			},
 			{
-				"id": "node_1",
+				"id": "node1",
 				"verdicts": {
 					"fail": {
 						"tests": [

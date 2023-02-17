@@ -26,7 +26,6 @@ changes to the source:
 
 ## The tools
 
-
 ### `rtcg.sh`: generate C tests from traces
 
 Usage: `rtcg-gen TEMPLATE-DIR [TRACES-FILE]`
@@ -58,12 +57,43 @@ is that the former is a faithful tree representation of the test in the CSP
 testing theory, and the latter is a more straightforwardly useful list of
 states and transitions which can be used to generate code.
 
+
 ### `rtcg-gen`: generate C code
 
-Usage: `rtcg-gen TEMPLATE-DIR [STM-FILE]`
+Usage: `rtcg-gen [-clean | -output DIR] TEMPLATE-DIR [STM-FILE]`
 
 **Tool under development**
 
 This tool takes in a `rtcg` state machine suite in JSON format (e.g. from
 `rtcg-make-stms`), as well as some `text/template` templates for
 generating code, and emits automatically generated test code.
+
+To get a quick idea of how `rtcg-gen` works, try:
+
+```shell
+$ make examples-cpp
+$ ls out/bmon/ros
+```
+
+
+## Q&A
+
+### Is this ready for production use?
+
+Not yet!  This is a work-in-progress being explored as part of some work on
+testing RoboChart models, and should not be considered a main-line RoboStar
+tool in the same way as RoboTool.
+
+
+### Why is this written in Go, given RoboTool is an Eclipse plugin set?
+
+I (Matt) chose to write this tool in Go because its main use is to expand out
+a series of textual templates in a data-driven manner, and this is a very good
+use case for Go's standard `text/template` library.
+
+
+### Will there be binaries available?
+
+Once the tool is in a stable state, I'll start producing binaries for the
+various platforms supported by RoboTool.
+
