@@ -12,6 +12,6 @@ Base indent is set at 2, as we are inside a top-level function.
     break;
 {{- end }}
   default:
-    {{ template "log" "error" }}("unexpected state %d", state);
+    {{ template "log" "error" }}("unexpected state %d", static_cast<int>(state));
     end(Status::BUG);
   }

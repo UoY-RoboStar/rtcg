@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "rtcg/rtcg.h" // Helper definitions (compile with rtcg/rtcg.cpp)
+
 {{-   block "system_includes" . }}
 {{-   end }}
 
@@ -25,32 +27,6 @@
 
 {{ block "constants" . }}
 {{- end }}
-
-
-//
-// OUTCOMES
-//
-
-// An inconclusive, passing, or failing outcome.
-enum class Outcome {
-    INC,
-    PASS,
-    FAIL
-};
-
-// A string representation of an outcome.
-const char* outstr(Outcome o)
-{
-  switch (o) {
-  case Outcome::INC:
-    return "inconclusive";
-  case Outcome::PASS:
-    return "passed";
-  case Outcome::FAIL:
-    return "failed";
-  }
-  return "???";
-}
 
 
 //

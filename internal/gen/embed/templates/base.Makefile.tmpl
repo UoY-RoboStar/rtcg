@@ -1,0 +1,17 @@
+.POSIX:
+
+CXXFLAGS   = {{ block "cxxflags" . }}-std=c++11 -Wall -Wextra{{ end }}
+INPUT_DIR  = src
+OUTPUT_DIR = bin
+PRELUDE    = $(INPUT_DIR)/rtcg/rtcg.cpp
+
+.PHONY: all mkdir
+
+all: mkdir {{- range $k, $v := . }} $(OUTPUT_DIR)/{{ $k }}{{- end }}
+
+mkdir:
+	mkdir -p $(OUTPUT_DIR)
+{{ range $k, $v := . }}
+$(OUTPUT_DIR)/{{ $k }}: $(INPUT_DIR)/{{ $k }}.cpp $(PRELUDE)
+	$(CXX) $(CXXFLAGS) -o $@ $< $(PRELUDE)
+{{- end }}

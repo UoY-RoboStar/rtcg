@@ -4,9 +4,21 @@ package cppfunc
 import (
 	"fmt"
 	"strings"
+	"text/template"
 
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 )
+
+// Funcs adds the C++ function map to base.
+func Funcs(base *template.Template) *template.Template {
+	return base.Funcs(template.FuncMap{
+		"cppEnumField":   EnumField,
+		"cppOutcomeEnum": OutcomeEnum,
+		"cppStateEntry":  StateEntry,
+		"cppStateEnum":   StateEnum,
+		"cppTestEnum":    TestEnum,
+	})
+}
 
 // StateEntry gets the name of the entry method for the state with the given id.
 func StateEntry(id testlang.NodeID) string {

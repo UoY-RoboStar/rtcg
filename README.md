@@ -72,7 +72,7 @@ To get a quick idea of how `rtcg-gen` works, try:
 
 ```shell
 $ make examples-cpp
-$ ls out/bmon/ros
+$ ls out/bmon/ros/src
 ```
 
 
