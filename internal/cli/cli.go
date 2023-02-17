@@ -3,6 +3,7 @@ package cli
 
 import (
 	"errors"
+	"flag"
 	"fmt"
 	"io"
 	"os"
@@ -44,7 +45,9 @@ func OpenFileOrStdin(path string) (io.ReadCloser, error) {
 // HandleError handles a top-level error err in the tool.
 //
 // It exits with a nonzero status code if the error is non-nil.
-func HandleError(err error, usageStr string) {
+//
+// If the error has something to do with arguments, we call usage.
+func HandleError(err error, usage func()) {
 	if err == nil {
 		return
 	}
@@ -52,14 +55,21 @@ func HandleError(err error, usageStr string) {
 	_, _ = fmt.Fprintln(os.Stderr, err)
 
 	if errors.Is(err, ErrBadArgs) {
-		usage(usageStr)
+		usage()
 	}
 
 	os.Exit(1)
 }
 
-func usage(usageStr string) {
+// Usage is a basic usage function.
+func Usage(usageStr string) {
 	_, _ = fmt.Fprintln(os.Stderr, "usage:", os.Args[0], usageStr)
+}
+
+// FlagUsage is a usage function for commands that use flag.
+func FlagUsage(usageStr string) {
+	Usage("(flags) " + usageStr)
+	flag.PrintDefaults()
 }
 
 // ErrBadArgs is an error used when invalid arguments have been supplied.

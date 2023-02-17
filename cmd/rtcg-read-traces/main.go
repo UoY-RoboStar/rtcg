@@ -11,13 +11,10 @@ import (
 	"github.com/UoY-RoboStar/rtcg/internal/trace"
 )
 
-const (
-	usage            = "[INPUT-FILE]"
-	numAnonymousArgs = 1
-)
+const numAnonymousArgs = 1
 
 func main() {
-	cli.HandleError(run(), usage)
+	cli.HandleError(run(), func() { cli.Usage("[TRACES-FILE]") })
 }
 
 func run() error {

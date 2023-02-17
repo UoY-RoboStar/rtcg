@@ -3,25 +3,28 @@ package main
 
 import (
 	"errors"
+	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/UoY-RoboStar/rtcg/internal/cli"
 	"github.com/UoY-RoboStar/rtcg/internal/gen"
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
 )
 
-const (
-	usage            = "TEMPLATE-DIR [STM-FILE]"
-	numAnonymousArgs = 2
-)
+const numAnonymousArgs = 2
 
 func main() {
 	cli.HandleError(run(), usage)
 }
 
+func usage() {
+	cli.FlagUsage("TEMPLATE-DIR [STM-FILE]")
+}
+
 func run() error {
-	a, err := parseArgs(os.Args)
+	a, err := parseArgs()
 	if err != nil {
 		return err
 	}
@@ -29,15 +32,21 @@ func run() error {
 	return a.run()
 }
 
-func parseArgs(argv []string) (*genAction, error) {
+func parseArgs() (*genAction, error) {
 	var (
 		action genAction
 		err    error
 	)
 
-	action.templateDir = argv[1]
+	flag.BoolVar(&action.clean, "clean", false, "remove output directory before generating")
+	flag.StringVar(&action.outputDir, "output", "out", "output directory")
+	flag.Usage = usage
+	flag.Parse()
 
-	action.inputFile, err = cli.ParseFileArgument(argv, numAnonymousArgs+1)
+	argv := flag.Args()
+	action.templateDir = argv[0]
+
+	action.inputFile, err = cli.ParseFileArgument(argv, numAnonymousArgs)
 	if err != nil {
 		return nil, fmt.Errorf("couldn't parse args: %w", err)
 	}
@@ -46,18 +55,48 @@ func parseArgs(argv []string) (*genAction, error) {
 }
 
 type genAction struct {
+	clean       bool   // clean makes the generator remove the output directory before generating.
+	outputDir   string // outputDir is the output directory.
 	templateDir string
 	inputFile   string
 }
 
 func (a *genAction) run() error {
+	a.outputDir = filepath.Clean(a.outputDir)
+	a.templateDir = filepath.Clean(a.templateDir)
+
 	stms, err := a.readSuite()
 	if err != nil {
 		return fmt.Errorf("couldn't read state machine suite: %w", err)
 	}
 
+	if err := a.maybeClean(); err != nil {
+		return err
+	}
+
 	return a.generate(stms)
 }
+
+func (a *genAction) maybeClean() error {
+	if !a.clean {
+		return nil
+	}
+
+	if a.outputDir == "." {
+		return ErrCleanDot
+	}
+
+	if err := os.RemoveAll(a.outputDir); err != nil {
+		return fmt.Errorf("couldn't clean %q: %w", a.outputDir, err)
+	}
+
+	return nil
+}
+
+// ErrCleanDot occurs if we try to clean "." (current directory).
+//
+// We don't support this because it would then change or confuse the current working directory.
+var ErrCleanDot = errors.New("can't clean current directory")
 
 func (a *genAction) readSuite() (stm.Suite, error) {
 	file, err := cli.OpenFileOrStdin(a.inputFile)
@@ -73,7 +112,7 @@ func (a *genAction) readSuite() (stm.Suite, error) {
 func (a *genAction) generate(stms stm.Suite) error {
 	tmpls := os.DirFS(a.templateDir)
 
-	g, err := gen.New(tmpls, "out") // for now
+	g, err := gen.New(tmpls, a.outputDir) // for now
 	if err != nil {
 		return fmt.Errorf("couldn't create generator: %w", err)
 	}
