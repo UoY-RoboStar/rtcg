@@ -28,7 +28,7 @@ func TestRoot(t *testing.T) {
 	tree := testlang.Root(branch1, branch23)
 	tree.Mark("test1", "test2", "test3")
 
-	val, err := validate.Test(&tree)
+	val, err := validate.Full(&tree)
 	if err != nil {
 		t.Fatalf("unexpected validation error: %s", err)
 	}

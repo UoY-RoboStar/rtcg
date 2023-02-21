@@ -2,6 +2,7 @@ package stm
 
 import (
 	"fmt"
+	"github.com/UoY-RoboStar/rtcg/internal/validate"
 
 	"github.com/UoY-RoboStar/rtcg/internal/structure"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
@@ -15,7 +16,7 @@ type Builder struct {
 }
 
 // BuildSuite builds a test suite s into a map of state machines.
-func (b *Builder) BuildSuite(s testlang.Suite) Suite {
+func (b *Builder) BuildSuite(s validate.Suite) Suite {
 	suite := make(Suite, len(s))
 
 	for k, v := range s {
@@ -26,11 +27,12 @@ func (b *Builder) BuildSuite(s testlang.Suite) Suite {
 	return suite
 }
 
-// Build builds a single test from testRoot onwards.
-func (b *Builder) Build(name string, testRoot *testlang.Node) Stm {
+// Build builds a single state machine from the given validated test.
+func (b *Builder) Build(name string, test *validate.Test) Stm {
 	b.nodeNum = 0
 	b.stm = Stm{States: []*State{}, Tests: structure.NewSet[string]()}
 
+	testRoot := test.Root()
 	testRoot.ID = testlang.NodeID(name)
 
 	b.stack.Clear()

@@ -2,6 +2,7 @@ package stm_test
 
 import (
 	"github.com/UoY-RoboStar/rtcg/internal/stm/verdict"
+	"github.com/UoY-RoboStar/rtcg/internal/validate"
 	"reflect"
 	"testing"
 
@@ -18,8 +19,13 @@ func TestBuilder_Build_EmptyPrefixTrace(t *testing.T) {
 
 	tree := trace.New(event).Expand("test")
 
+	vtree, err := validate.Full(tree)
+	if err != nil {
+		t.Fatalf("tree failed validation: %s", err)
+	}
+
 	var builder stm.Builder
-	mach := builder.Build("tree", tree)
+	mach := builder.Build("tree", vtree)
 
 	gotTests := mach.Tests.Values()
 	wantTests := []string{"test"}

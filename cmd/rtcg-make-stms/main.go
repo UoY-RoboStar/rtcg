@@ -4,6 +4,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"github.com/UoY-RoboStar/rtcg/internal/validate"
 	"os"
 
 	"github.com/UoY-RoboStar/rtcg/internal/cli"
@@ -50,7 +51,12 @@ func (a *makeStmAction) run() error {
 		return fmt.Errorf("couldn't read test suite: %w", err)
 	}
 
-	stms := a.buildStms(s)
+	vs, err := validate.FullSuite(s)
+	if err != nil {
+		return fmt.Errorf("malformed test suite: %w", err)
+	}
+
+	stms := a.buildStms(vs)
 
 	if err := stms.Write(os.Stdout); err != nil {
 		return fmt.Errorf("couldn't write state machines: %w", err)
@@ -70,7 +76,7 @@ func (a *makeStmAction) readSuite() (testlang.Suite, error) {
 	return suite, errors.Join(err, file.Close())
 }
 
-func (a *makeStmAction) buildStms(tests testlang.Suite) stm.Suite {
+func (a *makeStmAction) buildStms(tests validate.Suite) stm.Suite {
 	var bs stm.Builder
 
 	return bs.BuildSuite(tests)
