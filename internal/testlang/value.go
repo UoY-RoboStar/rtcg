@@ -5,6 +5,7 @@ import (
 	"encoding"
 	"errors"
 	"fmt"
+	"reflect"
 	"strconv"
 )
 
@@ -29,6 +30,20 @@ func (v *Value) IsPresent() bool {
 // IsEmpty checks whether v is empty.
 func (v *Value) IsEmpty() bool {
 	return v.Content == nil
+}
+
+// Equals tests equality on two Values.
+func (v *Value) Equals(other Value) bool {
+	if v.IsEmpty() {
+		return other.IsEmpty()
+	}
+
+	if other.IsEmpty() {
+		return false
+	}
+
+	// TODO: is this the right way to compare these?
+	return reflect.DeepEqual(v.Content, other.Content)
 }
 
 func (v *Value) MarshalText() ([]byte, error) {

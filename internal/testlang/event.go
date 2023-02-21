@@ -30,6 +30,10 @@ func Output(ch string, v Value) Event {
 	return NewEvent(ch, channel.KindOut, v)
 }
 
+func (e *Event) Equals(other Event) bool {
+	return e.Channel.Equals(other.Channel) && e.Value.Equals(other.Value)
+}
+
 func (e *Event) MarshalText() ([]byte, error) {
 	chanBytes, err := e.Channel.MarshalText()
 	if err != nil {

@@ -1,6 +1,7 @@
 package stm_test
 
 import (
+	"github.com/UoY-RoboStar/rtcg/internal/stm/verdict"
 	"reflect"
 	"testing"
 
@@ -51,9 +52,9 @@ func emptyPrefixTraceNode1(t *testing.T, state *stm.State) {
 		t.Errorf("expected first state to have name of test-tree, got %q", state.ID)
 	}
 
-	assertVerdict(t, state.Verdicts, testlang.OutcomeInc, false)
-	assertVerdict(t, state.Verdicts, testlang.OutcomeFail, false)
-	assertVerdict(t, state.Verdicts, testlang.OutcomePass, true)
+	assertVerdict(t, state.Verdict, testlang.OutcomeInc, false)
+	assertVerdict(t, state.Verdict, testlang.OutcomeFail, false)
+	assertVerdict(t, state.Verdict, testlang.OutcomePass, true)
 }
 
 func emptyPrefixTraceNode2(t *testing.T, state *stm.State) {
@@ -68,12 +69,12 @@ func emptyPrefixTraceNode2(t *testing.T, state *stm.State) {
 		t.Errorf("second state should have no transition sets, got %d", nsets)
 	}
 
-	assertVerdict(t, state.Verdicts, testlang.OutcomeInc, false)
-	assertVerdict(t, state.Verdicts, testlang.OutcomeFail, true)
-	assertVerdict(t, state.Verdicts, testlang.OutcomePass, false)
+	assertVerdict(t, state.Verdict, testlang.OutcomeInc, false)
+	assertVerdict(t, state.Verdict, testlang.OutcomeFail, true)
+	assertVerdict(t, state.Verdict, testlang.OutcomePass, false)
 }
 
-func assertVerdict(t *testing.T, verdicts *stm.VerdictSet, status testlang.Outcome, want bool) {
+func assertVerdict(t *testing.T, verdicts *verdict.Verdict, status testlang.Outcome, want bool) {
 	t.Helper()
 
 	if verdicts.Is(status) != want {

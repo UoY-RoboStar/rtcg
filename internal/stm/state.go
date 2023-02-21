@@ -2,6 +2,7 @@ package stm
 
 import (
 	"fmt"
+	"github.com/UoY-RoboStar/rtcg/internal/stm/verdict"
 	"strings"
 
 	"github.com/UoY-RoboStar/rtcg/internal/stm/transition"
@@ -20,7 +21,7 @@ type State struct {
 	// Each transition set maps a particular channel to a list of transitions predicated on that channel's value.
 	TransitionSets []transition.Set `json:"transitionSets,omitempty"`
 
-	Verdicts *VerdictSet `json:"verdicts,omitempty"` // Verdicts holds the test verdicts that this state reports.
+	Verdict *verdict.Verdict `json:"verdicts,omitempty"` // Verdict holds the test verdicts that this state reports.
 }
 
 // NewState creates a new State with the given id.
@@ -28,7 +29,7 @@ func NewState(id testlang.NodeID) *State {
 	return &State{
 		ID:             id,
 		TransitionSets: nil,
-		Verdicts:       &VerdictSet{},
+		Verdict:        &verdict.Verdict{},
 	}
 }
 
@@ -43,7 +44,7 @@ func (s *State) AddOutgoingNode(node *testlang.Node) {
 // We assume the node has already been assigned an ID.
 func (s *State) addTransitionToNode(node *testlang.Node) {
 	// We don't add transitions to failing nodes; they are just sentinels with no test content.
-	if node.Status == testlang.OutcomeFail {
+	if node.Outcome == testlang.OutcomeFail {
 		return
 	}
 
@@ -61,20 +62,11 @@ func (s *State) addTransitionToNode(node *testlang.Node) {
 
 // addVerdictsFromNode adds the test verdicts from n into s.
 func (s *State) addVerdictsFromNode(node *testlang.Node) {
-	s.Verdicts.Add(node.Status, node.Tests...)
+	s.Verdict.Add(node.Outcome, node.Tests...)
 }
 
 func (s *State) String() string {
-	return fmt.Sprintf("%s:{%s}(%s)", s.ID, s.verdictString(), s.transitionString())
-}
-
-func (s *State) verdictString() string {
-	vsets := make([]string, testlang.NumStatus)
-	for st := testlang.FirstOutcome; st <= testlang.LastStatus; st++ {
-		vsets[st] = fmt.Sprintf("%s %s", &st, (*s.Verdicts)[st])
-	}
-
-	return strings.Join(vsets, ", ")
+	return fmt.Sprintf("%s:{%s}(%s)", s.ID, s.Verdict, s.transitionString())
 }
 
 func (s *State) transitionString() string {

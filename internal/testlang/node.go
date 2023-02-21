@@ -5,9 +5,15 @@ type Node struct {
 	ID    NodeID   `json:"id,omitempty"`    // ID is an optional identifier assigned to the node.
 	Tests []string `json:"tests,omitempty"` // Tests optionally tags a node with the original tests from which it came.
 
-	Status Outcome `json:"status"`          // Status is the status at this node.
-	Event  *Event  `json:"event,omitempty"` // Event is the event, if any, contained in this part of the trace.
-	Next   []Node  `json:"next,omitempty"`  // Next is the list of possible continuations of this test.
+	Outcome Outcome `json:"outcome,omitempty"` // Outcome is the status at this node.
+	Event   *Event  `json:"event,omitempty"`   // Event is the event, if any, contained in this part of the trace.
+	Next    []Node  `json:"next,omitempty"`    // Next is the list of possible continuations of this test.
+}
+
+// Root constructs a test root.
+func Root(next ...Node) Node {
+	// The precise representation of this may change.
+	return NewNode(OutcomeUnset, nil, next...)
 }
 
 // Pass constructs a valid passing test node.
@@ -25,11 +31,11 @@ func Fail() Node {
 	return NewNode(OutcomeFail, nil)
 }
 
-// NewNode constructs a new node with the given status, event, and next nodes.
+// NewNode constructs a new node with the given outcome, event, and next nodes.
 //
 // The node does not have an assigned ID or test list; set these afterwards if desired.
-func NewNode(status Outcome, event *Event, next ...Node) Node {
-	return Node{ID: "", Tests: nil, Status: status, Event: event, Next: next}
+func NewNode(outcome Outcome, event *Event, next ...Node) Node {
+	return Node{ID: "", Tests: nil, Outcome: outcome, Event: event, Next: next}
 }
 
 // From replaces the Tests field of this Node inline with the contents of tests.

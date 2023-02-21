@@ -24,6 +24,26 @@ func (t Trace) String() string {
 	return fmt.Sprintf("<%s>", strings.Join(eventStrs, ", "))
 }
 
+// Equals checks whether t is equal to other.
+func (t Trace) Equals(other Trace) bool {
+	return len(t) == len(other) && t.IsPrefixOf(other)
+}
+
+func (t Trace) IsPrefixOf(other Trace) bool {
+	// Can't be a prefix if we're bigger than the other trace
+	if len(other) < len(t) {
+		return false
+	}
+
+	for i, e := range t {
+		if !e.Equals(other[i]) {
+			return false
+		}
+	}
+
+	return true
+}
+
 // Forbidden is the type of 'flat' forbidden-trace tests.
 type Forbidden struct {
 	Prefix Trace          // Prefix is the sequence of events that must occur for the test to pass.

@@ -14,10 +14,11 @@ func TestStatus_String(t *testing.T) {
 		input testlang.Outcome
 		want  string
 	}{
+		{input: testlang.OutcomeUnset, want: "unset"},
 		{input: testlang.OutcomeInc, want: "inc"},
 		{input: testlang.OutcomeFail, want: "fail"},
 		{input: testlang.OutcomePass, want: "pass"},
-		{input: testlang.OutcomePass + 1, want: "Outcome(3)"},
+		{input: testlang.OutcomePass + 1, want: "Outcome(4)"},
 	} {
 		input := test.input
 		want := test.want

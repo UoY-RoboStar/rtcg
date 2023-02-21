@@ -15,11 +15,11 @@ func TestPass(t *testing.T) {
 
 	got := testlang.Pass(event)
 	want := testlang.Node{
-		ID:     "",
-		Tests:  nil,
-		Status: testlang.OutcomePass,
-		Event:  &event,
-		Next:   nil,
+		ID:      "",
+		Tests:   nil,
+		Outcome: testlang.OutcomePass,
+		Event:   &event,
+		Next:    nil,
 	}
 
 	checkNode(t, got, want)
@@ -33,11 +33,11 @@ func TestInc(t *testing.T) {
 
 	got := testlang.Inc(event)
 	want := testlang.Node{
-		ID:     "",
-		Tests:  nil,
-		Status: testlang.OutcomeInc,
-		Event:  &event,
-		Next:   nil,
+		ID:      "",
+		Tests:   nil,
+		Outcome: testlang.OutcomeInc,
+		Event:   &event,
+		Next:    nil,
 	}
 
 	checkNode(t, got, want)
@@ -49,11 +49,11 @@ func TestFail(t *testing.T) {
 
 	got := testlang.Fail()
 	want := testlang.Node{
-		ID:     "",
-		Tests:  nil,
-		Status: testlang.OutcomeFail,
-		Event:  nil,
-		Next:   nil,
+		ID:      "",
+		Tests:   nil,
+		Outcome: testlang.OutcomeFail,
+		Event:   nil,
+		Next:    nil,
 	}
 
 	checkNode(t, got, want)
@@ -64,8 +64,8 @@ func checkNode(t *testing.T, got, want testlang.Node) {
 
 	// TODO: check other fields
 
-	if got.Status != want.Status {
-		t.Errorf("want node status %q, got %q", &want.Status, &got.Status)
+	if got.Outcome != want.Outcome {
+		t.Errorf("want node status %q, got %q", &want.Outcome, &got.Outcome)
 	}
 
 	if !reflect.DeepEqual(got.Event, want.Event) {

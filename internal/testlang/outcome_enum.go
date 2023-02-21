@@ -13,25 +13,29 @@ import (
 )
 
 const (
+	// OutcomeUnset is a Outcome of type Unset.
+	// No outcome recorded yet.
+	OutcomeUnset Outcome = iota
 	// OutcomeInc is a Outcome of type Inc.
-	// Inconclusive status.
-	OutcomeInc Outcome = iota
+	// Inconclusive outcome.
+	OutcomeInc
 	// OutcomeFail is a Outcome of type Fail.
-	// Failing status.
+	// Failing outcome.
 	OutcomeFail
 	// OutcomePass is a Outcome of type Pass.
-	// Passing status.
+	// Passing outcome.
 	OutcomePass
 )
 
 var ErrInvalidOutcome = errors.New("not a valid Outcome")
 
-const _OutcomeName = "incfailpass"
+const _OutcomeName = "unsetincfailpass"
 
 var _OutcomeMap = map[Outcome]string{
-	OutcomeInc:  _OutcomeName[0:3],
-	OutcomeFail: _OutcomeName[3:7],
-	OutcomePass: _OutcomeName[7:11],
+	OutcomeUnset: _OutcomeName[0:5],
+	OutcomeInc:   _OutcomeName[5:8],
+	OutcomeFail:  _OutcomeName[8:12],
+	OutcomePass:  _OutcomeName[12:16],
 }
 
 // String implements the Stringer interface.
@@ -43,12 +47,14 @@ func (x Outcome) String() string {
 }
 
 var _OutcomeValue = map[string]Outcome{
-	_OutcomeName[0:3]:                   OutcomeInc,
-	strings.ToLower(_OutcomeName[0:3]):  OutcomeInc,
-	_OutcomeName[3:7]:                   OutcomeFail,
-	strings.ToLower(_OutcomeName[3:7]):  OutcomeFail,
-	_OutcomeName[7:11]:                  OutcomePass,
-	strings.ToLower(_OutcomeName[7:11]): OutcomePass,
+	_OutcomeName[0:5]:                    OutcomeUnset,
+	strings.ToLower(_OutcomeName[0:5]):   OutcomeUnset,
+	_OutcomeName[5:8]:                    OutcomeInc,
+	strings.ToLower(_OutcomeName[5:8]):   OutcomeInc,
+	_OutcomeName[8:12]:                   OutcomeFail,
+	strings.ToLower(_OutcomeName[8:12]):  OutcomeFail,
+	_OutcomeName[12:16]:                  OutcomePass,
+	strings.ToLower(_OutcomeName[12:16]): OutcomePass,
 }
 
 // ParseOutcome attempts to convert a string to a Outcome.

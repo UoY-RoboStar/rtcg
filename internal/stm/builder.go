@@ -38,7 +38,7 @@ func (b *Builder) Build(name string, testRoot *testlang.Node) Stm {
 		node := b.stack.Pop()
 
 		// We don't emit failing states.
-		if node.Status != testlang.OutcomeFail {
+		if node.Outcome != testlang.OutcomeFail {
 			b.processNode(node)
 		}
 	}
