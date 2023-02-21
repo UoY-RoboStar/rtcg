@@ -1,16 +1,5 @@
 package structure
 
-// OverMapValues maps mapper over all values of input, returning the resulting new map.
-func OverMapValues[K comparable, T, U any](input map[K]T, mapper func(T) U) map[K]U {
-	result := make(map[K]U, len(input))
-
-	for k, v := range input {
-		result[k] = mapper(v)
-	}
-
-	return result
-}
-
 // TryOverMapValues maps mapper over all values of input, returning the resulting new map or error.
 func TryOverMapValues[K comparable, T, U any](input map[K]T, mapper func(T) (U, error)) (map[K]U, error) {
 	result := make(map[K]U, len(input))
