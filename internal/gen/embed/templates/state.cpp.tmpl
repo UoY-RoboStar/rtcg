@@ -6,12 +6,10 @@ It expects the state in question as its dot.
 Base indent is set at 2, as we are inside a top-level function.
 */}}
 
-{{- range $s, $ts := .Verdicts }}
-{{-  range $ts.Tests.Values }}
-  verdict.set({{ cppTestEnum . }}, {{ cppOutcomeEnum $s }});
-{{-  end }}
+{{- range $t, $o := .Verdict }}
+  verdict.set({{ cppTestEnum $t }}, {{ cppOutcomeEnum $o }});
 {{- end }}
-{{- if .Verdicts.IsFail }}
+{{- if .Verdict.IsFail }}
 
   end(Status::FAIL); // This state fails at least one test
 {{- end -}}

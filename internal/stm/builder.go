@@ -29,7 +29,9 @@ func (b *Builder) BuildSuite(s testlang.Suite) Suite {
 // Build builds a single test from testRoot onwards.
 func (b *Builder) Build(name string, testRoot *testlang.Node) Stm {
 	b.nodeNum = 0
-	b.initStm(name, testRoot)
+	b.stm = Stm{States: []*State{}, Tests: structure.NewSet[string]()}
+
+	testRoot.ID = testlang.NodeID(name)
 
 	b.stack.Clear()
 	b.stack.Push(testRoot)
@@ -84,5 +86,4 @@ func (b *Builder) initStm(name string, node *testlang.Node) {
 	initial := NewState(testlang.NodeID(name))
 	initial.AddOutgoingNode(node)
 
-	b.stm = Stm{States: []*State{initial}, Tests: structure.NewSet[string](node.Tests...)}
 }

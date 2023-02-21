@@ -1,8 +1,7 @@
 package trace
 
 import (
-	"fmt"
-
+	"github.com/UoY-RoboStar/rtcg/internal/structure"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 )
 
@@ -16,17 +15,15 @@ func (t Forbidden) Expand(name string) *testlang.Node {
 		n.Mark(name)
 	}
 
+	n = testlang.Root(n)
+	n.Mark(name)
+
 	return &n
 }
 
-// ExpandAll expands a list of Forbidden traces to a systematically-named, non-factorised test suite.
-func ExpandAll(traces []Forbidden) testlang.Suite {
-	suite := make(testlang.Suite)
-
-	for i, tr := range traces {
-		name := fmt.Sprintf("test%d", i)
-		suite[name] = tr.Expand(name)
-	}
-
-	return suite
+// ExpandAll expands a suite of Forbidden traces to a non-factorised test suite.
+func ExpandAll(traces map[string]Forbidden) testlang.Suite {
+	return structure.OverMap(traces, func(k string, t Forbidden) (string, *testlang.Node) {
+		return k, t.Expand(k)
+	})
 }

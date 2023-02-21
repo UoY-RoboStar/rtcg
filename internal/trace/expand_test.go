@@ -2,6 +2,7 @@ package trace_test
 
 import (
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
@@ -21,13 +22,13 @@ func TestTrace_Expand(t *testing.T) {
 	}{
 		"no-prefix": {
 			input: trace.New(event1),
-			want:  testlang.TestPoint(event1),
+			want:  testlang.Root(testlang.TestPoint(event1)),
 		},
 		"lone-prefix": {
 			input: trace.New(event1, event2),
-			want: testlang.Inc(
+			want: testlang.Root(testlang.Inc(
 				event2,
-				testlang.TestPoint(event1)),
+				testlang.TestPoint(event1))),
 		},
 	} {
 		name := name
@@ -49,4 +50,36 @@ func TestTrace_Expand(t *testing.T) {
 			}
 		})
 	}
+}
+
+// FuzzExpandAll_CollapseAll_RoundTrip tests round-tripping trace.ExpandAll and trace.CollapseAll.
+func FuzzExpandAll_CollapseAll_RoundTrip(f *testing.F) {
+	f.Add("")
+	f.Add("batteryStatus.out.Ok")
+	f.Add("batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD |}\nbatteryStatus.out.Ok")
+	f.Add("batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD |}, batteryStatus.out.Ok")
+
+	f.Fuzz(func(t *testing.T, input string) {
+		t.Parallel()
+
+		r := strings.NewReader(input)
+
+		traces, err := trace.Read(r)
+		if err != nil {
+			t.SkipNow()
+		}
+
+		want := trace.Name(traces)
+
+		suite := trace.ExpandAll(want)
+
+		got, err := trace.CollapseAll(suite)
+		if err != nil {
+			t.Fatalf("error collapsing traces: %s", err)
+		}
+
+		if !reflect.DeepEqual(got, want) {
+			t.Fatalf("round-trip failure: got %v, want %v", got, want)
+		}
+	})
 }

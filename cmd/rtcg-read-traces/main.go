@@ -28,7 +28,7 @@ func run() error {
 		return fmt.Errorf("couldn't read traces from file %q: %w", fname, err)
 	}
 
-	suite := trace.ExpandAll(traces)
+	suite := trace.ExpandAll(trace.Name(traces))
 
 	if err := suite.Write(os.Stdout); err != nil {
 		return fmt.Errorf("couldn't write expanded traces: %w", err)

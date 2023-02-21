@@ -28,7 +28,12 @@ func TestRoot(t *testing.T) {
 	tree := testlang.Root(branch1, branch23)
 	tree.Mark("test1", "test2", "test3")
 
-	if err := validate.Test(&tree); err != nil {
+	val, err := validate.Test(&tree)
+	if err != nil {
 		t.Fatalf("unexpected validation error: %s", err)
+	}
+
+	if got := val.Root(); got != &tree {
+		t.Fatalf("wrong root node returned: got %v, want %v", got, tree)
 	}
 }

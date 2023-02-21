@@ -15,21 +15,13 @@
 					}
 				],
 				"verdicts": {
-					"pass": {
-						"tests": [
-							"test0"
-						]
-					}
+					"test0": "pass"
 				}
 			},
 			{
 				"id": "node0",
 				"verdicts": {
-					"fail": {
-						"tests": [
-							"test0"
-						]
-					}
+					"test0": "fail"
 				}
 			}
 		],
@@ -53,21 +45,13 @@
 					}
 				],
 				"verdicts": {
-					"pass": {
-						"tests": [
-							"test1"
-						]
-					}
+					"test1": "pass"
 				}
 			},
 			{
 				"id": "node0",
 				"verdicts": {
-					"fail": {
-						"tests": [
-							"test1"
-						]
-					}
+					"test1": "fail"
 				}
 			}
 		],
@@ -91,11 +75,7 @@
 					}
 				],
 				"verdicts": {
-					"inc": {
-						"tests": [
-							"test10"
-						]
-					}
+					"test10": "inc"
 				}
 			},
 			{
@@ -112,21 +92,13 @@
 					}
 				],
 				"verdicts": {
-					"pass": {
-						"tests": [
-							"test10"
-						]
-					}
+					"test10": "pass"
 				}
 			},
 			{
 				"id": "node1",
 				"verdicts": {
-					"fail": {
-						"tests": [
-							"test10"
-						]
-					}
+					"test10": "fail"
 				}
 			}
 		],
@@ -150,11 +122,7 @@
 					}
 				],
 				"verdicts": {
-					"inc": {
-						"tests": [
-							"test11"
-						]
-					}
+					"test11": "inc"
 				}
 			},
 			{
@@ -171,21 +139,13 @@
 					}
 				],
 				"verdicts": {
-					"pass": {
-						"tests": [
-							"test11"
-						]
-					}
+					"test11": "pass"
 				}
 			},
 			{
 				"id": "node1",
 				"verdicts": {
-					"fail": {
-						"tests": [
-							"test11"
-						]
-					}
+					"test11": "fail"
 				}
 			}
 		],
@@ -209,11 +169,7 @@
 					}
 				],
 				"verdicts": {
-					"inc": {
-						"tests": [
-							"test12"
-						]
-					}
+					"test12": "inc"
 				}
 			},
 			{
@@ -230,11 +186,7 @@
 					}
 				],
 				"verdicts": {
-					"inc": {
-						"tests": [
-							"test12"
-						]
-					}
+					"test12": "inc"
 				}
 			},
 			{
@@ -251,21 +203,13 @@
 					}
 				],
 				"verdicts": {
-					"pass": {
-						"tests": [
-							"test12"
-						]
-					}
+					"test12": "pass"
 				}
 			},
 			{
 				"id": "node2",
 				"verdicts": {
-					"fail": {
-						"tests": [
-							"test12"
-						]
-					}
+					"test12": "fail"
 				}
 			}
 		],
@@ -289,11 +233,7 @@
 					}
 				],
 				"verdicts": {
-					"inc": {
-						"tests": [
-							"test13"
-						]
-					}
+					"test13": "inc"
 				}
 			},
 			{
@@ -310,11 +250,7 @@
 					}
 				],
 				"verdicts": {
-					"inc": {
-						"tests": [
-							"test13"
-						]
-					}
+					"test13": "inc"
 				}
 			},
 			{
@@ -331,21 +267,13 @@
 					}
 				],
 				"verdicts": {
-					"pass": {
-						"tests": [
-							"test13"
-						]
-					}
+					"test13": "pass"
 				}
 			},
 			{
 				"id": "node2",
 				"verdicts": {
-					"fail": {
-						"tests": [
-							"test13"
-						]
-					}
+					"test13": "fail"
 				}
 			}
 		],
@@ -369,11 +297,7 @@
 					}
 				],
 				"verdicts": {
-					"inc": {
-						"tests": [
-							"test14"
-						]
-					}
+					"test14": "inc"
 				}
 			},
 			{
@@ -390,11 +314,7 @@
 					}
 				],
 				"verdicts": {
-					"inc": {
-						"tests": [
-							"test14"
-						]
-					}
+					"test14": "inc"
 				}
 			},
 			{
@@ -411,21 +331,13 @@
 					}
 				],
 				"verdicts": {
-					"pass": {
-						"tests": [
-							"test14"
-						]
-					}
+					"test14": "pass"
 				}
 			},
 			{
 				"id": "node2",
 				"verdicts": {
-					"fail": {
-						"tests": [
-							"test14"
-						]
-					}
+					"test14": "fail"
 				}
 			}
 		],
@@ -449,11 +361,7 @@
 					}
 				],
 				"verdicts": {
-					"inc": {
-						"tests": [
-							"test15"
-						]
-					}
+					"test15": "inc"
 				}
 			},
 			{
@@ -470,11 +378,7 @@
 					}
 				],
 				"verdicts": {
-					"inc": {
-						"tests": [
-							"test15"
-						]
-					}
+					"test15": "inc"
 				}
 			},
 			{
@@ -491,21 +395,13 @@
 					}
 				],
 				"verdicts": {
-					"pass": {
-						"tests": [
-							"test15"
-						]
-					}
+					"test15": "pass"
 				}
 			},
 			{
 				"id": "node2",
 				"verdicts": {
-					"fail": {
-						"tests": [
-							"test15"
-						]
-					}
+					"test15": "fail"
 				}
 			}
 		],
@@ -529,11 +425,7 @@
 					}
 				],
 				"verdicts": {
-					"inc": {
-						"tests": [
-							"test16"
-						]
-					}
+					"test16": "inc"
 				}
 			},
 			{
@@ -550,11 +442,7 @@
 					}
 				],
 				"verdicts": {
-					"inc": {
-						"tests": [
-							"test16"
-						]
-					}
+					"test16": "inc"
 				}
 			},
 			{
@@ -571,21 +459,13 @@
 					}
 				],
 				"verdicts": {
-					"pass": {
-						"tests": [
-							"test16"
-						]
-					}
+					"test16": "pass"
 				}
 			},
 			{
 				"id": "node2",
 				"verdicts": {
-					"fail": {
-						"tests": [
-							"test16"
-						]
-					}
+					"test16": "fail"
 				}
 			}
 		],
@@ -609,11 +489,7 @@
 					}
 				],
 				"verdicts": {
-					"inc": {
-						"tests": [
-							"test17"
-						]
-					}
+					"test17": "inc"
 				}
 			},
 			{
@@ -630,11 +506,7 @@
 					}
 				],
 				"verdicts": {
-					"inc": {
-						"tests": [
-							"test17"
-						]
-					}
+					"test17": "inc"
 				}
 			},
 			{
@@ -651,21 +523,13 @@
 					}
 				],
 				"verdicts": {
-					"pass": {
-						"tests": [
-							"test17"
-						]
-					}
+					"test17": "pass"
 				}
 			},
 			{
 				"id": "node2",
 				"verdicts": {
-					"fail": {
-						"tests": [
-							"test17"
-						]
-					}
+					"test17": "fail"
 				}
 			}
 		],
@@ -689,11 +553,7 @@
 					}
 				],
 				"verdicts": {
-					"inc": {
-						"tests": [
-							"test18"
-						]
-					}
+					"test18": "inc"
 				}
 			},
 			{
@@ -710,11 +570,7 @@
 					}
 				],
 				"verdicts": {
-					"inc": {
-						"tests": [
-							"test18"
-						]
-					}
+					"test18": "inc"
 				}
 			},
 			{
@@ -731,21 +587,13 @@
 					}
 				],
 				"verdicts": {
-					"pass": {
-						"tests": [
-							"test18"
-						]
-					}
+					"test18": "pass"
 				}
 			},
 			{
 				"id": "node2",
 				"verdicts": {
-					"fail": {
-						"tests": [
-							"test18"
-						]
-					}
+					"test18": "fail"
 				}
 			}
 		],
@@ -769,11 +617,7 @@
 					}
 				],
 				"verdicts": {
-					"inc": {
-						"tests": [
-							"test19"
-						]
-					}
+					"test19": "inc"
 				}
 			},
 			{
@@ -790,11 +634,7 @@
 					}
 				],
 				"verdicts": {
-					"inc": {
-						"tests": [
-							"test19"
-						]
-					}
+					"test19": "inc"
 				}
 			},
 			{
@@ -811,21 +651,13 @@
 					}
 				],
 				"verdicts": {
-					"pass": {
-						"tests": [
-							"test19"
-						]
-					}
+					"test19": "pass"
 				}
 			},
 			{
 				"id": "node2",
 				"verdicts": {
-					"fail": {
-						"tests": [
-							"test19"
-						]
-					}
+					"test19": "fail"
 				}
 			}
 		],
@@ -849,21 +681,13 @@
 					}
 				],
 				"verdicts": {
-					"pass": {
-						"tests": [
-							"test2"
-						]
-					}
+					"test2": "pass"
 				}
 			},
 			{
 				"id": "node0",
 				"verdicts": {
-					"fail": {
-						"tests": [
-							"test2"
-						]
-					}
+					"test2": "fail"
 				}
 			}
 		],
@@ -887,11 +711,7 @@
 					}
 				],
 				"verdicts": {
-					"inc": {
-						"tests": [
-							"test3"
-						]
-					}
+					"test3": "inc"
 				}
 			},
 			{
@@ -908,21 +728,13 @@
 					}
 				],
 				"verdicts": {
-					"pass": {
-						"tests": [
-							"test3"
-						]
-					}
+					"test3": "pass"
 				}
 			},
 			{
 				"id": "node1",
 				"verdicts": {
-					"fail": {
-						"tests": [
-							"test3"
-						]
-					}
+					"test3": "fail"
 				}
 			}
 		],
@@ -946,11 +758,7 @@
 					}
 				],
 				"verdicts": {
-					"inc": {
-						"tests": [
-							"test4"
-						]
-					}
+					"test4": "inc"
 				}
 			},
 			{
@@ -967,21 +775,13 @@
 					}
 				],
 				"verdicts": {
-					"pass": {
-						"tests": [
-							"test4"
-						]
-					}
+					"test4": "pass"
 				}
 			},
 			{
 				"id": "node1",
 				"verdicts": {
-					"fail": {
-						"tests": [
-							"test4"
-						]
-					}
+					"test4": "fail"
 				}
 			}
 		],
@@ -1005,11 +805,7 @@
 					}
 				],
 				"verdicts": {
-					"inc": {
-						"tests": [
-							"test5"
-						]
-					}
+					"test5": "inc"
 				}
 			},
 			{
@@ -1026,21 +822,13 @@
 					}
 				],
 				"verdicts": {
-					"pass": {
-						"tests": [
-							"test5"
-						]
-					}
+					"test5": "pass"
 				}
 			},
 			{
 				"id": "node1",
 				"verdicts": {
-					"fail": {
-						"tests": [
-							"test5"
-						]
-					}
+					"test5": "fail"
 				}
 			}
 		],
@@ -1064,11 +852,7 @@
 					}
 				],
 				"verdicts": {
-					"inc": {
-						"tests": [
-							"test6"
-						]
-					}
+					"test6": "inc"
 				}
 			},
 			{
@@ -1085,21 +869,13 @@
 					}
 				],
 				"verdicts": {
-					"pass": {
-						"tests": [
-							"test6"
-						]
-					}
+					"test6": "pass"
 				}
 			},
 			{
 				"id": "node1",
 				"verdicts": {
-					"fail": {
-						"tests": [
-							"test6"
-						]
-					}
+					"test6": "fail"
 				}
 			}
 		],
@@ -1123,11 +899,7 @@
 					}
 				],
 				"verdicts": {
-					"inc": {
-						"tests": [
-							"test7"
-						]
-					}
+					"test7": "inc"
 				}
 			},
 			{
@@ -1144,21 +916,13 @@
 					}
 				],
 				"verdicts": {
-					"pass": {
-						"tests": [
-							"test7"
-						]
-					}
+					"test7": "pass"
 				}
 			},
 			{
 				"id": "node1",
 				"verdicts": {
-					"fail": {
-						"tests": [
-							"test7"
-						]
-					}
+					"test7": "fail"
 				}
 			}
 		],
@@ -1182,11 +946,7 @@
 					}
 				],
 				"verdicts": {
-					"inc": {
-						"tests": [
-							"test8"
-						]
-					}
+					"test8": "inc"
 				}
 			},
 			{
@@ -1203,21 +963,13 @@
 					}
 				],
 				"verdicts": {
-					"pass": {
-						"tests": [
-							"test8"
-						]
-					}
+					"test8": "pass"
 				}
 			},
 			{
 				"id": "node1",
 				"verdicts": {
-					"fail": {
-						"tests": [
-							"test8"
-						]
-					}
+					"test8": "fail"
 				}
 			}
 		],
@@ -1241,11 +993,7 @@
 					}
 				],
 				"verdicts": {
-					"inc": {
-						"tests": [
-							"test9"
-						]
-					}
+					"test9": "inc"
 				}
 			},
 			{
@@ -1262,21 +1010,13 @@
 					}
 				],
 				"verdicts": {
-					"pass": {
-						"tests": [
-							"test9"
-						]
-					}
+					"test9": "pass"
 				}
 			},
 			{
 				"id": "node1",
 				"verdicts": {
-					"fail": {
-						"tests": [
-							"test9"
-						]
-					}
+					"test9": "fail"
 				}
 			}
 		],

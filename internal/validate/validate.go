@@ -7,11 +7,22 @@ import (
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 )
 
+// Validated represents a validated test.
+type Validated struct {
+	root *testlang.Node
+}
+
+// Root gets a pointer to the root node of a Validated test.
+func (v Validated) Root() *testlang.Node {
+	return v.root
+}
+
 // Test performs a full validation of the test starting at root.
-func Test(root *testlang.Node) error {
+// If successful, it returns a Validated test.
+func Test(root *testlang.Node) (*Validated, error) {
 	// TODO: check test monotonicity and partitioning
 
-	return testlang.Walk(root, func(node *testlang.Node) error {
+	err := testlang.Walk(root, func(node *testlang.Node) error {
 		var err error
 
 		if node == root {
@@ -26,6 +37,12 @@ func Test(root *testlang.Node) error {
 
 		return nil
 	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &Validated{root: root}, nil
 }
 
 // Root checks whether node is a valid root node.

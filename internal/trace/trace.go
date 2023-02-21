@@ -58,3 +58,15 @@ func New(forbid testlang.Event, after ...testlang.Event) Forbidden {
 func (t Forbidden) String() string {
 	return fmt.Sprintf("%s!%s", &t.Prefix, &t.Forbid)
 }
+
+// Name assigns a systematic name to each trace in traces.
+func Name(traces []Forbidden) map[string]Forbidden {
+	result := make(map[string]Forbidden, len(traces))
+
+	for i, t := range traces {
+		name := fmt.Sprintf("test%d", i)
+		result[name] = t
+	}
+
+	return result
+}
