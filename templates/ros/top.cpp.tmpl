@@ -3,15 +3,23 @@
 {{- end -}}
 
 {{- define "constants" }}
-constexpr int MAX_SPINS = 1;
+// no constants defined
 {{- end -}}
 
 {{- define "log" -}}
   /* {{ . }} */ printf
 {{- end -}}
 
-{{- define "callback_arg_type" -}}
-  const char*
+{{- /* Takes the Channel of a callback, returns its argument set (should be empty for an input). */ -}}
+{{- define "callback_args" -}}
+{{-   if not .IsIn -}}
+  const char* value
+{{-   end -}}
+{{- end -}}
+
+{{- /* Takes the Value received in an output callback, compares it against parameter `value`. */ -}}
+{{- define "callback_compare" -}}
+  strcmp(value, "{{ .StringValue }}")
 {{- end -}}
 
 {{/*

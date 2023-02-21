@@ -18,3 +18,9 @@ const static std::array<const char*, NUM_TESTS> TEST_NAMES =
   "{{ . }}", // {{ cppTestEnum . }}
 {{- end }}
 };
+
+// Gets the name of a test.
+const char* testName(Test t)
+{
+  return TEST_NAMES[static_cast<size_t>(t)];
+}

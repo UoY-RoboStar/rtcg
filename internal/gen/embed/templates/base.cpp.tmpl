@@ -8,6 +8,7 @@
 
 // System includes
 #include <array>
+#include <cstring>
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -30,16 +31,23 @@
 
 
 //
-// TEST METADATA
+// TESTS
 //
 // For non-factorised tests, there will likely only be one test captured by this test case.
 //
 {{ template "test_meta.cpp.tmpl" .Stm.Tests.Values }}
 
+
 //
 // VERDICTS
 //
 {{ template "verdict.cpp.tmpl" .Stm.Tests.Values }}
+
+
+//
+// STATES
+//
+{{ template "state_meta.cpp.tmpl" .Stm.States }}
 
 
 //

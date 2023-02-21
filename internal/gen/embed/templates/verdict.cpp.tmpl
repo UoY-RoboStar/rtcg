@@ -32,5 +32,5 @@ void Verdict::set(Test t, Outcome new_val)
     return;
 
   test_outcomes[i] = new_val;
-  {{ template "log" "info" }}("test %s is now %s (was %s)\n", TEST_NAMES[i], outstr(new_val), outstr(old_val));
+  {{ template "log" "info" }}("test %s is now %s (was %s)\n", testName(t), outstr(new_val), outstr(old_val));
 }

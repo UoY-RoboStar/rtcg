@@ -67,6 +67,16 @@ func (v *Value) String() string {
 	return v.Content.String()
 }
 
+// StringValue gets a source-interpolatable string representation of this value.
+// It differs from String in that it is not meant for human consumption.
+func (v *Value) StringValue() string {
+	if v.IsEmpty() {
+		return ""
+	}
+
+	return v.Content.StringValue()
+}
+
 func (v *Value) UnmarshalText(text []byte) error {
 	text = bytes.TrimSpace(text)
 
@@ -96,6 +106,10 @@ type Valuable interface {
 	encoding.TextMarshaler
 	encoding.TextUnmarshaler
 	fmt.Stringer
+
+	// StringValue gets a source-interpolatable string representation of this value.
+	// It differs from String in that it is not meant for human consumption.
+	StringValue() string
 }
 
 func tryUnmarshal[V Valuable](tmp V, text []byte) Valuable {
@@ -131,6 +145,10 @@ func (i *IntValue) String() string {
 	return fmt.Sprintf("int!%d", int64(*i))
 }
 
+func (i *IntValue) StringValue() string {
+	return strconv.FormatInt(int64(*i), intValueBase)
+}
+
 // Int constructs an integer Value.
 func Int(i int64) Value {
 	c := IntValue(i)
@@ -156,6 +174,10 @@ func (r *RawValue) UnmarshalText(text []byte) error {
 
 func (r *RawValue) String() string {
 	return fmt.Sprintf("raw!%q", string(*r))
+}
+
+func (r *RawValue) StringValue() string {
+	return string(*r)
 }
 
 // Raw constructs an uninterpreted Value.

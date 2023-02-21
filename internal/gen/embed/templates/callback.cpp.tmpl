@@ -9,9 +9,34 @@ Base indent is set at 2, as we are inside a top-level function.
   {
 {{- range $s, $ts := .States }}
   case {{ cppStateEnum $s }}:
+{{- /* If we're in an input channel, this will be an 'input accepted' callback.
+       A well-formed test will have precisely one transition out of here. */ -}}
+{{-   if $.Channel.IsIn }}
+    {{ template "log" "info" }}("{{ $.Channel }} accepted input as expected");
+    {{ cppStateEntry (index $ts 0).Next }}();
+{{-   else }}
+    // TODO: non-string IO
+{{-     range $i, $t := $ts }}
+    {{ if ne $i 0 }}else {{ end }}if ({{ template "callback_compare" $t.Value }}) // {{ $t.Value }} -> {{ $t.Next }}
+      {{ cppStateEntry $t.Next }}();
+{{-     end }}
+    else
+    {
+      // If we got here, then we saw a value the test isn't expecting.
+      {{ template "log" "info" }}("{{ $.Channel }} got unexpected value %s", value);
+      end(Status::OFF_SCRIPT);
+    }
+{{-   end }}
     break;
 {{- end }}
   default:
-    {{ template "log" "error" }}("unexpected state %d", static_cast<int>(state));
+{{-   if $.Channel.IsIn }}
+    // We shouldn't be seeing an input acknowledgement in this state.
+    {{ template "log" "error" }}("{{ $.Channel }} ack'd input in unexpected state %s", stateName(state));
     end(Status::BUG);
+{{- else }}
+    // This isn't one of the states that should observe {{ $.Channel }}!
+    {{ template "log" "info" }}("{{ $.Channel }} got output in unexpected state %s", stateName(state));
+    end(Status::OFF_SCRIPT);
+{{- end }}
   }

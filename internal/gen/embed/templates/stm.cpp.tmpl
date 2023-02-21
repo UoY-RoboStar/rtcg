@@ -4,15 +4,6 @@ stm.cpp.tmpl expands into the state machine for the tester.
 It expects the state machine as its dot.
 */}}
 
-// Indices of states in the state machine.
-enum class State
-{
-{{- range $i, $s := .States }}
-  {{ cppEnumField $s.ID }} = {{ $i }},
-{{- end }}
-};
-static const size_t NUM_STATES = {{ len .States }};
-
 // The main testing state machine.
 class StateMachine
 {
@@ -26,9 +17,9 @@ private:
   Status status = Status::RUNNING;
 
   // Callbacks
-{{- range .TransitionSets }}{{ if not .Channel.IsIn }}
-  void {{ .Channel.Name }}Callback({{ template "callback_arg_type" }} value);
-{{- end }}{{ end }}
+{{- range .TransitionSets }}
+  void {{ .Channel.Name }}Callback({{ template "callback_args" .Channel }});
+{{- end }}
 
   // State entry functions
 {{- range .States }}
@@ -36,6 +27,7 @@ private:
 {{- end }}
 
   void end(Status why);
+  void transitionTo(State next);
 };
 
 Status StateMachine::getStatus()
@@ -55,18 +47,19 @@ void StateMachine::dumpVerdict()
   verdict.dump();
 }
 
+
 //
 // Callback functions
 //
+{{- range .TransitionSets }}
 
-{{- range .TransitionSets }}{{ if not .Channel.IsIn }}
-void StateMachine::{{ .Channel.Name }}Callback({{ template "callback_arg_type" }} value)
+void StateMachine::{{ .Channel.Name }}Callback({{ template "callback_args" .Channel }})
 {
 {{- block "callback" . }}
 {{-   template "callback.cpp.tmpl" . }}
-{{- end }}
+{{- end -}}
 }
-{{- end }}{{ end }}
+{{- end }}
 
 
 //
@@ -77,7 +70,8 @@ void StateMachine::{{ .Channel.Name }}Callback({{ template "callback_arg_type" }
 
 void StateMachine::{{ cppStateEntry .ID }}()
 {
-{{- block "state" . }}
+  state = {{ cppStateEnum .ID }};
+{{ block "state" . }}
 {{- template "state.cpp.tmpl" . -}}
 {{- end }}
 }
