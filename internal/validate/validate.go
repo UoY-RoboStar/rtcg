@@ -7,6 +7,27 @@ import (
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 )
 
+// Test performs a full validation of the test starting at root.
+func Test(root *testlang.Node) error {
+	// TODO: check test monotonicity and partitioning
+
+	return testlang.Walk(root, func(node *testlang.Node) error {
+		var err error
+
+		if node == root {
+			err = Root(node)
+		} else {
+			err = Node(node)
+		}
+
+		if err != nil {
+			return fmt.Errorf("invalid node %q: %w", node, err)
+		}
+
+		return nil
+	})
+}
+
 // Root checks whether node is a valid root node.
 func Root(node *testlang.Node) error {
 	if node.Event != nil {
@@ -17,8 +38,8 @@ func Root(node *testlang.Node) error {
 		return ErrRootHasOutcome
 	}
 
-	if 0 < len(node.Tests) {
-		return ErrRootHasTests
+	if len(node.Tests) == 0 {
+		return ErrNoTests
 	}
 
 	return nil
@@ -116,14 +137,11 @@ var (
 	// ErrNoOutcome occurs when a non-root node has no outcome.
 	ErrNoOutcome = errors.New("non-root node should have an outcome set")
 
-	// ErrNoTests occurs when a non-root node has no tests set.
-	ErrNoTests = errors.New("non-root node should belong to at least one test")
+	// ErrNoTests occurs when a node has no tests set.
+	ErrNoTests = errors.New("node should belong to at least one test")
 
 	// ErrRootHasEvent occurs when a root node has an event set.
 	ErrRootHasEvent = errors.New("root should not have an event set")
-
-	// ErrRootHasTests occurs when a root node has tests set.
-	ErrRootHasTests = errors.New("root should not name any tests")
 
 	// ErrRootHasOutcome occurs when a root node has an outcome set.
 	ErrRootHasOutcome = errors.New("root should not have an outcome set")

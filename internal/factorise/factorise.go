@@ -66,6 +66,5 @@ type Failure struct {
 
 // Node constructs the 'pass, event, fail' node represented by this Failure.
 func (f Failure) Node() testlang.Node {
-	fail := testlang.Fail().From(f.Test)
-	return testlang.Pass(f.Event, fail).From(f.Test)
+	return testlang.TestPoint(f.Event, f.Test)
 }

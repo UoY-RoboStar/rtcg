@@ -31,6 +31,17 @@ func Fail() Node {
 	return NewNode(OutcomeFail, nil)
 }
 
+// TestPoint constructs a 'pass -> event -> fail' node set, and marks it as belonging to tests.
+func TestPoint(event Event, tests ...string) Node {
+	fail := Fail()
+	fail.Mark(tests...)
+
+	pass := Pass(event, fail)
+	pass.Mark(tests...)
+
+	return pass
+}
+
 // NewNode constructs a new node with the given outcome, event, and next nodes.
 //
 // The node does not have an assigned ID or test list; set these afterwards if desired.
@@ -38,8 +49,8 @@ func NewNode(outcome Outcome, event *Event, next ...Node) Node {
 	return Node{ID: "", Tests: nil, Outcome: outcome, Event: event, Next: next}
 }
 
-// From replaces the Tests field of this Node inline with the contents of tests.
-func (n Node) From(tests ...string) Node {
+// Mark replaces the Tests field of this Node inline with the contents of tests.
+func (n *Node) Mark(tests ...string) *Node {
 	n.Tests = tests
 
 	return n

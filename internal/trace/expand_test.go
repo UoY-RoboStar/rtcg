@@ -21,18 +21,19 @@ func TestTrace_Expand(t *testing.T) {
 	}{
 		"no-prefix": {
 			input: trace.New(event1),
-			want:  testlang.Pass(event1, testlang.Fail().From("no-prefix")).From("no-prefix"),
+			want:  testlang.TestPoint(event1),
 		},
 		"lone-prefix": {
 			input: trace.New(event1, event2),
 			want: testlang.Inc(
 				event2,
-				testlang.Pass(event1, testlang.Fail().From("lone-prefix")).From("lone-prefix")).From("lone-prefix"),
+				testlang.TestPoint(event1)),
 		},
 	} {
 		name := name
 		input := test.input
 		want := test.want
+		testlang.MarkAll(&want, name)
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
