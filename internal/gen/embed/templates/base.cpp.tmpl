@@ -56,12 +56,12 @@
 {{ template "stm.cpp.tmpl" .Stm }}
 
 
-int main(int argc, char** argv)
+int main({{ block "main_args" . }}int argc, char** argv{{ end }})
 {
 {{- block "body" . }}
   // Initialisation code
 {{-   block "init" . }}
-  auto* stm = new StateMachine();
+  StateMachine stm;
 {{-   end }}
 
   // Test code
@@ -71,11 +71,9 @@ int main(int argc, char** argv)
 
   // Teardown code
 {{-   block "aftermath" . }}
-  {{ template "log" "info" }}("test finished due to %s\n", explain(stm->getStatus()));
+  {{ template "log" "info" }}("test finished due to %s\n", explain(stm.getStatus()));
 
-  stm->dumpVerdict();
-
-  delete stm;
+  stm.dumpVerdict();
 {{-   end }}
 {{- end }}
 }
