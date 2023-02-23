@@ -25,6 +25,16 @@
   std::string(msg->data.c_str()).compare("{{ .StringValue }}") == 0
 {{- end -}}
 
+{{/* ROS initialisation code. */}}
+{{- define "init" }}
+  ros::init(argc, argv, "{{ .Name }}");
+  ros::NodeHandle nh;
+{{- end -}}
+
+{{- define "callback_init" }}
+  auto {{ .Name }}_sub = nh.subscribe("{{ .Name }}{{ if .IsIn }}_ack{{ end }}", 10, &StateMachine::{{ cppCallbackName . }}, &stm)
+{{- end -}}
+
 {{/*
 The main loop or spin of the test driver, coming between initialisation and cleanup.
 

@@ -3,6 +3,7 @@ package cppfunc
 
 import (
 	"fmt"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/channel"
 	"strings"
 	"text/template"
 
@@ -12,12 +13,18 @@ import (
 // Funcs adds the C++ function map to base.
 func Funcs(base *template.Template) *template.Template {
 	return base.Funcs(template.FuncMap{
-		"cppEnumField":   EnumField,
-		"cppOutcomeEnum": OutcomeEnum,
-		"cppStateEntry":  StateEntry,
-		"cppStateEnum":   StateEnum,
-		"cppTestEnum":    TestEnum,
+		"cppCallbackName": ChannelName,
+		"cppEnumField":    EnumField,
+		"cppOutcomeEnum":  OutcomeEnum,
+		"cppStateEntry":   StateEntry,
+		"cppStateEnum":    StateEnum,
+		"cppTestEnum":     TestEnum,
 	})
+}
+
+// ChannelName gets the name of the callback for the channel cha.
+func ChannelName(cha channel.Channel) string {
+	return cha.Name + "Callback"
 }
 
 // StateEntry gets the name of the entry method for the state with the given id.

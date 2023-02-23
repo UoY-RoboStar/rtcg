@@ -42,7 +42,10 @@ namespace rtcg
   };
 
   // Returns a (static) description of a status.
-  const char* explain(Status why);
+  const char* explain(Status s);
+
+  // Converts a status into an exit code.
+  int exitCode(Status s);
 }
 
 #endif // RTCG_H_DEFINED

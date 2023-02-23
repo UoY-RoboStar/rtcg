@@ -32,20 +32,32 @@ const char* rtcg::outstr(rtcg::Outcome o)
 // Status
 //
 
-const char* rtcg::explain(rtcg::Status why)
+const char* rtcg::explain(Status s)
 {
-  switch (why) {
+  switch (s) {
   case Status::RUNNING:
-    return "running";
+    return "still running";
   case Status::OFF_SCRIPT:
-    return "event happened that took the test off-script";
+    return "an event happened that took the test off-script";
   case Status::TIMEOUT:
-    return "no new events happening within the allotted timeframe";
+    return "the test ran out of time";
   case Status::FAIL:
-    return "an unwanted behaviour occurring";
+    return "an unwanted behaviour occurred";
   case Status::BUG:
-    return "internal error";
+    return "an internal error occurred";
   default:
     return "unknown (this should not occur)";
+  }
+}
+
+int rtcg::exitCode(Status s)
+{
+  switch (s) {
+  case Status::FAIL:
+    return 1;
+  case Status::BUG:
+    return 2;
+  default:
+    return 0;
   }
 }

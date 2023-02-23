@@ -19,7 +19,7 @@ private:
 
   // Callbacks
 {{- range .TransitionSets }}
-  void {{ .Channel.Name }}Callback({{ template "callback_args" .Channel }});
+  void {{ cppCallbackName .Channel }}({{ template "callback_args" .Channel }});
 {{- end }}
 
   // State entry functions
@@ -59,7 +59,7 @@ void StateMachine::dumpVerdict()
 //
 {{- range .TransitionSets }}
 
-void StateMachine::{{ .Channel.Name }}Callback({{ template "callback_args" .Channel }})
+void StateMachine::{{ cppCallbackName .Channel }}({{ template "callback_args" .Channel }})
 {
 {{- block "callback" . }}
 {{-   template "callback.cpp.tmpl" . }}

@@ -1,20 +1,26 @@
 {{/* The main entry point of the test. */}}
 int main({{ block "main_args" . }}int argc, char** argv{{ end }})
 {
-{{- block "body" . }}
-    // Initialisation code
-    StateMachine stm;
-    {{-   block "init" . }}
-    {{-   end }}
+  // Initialisation
+  StateMachine stm;
 
-    // Test code
-    {{   template "spin" . }}
-
-    // Teardown code
-    {{-   block "aftermath" . }}
-        {{ template "log" "info" }}("test finished due to %s\n", rtcg::explain(stm.getStatus()));
-
-        stm.dumpVerdict();
-    {{-   end }}
+{{- block "init" . }}
 {{- end }}
+{{- range .Stm.TransitionSets }}
+{{-   block "callback_init" .Channel }}
+{{- end }}
+{{- end }}
+
+  // Test loop
+  {{ template "log" "info" }}("test {{ .Name }} running\n");
+{{ template "spin" . }}
+
+  auto status = stm.getStatus();
+  {{ template "log" "info" }}("test {{ .Name }} finished: %s\n", rtcg::explain(status));
+  stm.dumpVerdict();
+
+{{- block "cleanup" . }}
+{{- end }}
+
+  return rtcg::exitCode(status);
 }
