@@ -1,39 +1,41 @@
 {{- define "system_includes" }}
-#include <ros/ros.h>
+// #include <ros/ros.h>
 {{- end -}}
 
 {{- define "constants" }}
 // no constants defined
 {{- end -}}
 
-{{- /* Expand to the name of a printf-style function used for logging. */ -}}
 {{- define "log" -}}
-  ROS_{{ toUpper . }}
+  /* {{ . }} */ printf
 {{- end -}}
 
 {{- /* Takes the Channel of a callback, returns its argument set (should be empty for an input). */ -}}
 {{- define "callback_args" -}}
-{{-   if .IsIn -}}
-  const std_msgs::Bool::ConstPtr& msg
-{{-   else -}}
-  const std_msgs::String::ConstPtr& msg
+{{-   if not .IsIn -}}
+  const char* value
 {{-   end -}}
 {{- end -}}
 
 {{- /* Takes the Value received in an output callback, compares it against parameter `value`. */ -}}
 {{- define "callback_compare" -}}
-  std::string(msg->data.c_str()).compare("{{ .StringValue }}") == 0
+  std::string(value).compare("{{ .StringValue }}") == 0
 {{- end -}}
 
 {{/*
-The main loop or spin of the test driver, coming between initialisation and cleanup.
+Placed in the test driver as the body of the 'while' loop that is waiting
+for results to come in from callbacks.
 
 Should have an indent of 2, and has the state machine as dot.
 */}}
 {{- define "spin" }}
-  ros::spin();
+  while (stm.getStatus() == Status::RUNNING)
+  {
+  }
 {{- end -}}
 
-{{/* We don't override "main_args" here. */}}
+{{- define "main_args" -}}
+  {{/* See https://stackoverflow.com/questions/46174445 */}}{{ "" }}
+{{- end -}}
 
 {{- template "base.cpp.tmpl" . -}}

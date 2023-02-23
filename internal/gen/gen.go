@@ -5,6 +5,7 @@ import (
 	"embed"
 	"errors"
 	"fmt"
+	"github.com/UoY-RoboStar/rtcg/internal/gen/stdfunc"
 	"io"
 	"io/fs"
 	"os"
@@ -57,6 +58,7 @@ func New(inFS fs.FS, outDir string) (*Generator, error) {
 
 func parseCppTemplate(inFS fs.FS) (*template.Template, error) {
 	base := cppfunc.Funcs(template.New(""))
+	base = stdfunc.Funcs(base)
 
 	base, err := base.ParseFS(baseTemplates, "embed/templates/*.cpp.tmpl")
 	if err != nil {
