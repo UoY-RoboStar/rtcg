@@ -31,15 +31,7 @@
 
 
 //
-// TESTS
-//
-// For non-factorised tests, there will likely only be one test captured by this test case.
-//
-{{ template "test_meta.cpp.tmpl" .Stm.Tests.Values }}
-
-
-//
-// VERDICTS
+// TEST VERDICTS
 //
 {{ template "verdict.cpp.tmpl" .Stm.Tests.Values }}
 
@@ -60,14 +52,12 @@ int main({{ block "main_args" . }}int argc, char** argv{{ end }})
 {
 {{- block "body" . }}
   // Initialisation code
-{{-   block "init" . }}
   StateMachine stm;
+{{-   block "init" . }}
 {{-   end }}
 
   // Test code
-{{-   block "tester" . }}
-{{ template "spin" . }}
-{{-   end }}
+{{   template "spin" . }}
 
   // Teardown code
 {{-   block "aftermath" . }}

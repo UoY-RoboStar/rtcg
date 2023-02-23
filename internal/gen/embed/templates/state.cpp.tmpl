@@ -7,7 +7,7 @@ Base indent is set at 2, as we are inside a top-level function.
 */}}
 
 {{- range $t, $o := .Verdict }}
-  verdict.set({{ cppTestEnum $t }}, {{ cppOutcomeEnum $o }});
+  verdict.{{ $t }}({{ cppOutcomeEnum $o }});
 {{- end }}
 {{- if .Verdict.IsFail }}
 

@@ -8,6 +8,8 @@ It expects the state machine as its dot.
 class StateMachine
 {
 public:
+  StateMachine();
+
   rtcg::Status getStatus();
   void dumpVerdict();
 
@@ -29,6 +31,11 @@ private:
   void end(rtcg::Status why);
   void transitionTo(State next);
 };
+
+StateMachine::StateMachine()
+{
+  {{ cppStateEntry .InitialState }}();
+}
 
 rtcg::Status StateMachine::getStatus()
 {

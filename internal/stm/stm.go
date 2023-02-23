@@ -10,6 +10,7 @@ package stm
 
 import (
 	"fmt"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 	"io"
 
 	"github.com/UoY-RoboStar/rtcg/internal/serial"
@@ -49,6 +50,12 @@ type Stm struct {
 
 	// Tests is the set of names of tests being captured by this state machine.
 	Tests structure.Set[string]
+}
+
+// InitialState is the node ID of the initial state.
+func (s *Stm) InitialState() testlang.NodeID {
+	// TODO: do we need to guard against an empty state machine?
+	return s.States[0].ID
 }
 
 // TransitionSets calculates all aggregate transition sets across the whole state machine.

@@ -7,10 +7,14 @@ It expects a slice of test ID strings as its dot.
 class Verdict
 {
 public:
-  void dump();
-  void set(Test t, rtcg::Outcome new_val);
+  void dump(); // Outputs all test verdicts to log.
+{{- range . }}
+  void {{ . }}(rtcg::Outcome new_val); // Sets the outcome of {{ . }}.
+{{- end }}
 private:
-  std::array<rtcg::Outcome, NUM_TESTS> test_outcomes;
+{{- range . }}
+  rtcg::Outcome {{ . }}_ = rtcg::Outcome::UNSET;
+{{- end }}
 };
 
 void Verdict::dump()
@@ -18,19 +22,19 @@ void Verdict::dump()
 {{- block "verdict_dump" . }}
   {{ template "log" "info" }}("final outcomes: \n");
 {{-   range . }}
-  {{ template "log" "info" }}("  {{ .}} = %s\n", rtcg::outstr(test_outcomes[static_cast<size_t>({{ cppTestEnum . }})]));
+  {{ template "log" "info" }}("  {{ . }} = %s\n", rtcg::outstr({{ . }}_));
 {{-   end }}
 {{- end }}
 }
 
-void Verdict::set(Test t, rtcg::Outcome new_val)
-{
-  auto i = static_cast<size_t>(t);
+{{- range . }}
 
-  auto old_val = test_outcomes[i];
-  if (old_val == new_val)
+void Verdict::{{ . }}(rtcg::Outcome new_val)
+{
+  if ({{ . }}_ == new_val)
     return;
 
-  test_outcomes[i] = new_val;
-  {{ template "log" "info" }}("test %s is now %s (was %s)\n", testName(t), rtcg::outstr(new_val), rtcg::outstr(old_val));
+  {{ template "log" "info" }}("test {{ . }} is now %s (was %s)\n", rtcg::outstr(new_val), rtcg::outstr({{ . }}_));
+  {{ . }}_ = new_val;
 }
+{{- end }}

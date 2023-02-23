@@ -15,6 +15,8 @@
 const char* rtcg::outstr(rtcg::Outcome o)
 {
   switch (o) {
+  case Outcome::UNSET:
+    return "unset";
   case Outcome::INC:
     return "inconclusive";
   case Outcome::PASS:
