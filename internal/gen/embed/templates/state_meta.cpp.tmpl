@@ -6,21 +6,18 @@ It expects a slice of state ID strings as its dot.
 // A numerical identifier for each state in the testing state machine.
 enum class State {
 {{- range $i, $v := . }}
-  {{ cppEnumField $v.ID }} = {{ $i }},
-{{- end }}
-};
-const size_t NUM_STATES = {{ len . }};
-
-// Names for each state.
-const static std::array<const char*, NUM_STATES> STATE_NAMES =
-{
-{{- range . }}
-  "{{ .ID }}", // {{ cppStateEnum .ID }}
+  {{ cppEnumField $v.ID }},
 {{- end }}
 };
 
 // Gets the name of a state.
 const char* stateName(State s)
 {
-  return STATE_NAMES[static_cast<size_t>(s)];
+  switch (s) {
+{{- range . }}
+  case {{ cppStateEnum .ID }}:
+    return "{{ .ID }}";
+{{- end }}
+  }
+  return "???";
 }

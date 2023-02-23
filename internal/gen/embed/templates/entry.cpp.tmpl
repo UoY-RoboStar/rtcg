@@ -1,0 +1,20 @@
+{{/* The main entry point of the test. */}}
+int main({{ block "main_args" . }}int argc, char** argv{{ end }})
+{
+{{- block "body" . }}
+    // Initialisation code
+    StateMachine stm;
+    {{-   block "init" . }}
+    {{-   end }}
+
+    // Test code
+    {{   template "spin" . }}
+
+    // Teardown code
+    {{-   block "aftermath" . }}
+        {{ template "log" "info" }}("test finished due to %s\n", rtcg::explain(stm.getStatus()));
+
+        stm.dumpVerdict();
+    {{-   end }}
+{{- end }}
+}

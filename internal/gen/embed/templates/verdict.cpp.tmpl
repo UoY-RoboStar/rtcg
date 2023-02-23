@@ -37,4 +37,4 @@ void Verdict::{{ . }}(rtcg::Outcome new_val)
   {{ template "log" "info" }}("test {{ . }} is now %s (was %s)\n", rtcg::outstr(new_val), rtcg::outstr({{ . }}_));
   {{ . }}_ = new_val;
 }
-{{- end }}
+{{- end -}}
