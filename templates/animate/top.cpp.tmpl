@@ -29,8 +29,9 @@ for results to come in from callbacks.
 Should have an indent of 2, and has the state machine as dot.
 */}}
 {{- define "spin" }}
-  while (stm.getStatus() == Status::RUNNING)
+  while (stm.getStatus() == rtcg::Status::RUNNING)
   {
+    // TODO: add animation here
   }
 {{- end -}}
 

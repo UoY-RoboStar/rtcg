@@ -71,7 +71,7 @@ int main({{ block "main_args" . }}int argc, char** argv{{ end }})
 
   // Teardown code
 {{-   block "aftermath" . }}
-  {{ template "log" "info" }}("test finished due to %s\n", explain(stm.getStatus()));
+  {{ template "log" "info" }}("test finished due to %s\n", rtcg::explain(stm.getStatus()));
 
   stm.dumpVerdict();
 {{-   end }}

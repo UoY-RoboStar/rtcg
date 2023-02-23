@@ -27,17 +27,17 @@ func StateEntry(id testlang.NodeID) string {
 
 // OutcomeEnum gets a reference to the enum member for outcome.
 func OutcomeEnum(outcome testlang.Outcome) string {
-	return enumName(outcomeEnumName, outcome)
+	return rtcgEnumName(outcomeEnumName, outcome)
 }
 
 // StateEnum gets a reference to the enum member for the state with the given id.
 func StateEnum(id testlang.NodeID) string {
-	return enumName(stateEnumName, id)
+	return localEnumName(stateEnumName, id)
 }
 
 // TestEnum gets a reference to the enum member for the test called name.
 func TestEnum(name string) string {
-	return enumName(testEnumName, name)
+	return localEnumName(testEnumName, name)
 }
 
 // EnumField massages variant to become suitable as an enum field name.
@@ -45,7 +45,11 @@ func EnumField(variant any) string {
 	return strings.ToUpper(fmt.Sprint(variant))
 }
 
-func enumName(name string, variant any) string {
+func rtcgEnumName(name string, variant any) string {
+	return "rtcg::" + localEnumName(name, variant)
+}
+
+func localEnumName(name string, variant any) string {
 	return name + "::" + EnumField(variant)
 }
 

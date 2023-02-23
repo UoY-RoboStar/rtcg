@@ -1,5 +1,5 @@
 //
-// rtcg.cpp - functionality common to rtcg tests.
+// rtcg.cpp - functionality common to rtcg tests
 //
 // Copyright (C) 2023 University of York and others
 //
@@ -12,7 +12,7 @@
 // Outcome
 //
 
-const char* outstr(Outcome o)
+const char* rtcg::outstr(rtcg::Outcome o)
 {
   switch (o) {
   case Outcome::INC:
@@ -30,7 +30,7 @@ const char* outstr(Outcome o)
 // Status
 //
 
-const char* explain(Status why)
+const char* rtcg::explain(rtcg::Status why)
 {
   switch (why) {
   case Status::RUNNING:

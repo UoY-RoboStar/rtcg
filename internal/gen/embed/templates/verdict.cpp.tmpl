@@ -8,9 +8,9 @@ class Verdict
 {
 public:
   void dump();
-  void set(Test t, Outcome new_val);
+  void set(Test t, rtcg::Outcome new_val);
 private:
-  std::array<Outcome, NUM_TESTS> test_outcomes;
+  std::array<rtcg::Outcome, NUM_TESTS> test_outcomes;
 };
 
 void Verdict::dump()
@@ -18,12 +18,12 @@ void Verdict::dump()
 {{- block "verdict_dump" . }}
   {{ template "log" "info" }}("final outcomes: \n");
 {{-   range . }}
-  {{ template "log" "info" }}("  {{ .}} = %s\n", outstr(test_outcomes[static_cast<size_t>({{ cppTestEnum . }})]));
+  {{ template "log" "info" }}("  {{ .}} = %s\n", rtcg::outstr(test_outcomes[static_cast<size_t>({{ cppTestEnum . }})]));
 {{-   end }}
 {{- end }}
 }
 
-void Verdict::set(Test t, Outcome new_val)
+void Verdict::set(Test t, rtcg::Outcome new_val)
 {
   auto i = static_cast<size_t>(t);
 
@@ -32,5 +32,5 @@ void Verdict::set(Test t, Outcome new_val)
     return;
 
   test_outcomes[i] = new_val;
-  {{ template "log" "info" }}("test %s is now %s (was %s)\n", testName(t), outstr(new_val), outstr(old_val));
+  {{ template "log" "info" }}("test %s is now %s (was %s)\n", testName(t), rtcg::outstr(new_val), rtcg::outstr(old_val));
 }

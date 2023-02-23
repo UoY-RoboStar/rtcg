@@ -8,13 +8,13 @@ It expects the state machine as its dot.
 class StateMachine
 {
 public:
-  Status getStatus();
+  rtcg::Status getStatus();
   void dumpVerdict();
 
 private:
   Verdict verdict;
   State state = {{ (index .States 0).ID | cppStateEnum }};
-  Status status = Status::RUNNING;
+  rtcg::Status status = rtcg::Status::RUNNING;
 
   // Callbacks
 {{- range .TransitionSets }}
@@ -26,16 +26,16 @@ private:
   void {{ cppStateEntry .ID }}();
 {{- end }}
 
-  void end(Status why);
+  void end(rtcg::Status why);
   void transitionTo(State next);
 };
 
-Status StateMachine::getStatus()
+rtcg::Status StateMachine::getStatus()
 {
   return status;
 }
 
-void StateMachine::end(Status why)
+void StateMachine::end(rtcg::Status why)
 {
   status = why;
 {{- block "end" . }}

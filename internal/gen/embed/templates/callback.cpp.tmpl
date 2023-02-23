@@ -24,7 +24,7 @@ Base indent is set at 2, as we are inside a top-level function.
     {
       // If we got here, then we saw a value the test isn't expecting.
       {{ template "log" "info" }}("{{ $.Channel }} got unexpected value %s", value);
-      end(Status::OFF_SCRIPT);
+      end(rtcg::Status::OFF_SCRIPT);
     }
 {{-   end }}
     break;
@@ -33,10 +33,10 @@ Base indent is set at 2, as we are inside a top-level function.
 {{-   if $.Channel.IsIn }}
     // We shouldn't be seeing an input acknowledgement in this state.
     {{ template "log" "error" }}("{{ $.Channel }} ack'd input in unexpected state %s", stateName(state));
-    end(Status::BUG);
+    end(rtcg::Status::BUG);
 {{- else }}
     // This isn't one of the states that should observe {{ $.Channel }}!
     {{ template "log" "info" }}("{{ $.Channel }} got output in unexpected state %s", stateName(state));
-    end(Status::OFF_SCRIPT);
+    end(rtcg::Status::OFF_SCRIPT);
 {{- end }}
   }
