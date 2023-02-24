@@ -1,29 +1,30 @@
 {{/*
 stm.cpp.tmpl expands into the state machine for the tester.
 
-It expects the state machine as its dot.
+It expects the test context as its dot.
 */}}
 // The main testing state machine.
 class StateMachine
 {
 public:
-  StateMachine();
+  StateMachine({{ block "stm_ctor_params" . }}{{ end }});
 
   rtcg::Status getStatus();
   void dumpVerdict();
 
 private:
   Verdict verdict;
-  State state = {{ (index .States 0).ID | cppStateEnum }};
+  State state = {{ (index .Stm.States 0).ID | cppStateEnum }};
   rtcg::Status status = rtcg::Status::RUNNING;
+{{- block "stm_fields" . -}}{{- end }}
 
   // Callbacks
-{{- range .TransitionSets }}
+{{- range .Transitions }}
   void {{ cppCallbackName .Channel }}({{ template "callback_args" .Channel }});
 {{- end }}
 
   // State entry functions
-{{- range .States }}
+{{- range .Stm.States }}
   void {{ cppStateEntry .ID }}();
 {{- end }}
 
@@ -31,9 +32,10 @@ private:
   void transitionTo(State next);
 };
 
-StateMachine::StateMachine()
+StateMachine::StateMachine({{ template "stm_ctor_params" . }})
 {
-  {{ cppStateEntry .InitialState }}();
+  {{ cppStateEntry .Stm.InitialState }}();
+  {{- block "stm_ctor" . }}{{ end }}
 }
 
 rtcg::Status StateMachine::getStatus()
@@ -57,7 +59,7 @@ void StateMachine::dumpVerdict()
 //
 // Callback functions
 //
-{{- range .TransitionSets }}
+{{- range .Transitions }}
 
 void StateMachine::{{ cppCallbackName .Channel }}({{ template "callback_args" .Channel }})
 {
@@ -72,7 +74,7 @@ void StateMachine::{{ cppCallbackName .Channel }}({{ template "callback_args" .C
 // State machine entry functions
 //
 
-{{- range .States }}
+{{- range .Stm.States }}
 
 void StateMachine::{{ cppStateEntry .ID }}()
 {

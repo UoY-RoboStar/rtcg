@@ -5,16 +5,15 @@ import (
 	"embed"
 	"errors"
 	"fmt"
-	"github.com/UoY-RoboStar/rtcg/internal/gen/stdfunc"
 	"io"
 	"io/fs"
 	"os"
 	"path"
 	"path/filepath"
 	"text/template"
-	"time"
 
 	"github.com/UoY-RoboStar/rtcg/internal/gen/cppfunc"
+	"github.com/UoY-RoboStar/rtcg/internal/gen/stdfunc"
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
 )
 
@@ -187,7 +186,7 @@ func (g *Generator) generateSuite(suite stm.Suite) error {
 func (g *Generator) generateStm(name string, body *stm.Stm) error {
 	outPath := filepath.Join(g.outputDir, srcDir, name+".cpp")
 
-	ctx := Context{Stm: body, Name: name, Date: time.Now()}
+	ctx := NewContext(name, body)
 
 	return executeTemplateOnFile("test-case "+name, outPath, "top.cpp.tmpl", g.template, ctx)
 }

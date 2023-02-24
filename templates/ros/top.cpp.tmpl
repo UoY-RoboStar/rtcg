@@ -35,6 +35,38 @@
   auto {{ .Name }}_sub = nh.subscribe("{{ .Name }}{{ if .IsIn }}_ack{{ end }}", 10, &StateMachine::{{ cppCallbackName . }}, &stm)
 {{- end -}}
 
+{{- define "publisher_name" -}}{{ .Channel.Name }}_pub{{- end -}}
+
+{{- /* Adding the ROS publishers to the state machine and its constructor: */ -}}
+
+{{- define "stm_fields" }}
+  // Publisher handles:
+{{-   range .Inputs }}
+  ros::Publisher {{ template "publisher_name" . }}_;
+{{-   end -}}
+{{- end -}}
+
+{{- define "stm_ctor_params" -}}
+{{-   range $i, $t := .Inputs -}}
+{{-     if ne $i 0 -}}, {{ end -}}
+ros::Publisher {{      template "publisher_name" $t }}
+{{-   end -}}
+{{- end -}}
+
+{{- define "stm_ctor_args" -}}
+{{-   range $i, $t := .Inputs -}}
+{{-     if ne $i 0 -}}, {{ end -}}
+{{      template "publisher_name" $t }}
+{{-   end -}}
+{{- end -}}
+
+{{- define "stm_ctor" }}
+  // Install the publisher handles:
+{{-   range .Inputs }}
+  {{ template "publisher_name" . }}_ = {{ template "publisher_name" . }};
+{{-   end -}}
+{{- end -}}
+
 {{/*
 The main loop or spin of the test driver, coming between initialisation and cleanup.
 
