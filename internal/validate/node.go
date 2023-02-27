@@ -2,6 +2,7 @@ package validate
 
 import (
 	"fmt"
+
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 )
 
@@ -37,6 +38,7 @@ func Node(node *testlang.Node) error {
 		if err := passNode(node); err != nil {
 			return err
 		}
+
 		fallthrough
 	case testlang.OutcomeInc:
 		return nonFailNode(node)

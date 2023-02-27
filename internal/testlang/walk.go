@@ -5,6 +5,7 @@ import "github.com/UoY-RoboStar/rtcg/internal/structure"
 // Walk walks the test tree from node in pre-order, applying function until it returns an error.
 func Walk(node *Node, function func(*Node) error) error {
 	var stack structure.Stack[*Node]
+
 	stack.Push(node)
 
 	for !stack.IsEmpty() {

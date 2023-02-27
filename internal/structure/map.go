@@ -4,13 +4,13 @@ package structure
 func TryOverMapValues[K comparable, T, U any](input map[K]T, mapper func(T) (U, error)) (map[K]U, error) {
 	result := make(map[K]U, len(input))
 
-	for k, v := range input {
+	for key, v := range input {
 		nv, err := mapper(v)
 		if err != nil {
 			return nil, err
 		}
 
-		result[k] = nv
+		result[key] = nv
 	}
 
 	return result, nil

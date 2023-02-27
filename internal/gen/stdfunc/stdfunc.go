@@ -2,9 +2,10 @@
 package stdfunc
 
 import (
-	"github.com/UoY-RoboStar/rtcg/internal/strmanip"
 	"strings"
 	"text/template"
+
+	"github.com/UoY-RoboStar/rtcg/internal/strmanip"
 )
 
 // Funcs adds the standard function map to base.

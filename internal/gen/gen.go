@@ -40,7 +40,7 @@ type Generator struct {
 
 // New creates a new Generator by reading all templates from inFS, and outputting to outDir.
 func New(inFS fs.FS, outDir string) (*Generator, error) {
-	generator := Generator{outputDir: outDir, template: nil}
+	generator := Generator{outputDir: outDir, template: nil, makefile: nil}
 
 	var err error
 
@@ -106,22 +106,22 @@ func (g *Generator) Generate(suite stm.Suite) error {
 	return nil
 }
 
-// mkdirs makes the various directories used by the
+// mkdirs makes the various directories used by the generator.
 func (g *Generator) mkdirs(suite stm.Suite) error {
 	if err := g.mkdir("test"); err != nil {
 		return err
 	}
 
-	if err := g.mkdir("test", srcDir); err != nil {
+	if err := g.mkdir("test source", srcDir); err != nil {
 		return err
 	}
 
-	if err := g.mkdir("test", srcDir, preludeDir); err != nil {
+	if err := g.mkdir("prelude", srcDir, preludeDir); err != nil {
 		return err
 	}
 
 	for name := range suite {
-		if err := g.mkdir("test", srcDir, name); err != nil {
+		if err := g.mkdir(name, srcDir, name); err != nil {
 			return err
 		}
 	}
@@ -164,6 +164,7 @@ func (g *Generator) copyPreludeFile(name string) error {
 	dst, err := os.Create(filepath.Join(g.outputDir, srcDir, preludeDir, name))
 	if err != nil {
 		err = fmt.Errorf("couldn't create prelude file %q: %w", name, err)
+
 		return errors.Join(err, src.Close())
 	}
 
@@ -177,6 +178,7 @@ func (g *Generator) copyPreludeFile(name string) error {
 
 func (g *Generator) generateMakefile(suite stm.Suite) error {
 	outPath := filepath.Join(g.outputDir, "Makefile")
+
 	return executeTemplateOnFile("Makefile", outPath, "Makefile.tmpl", g.makefile, suite)
 }
 
@@ -186,6 +188,7 @@ func (g *Generator) generateSuite(suite stm.Suite) error {
 			return fmt.Errorf("couldn't generate test %s: %w", k, err)
 		}
 	}
+
 	return nil
 }
 

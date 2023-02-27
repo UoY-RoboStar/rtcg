@@ -4,12 +4,12 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/UoY-RoboStar/rtcg/internal/validate"
 	"os"
 
 	"github.com/UoY-RoboStar/rtcg/internal/cli"
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
+	"github.com/UoY-RoboStar/rtcg/internal/validate"
 )
 
 const numAnonymousArgs = 1

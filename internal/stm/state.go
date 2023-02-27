@@ -2,10 +2,10 @@ package stm
 
 import (
 	"fmt"
-	"github.com/UoY-RoboStar/rtcg/internal/stm/verdict"
 	"strings"
 
 	"github.com/UoY-RoboStar/rtcg/internal/stm/transition"
+	"github.com/UoY-RoboStar/rtcg/internal/stm/verdict"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 )
 

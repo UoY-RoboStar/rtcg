@@ -2,10 +2,10 @@ package stm
 
 import (
 	"fmt"
-	"github.com/UoY-RoboStar/rtcg/internal/validate"
 
 	"github.com/UoY-RoboStar/rtcg/internal/structure"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
+	"github.com/UoY-RoboStar/rtcg/internal/validate"
 )
 
 // Builder builds state machines from tests.
@@ -78,14 +78,4 @@ func (b *Builder) ensureNodeID(n *testlang.Node) {
 		n.ID = testlang.NodeID(fmt.Sprintf("node%d", b.nodeNum))
 		b.nodeNum++
 	}
-}
-
-func (b *Builder) initStm(name string, node *testlang.Node) {
-	// Ideally, we wouldn't do this, and, instead, we'd just create a special prefix node and put that in the stack.
-	// However, that would require us to copy node into its Next list.
-	b.ensureNodeID(node)
-
-	initial := NewState(testlang.NodeID(name))
-	initial.AddOutgoingNode(node)
-
 }

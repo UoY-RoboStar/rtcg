@@ -8,17 +8,17 @@ import (
 // Expand expands a single Forbidden trace into a test, tagged throughout with name.
 func (t Forbidden) Expand(name string) *testlang.Node {
 	// Work backwards through the trace, building the tree from the failure.
-	n := testlang.TestPoint(t.Forbid, name)
+	node := testlang.TestPoint(t.Forbid, name)
 
 	for i := len(t.Prefix) - 1; 0 <= i; i-- {
-		n = testlang.Inc(t.Prefix[i], n)
-		n.Mark(name)
+		node = testlang.Inc(t.Prefix[i], node)
+		node.Mark(name)
 	}
 
-	n = testlang.Root(n)
-	n.Mark(name)
+	node = testlang.Root(node)
+	node.Mark(name)
 
-	return &n
+	return &node
 }
 
 // ExpandAll expands a suite of Forbidden traces to a non-factorised test suite.

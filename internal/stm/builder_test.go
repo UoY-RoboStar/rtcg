@@ -1,14 +1,14 @@
 package stm_test
 
 import (
-	"github.com/UoY-RoboStar/rtcg/internal/stm/verdict"
-	"github.com/UoY-RoboStar/rtcg/internal/validate"
 	"reflect"
 	"testing"
 
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
+	"github.com/UoY-RoboStar/rtcg/internal/stm/verdict"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 	"github.com/UoY-RoboStar/rtcg/internal/trace"
+	"github.com/UoY-RoboStar/rtcg/internal/validate"
 )
 
 // Tests the building of a state machine relating to a tree with only one (failing) event.

@@ -3,6 +3,7 @@ package validate
 
 import (
 	"fmt"
+
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 )
 
@@ -20,7 +21,6 @@ func (t Test) Root() *testlang.Node {
 // If successful, it returns a Test.
 func Full(root *testlang.Node) (*Test, error) {
 	// TODO: check test monotonicity and partitioning
-
 	err := testlang.Walk(root, func(node *testlang.Node) error {
 		var err error
 
@@ -36,9 +36,8 @@ func Full(root *testlang.Node) (*Test, error) {
 
 		return nil
 	})
-
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to validate test: %w", err)
 	}
 
 	return &Test{root: root}, nil

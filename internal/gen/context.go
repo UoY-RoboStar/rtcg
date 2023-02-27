@@ -3,9 +3,8 @@ package gen
 import (
 	"time"
 
-	"github.com/UoY-RoboStar/rtcg/internal/stm/transition"
-
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
+	"github.com/UoY-RoboStar/rtcg/internal/stm/transition"
 )
 
 // Context is the context passed into the template.
@@ -45,6 +44,7 @@ type TransitionContext struct {
 func (c *TransitionContext) addInput(t transition.AggregateSet) {
 	c.HasIn = true
 	c.In = append(c.In, t)
+
 	for s, ts := range t.States {
 		c.InMerged[s] = append(c.InMerged[s], ts...)
 	}

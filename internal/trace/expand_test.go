@@ -52,8 +52,8 @@ func TestTrace_Expand(t *testing.T) {
 	}
 }
 
-// FuzzExpandAll_CollapseAll_RoundTrip tests round-tripping trace.ExpandAll and trace.CollapseAll.
-func FuzzExpandAll_CollapseAll_RoundTrip(f *testing.F) {
+// FuzzExpandAllCollapseAllRoundTrip tests round-tripping trace.ExpandAll and trace.CollapseAll.
+func FuzzExpandAllCollapseAllRoundTrip(f *testing.F) {
 	f.Add("")
 	f.Add("batteryStatus.out.Ok")
 	f.Add("batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD |}\nbatteryStatus.out.Ok")

@@ -14,6 +14,7 @@ func ToLowerUnderscored(ident string) string {
 		if 0 < i && unicode.IsUpper(c) {
 			_, _ = build.WriteRune('_')
 		}
+
 		_, _ = build.WriteRune(unicode.ToLower(c))
 	}
 

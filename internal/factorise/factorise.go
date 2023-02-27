@@ -36,12 +36,13 @@ func SpineNodes(tests map[string]trace.Forbidden, after trace.Trace) []testlang.
 }
 
 func lastEvent(after trace.Trace) testlang.Event {
-	nAfter := len(after)
-	if nAfter == 0 {
-		return testlang.Event{}
+	var last testlang.Event
+
+	if nAfter := len(after); 0 < nAfter {
+		last = after[nAfter-1]
 	}
 
-	return after[nAfter-1]
+	return last
 }
 
 // Failures finds, for every forbidden-trace test in tests, the failures reached by following trace after.

@@ -3,11 +3,11 @@ package cppfunc
 
 import (
 	"fmt"
-	"github.com/UoY-RoboStar/rtcg/internal/testlang/channel"
 	"strings"
 	"text/template"
 
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/channel"
 )
 
 // Funcs adds the C++ function map to base.

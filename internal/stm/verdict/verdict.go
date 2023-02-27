@@ -72,15 +72,15 @@ func (v *Verdict) Is(status testlang.Outcome) bool {
 
 // SetOf gets the set of all tests that match status.
 func (v *Verdict) SetOf(status testlang.Outcome) TestSet {
-	ts := structure.NewSet[string]()
+	tests := structure.NewSet[string]()
 
 	for k, s := range *v {
 		if s == status {
-			ts.Add(k)
+			tests.Add(k)
 		}
 	}
 
-	return TestSet(ts)
+	return TestSet(tests)
 }
 
 // Add adds each test in tests as having outcome.

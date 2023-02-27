@@ -1,9 +1,10 @@
 package validate_test
 
 import (
+	"testing"
+
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 	"github.com/UoY-RoboStar/rtcg/internal/validate"
-	"testing"
 )
 
 // TestRoot tests the happy path of Root validation.
