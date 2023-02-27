@@ -12,6 +12,6 @@ all: mkdir {{- range $k, $v := . }} $(OUTPUT_DIR)/{{ $k }}{{- end }}
 mkdir:
 	mkdir -p $(OUTPUT_DIR)
 {{ range $k, $v := . }}
-$(OUTPUT_DIR)/{{ $k }}: $(INPUT_DIR)/{{ $k }}.cpp $(PRELUDE)
+$(OUTPUT_DIR)/{{ $k }}: $(INPUT_DIR)/{{ $k }}/{{ $k }}.cpp $(PRELUDE)
 	$(CXX) $(CXXFLAGS) -o $@ $< $(PRELUDE)
 {{- end }}

@@ -87,7 +87,7 @@ func parseMakefileTemplate(inFS fs.FS) (*template.Template, error) {
 }
 
 func (g *Generator) Generate(suite stm.Suite) error {
-	if err := g.mkdirs(); err != nil {
+	if err := g.mkdirs(suite); err != nil {
 		return err
 	}
 
@@ -107,7 +107,7 @@ func (g *Generator) Generate(suite stm.Suite) error {
 }
 
 // mkdirs makes the various directories used by the
-func (g *Generator) mkdirs() error {
+func (g *Generator) mkdirs(suite stm.Suite) error {
 	if err := g.mkdir("test"); err != nil {
 		return err
 	}
@@ -118,6 +118,12 @@ func (g *Generator) mkdirs() error {
 
 	if err := g.mkdir("test", srcDir, preludeDir); err != nil {
 		return err
+	}
+
+	for name := range suite {
+		if err := g.mkdir("test", srcDir, name); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -184,7 +190,7 @@ func (g *Generator) generateSuite(suite stm.Suite) error {
 }
 
 func (g *Generator) generateStm(name string, body *stm.Stm) error {
-	outPath := filepath.Join(g.outputDir, srcDir, name+".cpp")
+	outPath := filepath.Join(g.outputDir, srcDir, name, name+".cpp")
 
 	ctx := NewContext(name, body)
 
