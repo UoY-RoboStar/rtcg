@@ -72,19 +72,25 @@ const int INPUT_DELAY_SEC = 3;
  */
 -}}
 
-{{- /* Adding the ROS publishers to the state machine and its constructor: */ -}}
+{{- /* Adding the ROS handles to the state machine and its constructor: */ -}}
 
 {{- define "stm_fields" }}
-  // Publisher handles:
+
+  // Publisher handles
 {{-   range .Transitions.In }}
   ros::Publisher {{ template "publisher_name" . }}_;
+{{-   end -}}
+
+  // Subscriber handles
+{{-   range .Transitions.Out }}
+  ros::Subscriber {{ template "subscriber_name" . }}_;
 {{-   end -}}
 {{- end -}}
 
 {{- define "stm_ctor_params" -}}
 {{-   range $i, $t := .Transitions.In -}}
 {{-     if ne $i 0 -}}, {{ end -}}
-ros::Publisher {{      template "publisher_name" $t }}
+ros::Publisher {{ template "publisher_name" $t }}
 {{-   end -}}
 {{- end -}}
 
@@ -96,7 +102,7 @@ ros::Publisher {{      template "publisher_name" $t }}
 {{- end -}}
 
 {{- define "stm_ctor" }}
-  // Install the publisher handles:
+  // Install the publisher handles
 {{-   range .Transitions.In }}
   {{ template "publisher_name" . }}_ = {{ template "publisher_name" . }};
 {{-   end -}}
