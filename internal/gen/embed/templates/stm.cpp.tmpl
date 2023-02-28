@@ -51,8 +51,8 @@ const char* StateMachine::stateName()
 void StateMachine::end(rtcg::Status s)
 {
   status_ = s;
-{{- block "end" . }}
-{{- end }}
+{{- /* Depending on the way we're running the tests, we may need extra code here to abort the test: */ -}}
+{{- block "stm_end" . -}}{{- end }}
 }
 
 

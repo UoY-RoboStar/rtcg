@@ -66,6 +66,12 @@ const int INPUT_DELAY_SEC = 3;
   ros::Timer Pub_timer=nh.createTimer(ros::Duration(Init_Wait),Pub_timer_Callback);
 {{- end -}}
 
+{{-
+/*
+ * State machine
+ */
+-}}
+
 {{- /* Adding the ROS publishers to the state machine and its constructor: */ -}}
 
 {{- define "stm_fields" }}
@@ -94,6 +100,11 @@ ros::Publisher {{      template "publisher_name" $t }}
 {{-   range .Transitions.In }}
   {{ template "publisher_name" . }}_ = {{ template "publisher_name" . }};
 {{-   end -}}
+{{- end -}}
+
+{{- /* Making sure ending the test ends ROS: */ -}}
+{{- define "stm_end" }}
+  ros::shutdown();
 {{- end -}}
 
 {{/*
