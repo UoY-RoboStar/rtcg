@@ -50,6 +50,18 @@ const char* StateMachine::stateName()
 
 void StateMachine::end(rtcg::Status s)
 {
+  if (status_ != rtcg::Status::RUNNING)
+  {
+    {{ template "log" "error" }}("tried to end test twice (first as %s, then as %s)\n", rtcg::explain(status_), rtcg::explain(s));
+    return;
+  }
+
+  if (s == rtcg::Status::RUNNING)
+  {
+    {{ template "log" "error" }}("tried to end with 'running' status\n");
+    s = rtcg::Status::BUG;
+  }
+
   status_ = s;
 {{- /* Depending on the way we're running the tests, we may need extra code here to abort the test: */ -}}
 {{- block "stm_end" . -}}{{- end }}
