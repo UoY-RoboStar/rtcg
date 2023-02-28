@@ -10,14 +10,17 @@ enum class State {
 {{- end }}
 };
 
-// Gets the name of a state.
-const char* stateName(State s)
+namespace state
 {
-  switch (s) {
-{{- range . }}
-  case {{ cppStateEnum .ID }}:
-    return "{{ .ID }}";
-{{- end }}
+  // Gets the name of a state.
+  const char* name(State s)
+  {
+    switch (s) {
+  {{- range . }}
+    case {{ cppStateEnum .ID }}:
+      return "{{ .ID }}";
+  {{- end }}
+    }
+    return "???";
   }
-  return "???";
 }

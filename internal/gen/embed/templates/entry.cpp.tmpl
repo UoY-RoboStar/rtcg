@@ -4,10 +4,7 @@ int main({{ block "main_args" . }}int argc, char** argv{{ end }})
   // Initialisation
 {{- block "init" . }}
 {{- end }}
-{{- range .Stm.TransitionSets }}
-{{-   block "callback_init" .Channel }}
-{{- end }}
-{{- end }}
+
   StateMachine stm { {{- block "stm_ctor_args" . -}}{{- end -}} };
 
   // Test loop

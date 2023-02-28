@@ -1,0 +1,20 @@
+{{/*
+in_callback.cpp.tmpl expands into the body of the input acknowledgement callback.
+
+It expects a state/transition map.
+
+Base indent is set at 2, as we are inside a top-level function.
+*/}}
+  switch (state_)
+  {
+{{- range $s, $ts := . }}
+  case {{ cppStateEnum $s }}:
+    {{ template "log" "info" }}("accepted input on state {{ $s }} as expected");
+    {{ cppStateEntry (index $ts 0).Next }}();
+    break;
+{{- end }}
+  default:
+    // We shouldn't be seeing an input acknowledgement in this state.
+    {{ template "log" "error" }}("accepted input in unexpected state %s", stateName());
+    end(rtcg::Status::BUG);
+  }

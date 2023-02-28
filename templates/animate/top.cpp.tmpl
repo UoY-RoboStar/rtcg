@@ -10,11 +10,19 @@
   /* {{ . }} */ printf
 {{- end -}}
 
-{{- /* Takes the Channel of a callback, returns its argument set (should be empty for an input). */ -}}
-{{- define "callback_args" -}}
-{{-   if not .IsIn -}}
+{{- /* Returns the argument set of a timeout callback. */ -}}
+{{- define "timeout_args" -}}
+  {{- "" -}}{{- /* This template intentionally left blank. */ -}}
+{{- end -}}
+
+{{- /* Returns the argument set of an input-accepted callback. */ -}}
+{{- define "in_callback_args" -}}
+  {{- "" -}}{{- /* This template intentionally left blank. */ -}}
+{{- end -}}
+
+{{- /* Takes the Channel of an output callback, returns its argument set. */ -}}
+{{- define "out_callback_args" -}}
   const char* value
-{{-   end -}}
 {{- end -}}
 
 {{- /* Takes the Value received in an output callback, compares it against parameter `value`. */ -}}

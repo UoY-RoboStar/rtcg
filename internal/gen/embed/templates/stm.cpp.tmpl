@@ -16,9 +16,11 @@ private:
 
   // Callbacks
   void timeoutCallback({{ template "timeout_args" }});
-
-{{- range .Transitions }}
-  void {{ cppCallbackName .Channel }}({{ template "callback_args" .Channel }});
+{{- if .Transitions.HasIn }}
+  void inputAcceptedCallback({{ template "in_callback_args" }});
+{{- end }}
+{{- range .Transitions.Out }}
+  void {{ cppCallbackName .Channel }}({{ template "out_callback_args" .Channel }});
 {{- end }}
 
   // State entry functions
@@ -26,6 +28,7 @@ private:
   void {{ cppStateEntry .ID }}();
 {{- end }}
 
+  const char* stateName();       // Gets the name of the current state.
   void end(rtcg::Status status); // Ends the test with the given status.
 };
 
@@ -40,6 +43,11 @@ Verdict& StateMachine::getVerdict()
   return verdict_;
 }
 
+const char* StateMachine::stateName()
+{
+  return state::name(state_);
+}
+
 void StateMachine::end(rtcg::Status s)
 {
   status_ = s;
@@ -47,22 +55,33 @@ void StateMachine::end(rtcg::Status s)
 {{- end }}
 }
 
+
 //
 // Callback functions
 //
 
-void StateMachine::timeoutCallback({{ block "timeout_args" . }}{{ end }})
+void StateMachine::timeoutCallback({{ template "timeout_args" }})
 {
   {{ template "log" "info" }}("timeout");
   end(rtcg::Status::TIMEOUT);
 }
 
-{{- range .Transitions }}
+{{- if .Transitions.HasIn }}
 
-void StateMachine::{{ cppCallbackName .Channel }}({{ template "callback_args" .Channel }})
+void StateMachine::inputAcceptedCallback({{ template "in_callback_args" }})
 {
-{{- block "callback" . }}
-{{-   template "callback.cpp.tmpl" . }}
+{{-   block "in_callback" .Transitions.InMerged }}
+{{-     template "in_callback.cpp.tmpl" . }}
+{{-   end -}}
+}
+{{- end }}
+
+{{- range .Transitions.Out }}
+
+void StateMachine::{{ cppCallbackName .Channel }}({{ template "out_callback_args" .Channel }})
+{
+{{- block "out_callback" . }}
+{{-   template "out_callback.cpp.tmpl" . }}
 {{- end -}}
 }
 {{- end }}
@@ -78,7 +97,7 @@ void StateMachine::{{ cppStateEntry .ID }}()
 {
   state_ = {{ cppStateEnum .ID }};
 {{ block "state" . }}
-{{- template "state.cpp.tmpl" . -}}
+{{- template "state_entry.cpp.tmpl" . -}}
 {{- end }}
 }
 {{- end }}
