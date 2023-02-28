@@ -17,3 +17,4 @@ linters:
     - wastedassign
     - ireturn
     - godox
+    - musttag # this is throwing weird errors at the moment
