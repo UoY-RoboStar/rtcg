@@ -3,22 +3,20 @@ stm.cpp.tmpl expands into the state machine for the tester.
 
 It expects the test context as its dot.
 */}}
-// The main testing state machine.
-class StateMachine
+// The main testing state machine, containing all state used in the test.
+class StateMachine : public rtcg::TestCase
 {
 public:
   StateMachine({{ block "stm_ctor_params" . }}{{ end }});
-
-  rtcg::Status getStatus();
-  void dumpVerdict();
-
+  Verdict& getVerdict(); // Gets the current verdict.
 private:
-  Verdict verdict;
-  State state = {{ (index .Stm.States 0).ID | cppStateEnum }};
-  rtcg::Status status = rtcg::Status::RUNNING;
+  Verdict verdict_;
+  State state_ = {{ (index .Stm.States 0).ID | cppStateEnum }};
 {{- block "stm_fields" . -}}{{- end }}
 
   // Callbacks
+  void timeoutCallback({{ template "timeout_args" }});
+
 {{- range .Transitions }}
   void {{ cppCallbackName .Channel }}({{ template "callback_args" .Channel }});
 {{- end }}
@@ -28,8 +26,7 @@ private:
   void {{ cppStateEntry .ID }}();
 {{- end }}
 
-  void end(rtcg::Status why);
-  void transitionTo(State next);
+  void end(rtcg::Status status); // Ends the test with the given status.
 };
 
 StateMachine::StateMachine({{ template "stm_ctor_params" . }})
@@ -38,27 +35,28 @@ StateMachine::StateMachine({{ template "stm_ctor_params" . }})
   {{- block "stm_ctor" . }}{{ end }}
 }
 
-rtcg::Status StateMachine::getStatus()
+Verdict& StateMachine::getVerdict()
 {
-  return status;
+  return verdict_;
 }
 
-void StateMachine::end(rtcg::Status why)
+void StateMachine::end(rtcg::Status s)
 {
-  status = why;
+  status_ = s;
 {{- block "end" . }}
 {{- end }}
 }
 
-void StateMachine::dumpVerdict()
-{
-  verdict.dump();
-}
-
-
 //
 // Callback functions
 //
+
+void StateMachine::timeoutCallback({{ block "timeout_args" . }}{{ end }})
+{
+  {{ template "log" "info" }}("timeout");
+  end(rtcg::Status::TIMEOUT);
+}
+
 {{- range .Transitions }}
 
 void StateMachine::{{ cppCallbackName .Channel }}({{ template "callback_args" .Channel }})
@@ -78,7 +76,7 @@ void StateMachine::{{ cppCallbackName .Channel }}({{ template "callback_args" .C
 
 void StateMachine::{{ cppStateEntry .ID }}()
 {
-  state = {{ cppStateEnum .ID }};
+  state_ = {{ cppStateEnum .ID }};
 {{ block "state" . }}
 {{- template "state.cpp.tmpl" . -}}
 {{- end }}

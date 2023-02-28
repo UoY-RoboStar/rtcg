@@ -46,6 +46,19 @@ namespace rtcg
 
   // Converts a status into an exit code.
   int exitCode(Status s);
+
+  //
+  // Test case
+  //
+
+  // Base class for test cases, containing functionality unchanged across all cases.
+  class TestCase
+  {
+  public:
+    Status getStatus(); // Gets the current status of the test.
+  protected:
+    Status status_ = Status::RUNNING; // Current status of the test.
+  };
 }
 
 #endif // RTCG_H_DEFINED

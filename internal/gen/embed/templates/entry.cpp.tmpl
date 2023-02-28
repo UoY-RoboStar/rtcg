@@ -16,7 +16,7 @@ int main({{ block "main_args" . }}int argc, char** argv{{ end }})
 
   auto status = stm.getStatus();
   {{ template "log" "info" }}("test {{ .Name }} finished: %s\n", rtcg::explain(status));
-  stm.dumpVerdict();
+  stm.getVerdict().dump();
 
 {{- block "cleanup" . }}
 {{- end }}

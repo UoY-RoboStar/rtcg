@@ -61,3 +61,12 @@ int rtcg::exitCode(Status s)
     return 0;
   }
 }
+
+//
+// TestCase
+//
+
+rtcg::Status rtcg::TestCase::getStatus()
+{
+  return status_;
+}

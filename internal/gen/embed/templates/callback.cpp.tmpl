@@ -5,7 +5,7 @@ It expects the aggregate transition set as its dot.
 
 Base indent is set at 2, as we are inside a top-level function.
 */}}
-  switch (state)
+  switch (state_)
   {
 {{- range $s, $ts := .States }}
   case {{ cppStateEnum $s }}:
@@ -32,11 +32,11 @@ Base indent is set at 2, as we are inside a top-level function.
   default:
 {{-   if $.Channel.IsIn }}
     // We shouldn't be seeing an input acknowledgement in this state.
-    {{ template "log" "error" }}("{{ $.Channel }} ack'd input in unexpected state %s", stateName(state));
+    {{ template "log" "error" }}("{{ $.Channel }} ack'd input in unexpected state %s", stateName(state_));
     end(rtcg::Status::BUG);
 {{- else }}
     // This isn't one of the states that should observe {{ $.Channel }}!
-    {{ template "log" "info" }}("{{ $.Channel }} got output in unexpected state %s", stateName(state));
+    {{ template "log" "info" }}("{{ $.Channel }} got output in unexpected state %s", stateName(state_));
     end(rtcg::Status::OFF_SCRIPT);
 {{- end }}
   }
