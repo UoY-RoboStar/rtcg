@@ -20,7 +20,7 @@ func main() {
 }
 
 func usage() {
-	cli.FlagUsage("TEMPLATE-DIR [STM-FILE]")
+	cli.FlagUsage("CONFIG-FILE [STM-FILE]")
 }
 
 func run() error {
@@ -44,7 +44,7 @@ func parseArgs() (*genAction, error) {
 	flag.Parse()
 
 	argv := flag.Args()
-	action.templateDir = argv[0]
+	action.configFile = argv[0]
 
 	action.inputFile, err = cli.ParseFileArgument(argv, numAnonymousArgs)
 	if err != nil {
@@ -55,15 +55,16 @@ func parseArgs() (*genAction, error) {
 }
 
 type genAction struct {
-	clean       bool   // clean makes the generator remove the output directory before generating.
-	outputDir   string // outputDir is the output directory.
-	templateDir string
-	inputFile   string
+	clean      bool   // clean makes the generator remove the output directory before generating.
+	outputDir  string // outputDir is the output directory.
+	configFile string
+	inputFile  string
 }
 
 func (a *genAction) run() error {
 	a.outputDir = filepath.Clean(a.outputDir)
-	a.templateDir = filepath.Clean(a.templateDir)
+	a.configFile = filepath.Clean(a.configFile)
+	a.inputFile = filepath.Clean(a.inputFile)
 
 	stms, err := a.readSuite()
 	if err != nil {
@@ -110,9 +111,12 @@ func (a *genAction) readSuite() (stm.Suite, error) {
 }
 
 func (a *genAction) generate(stms stm.Suite) error {
-	tmpls := os.DirFS(a.templateDir)
+	config, err := gen.LoadConfig(a.configFile)
+	if err != nil {
+		return fmt.Errorf("couldn't get config for generator: %w", err)
+	}
 
-	g, err := gen.New(tmpls, a.outputDir) // for now
+	g, err := gen.New(config, a.outputDir) // for now
 	if err != nil {
 		return fmt.Errorf("couldn't create generator: %w", err)
 	}

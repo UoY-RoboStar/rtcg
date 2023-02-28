@@ -33,13 +33,16 @@ const (
 
 // Generator is a test code generator.
 type Generator struct {
-	template  *template.Template // template is the template to use for C++ files.
-	makefile  *template.Template // makefile is the template to use for Makefiles.
-	outputDir string             // outputDir is the output directory for the tests.
+	cppGenerators []CppGenerator     // cppGenerators is the set of C++ generators.
+	template      *template.Template // template is the template to use for C++ files.
+	makefile      *template.Template // makefile is the template to use for Makefiles.
+	outputDir     string             // outputDir is the output directory for the tests.
 }
 
 // New creates a new Generator by reading all templates from inFS, and outputting to outDir.
 func New(inFS fs.FS, outDir string) (*Generator, error) {
+
+	tmpls := os.DirFS(a.configFile)
 	generator := Generator{outputDir: outDir, template: nil, makefile: nil}
 
 	var err error
