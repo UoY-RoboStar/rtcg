@@ -28,13 +28,13 @@ changes to the source:
 
 ### `rtcg.sh`: generate C tests from traces
 
-Usage: `rtcg-gen TEMPLATE-DIR [TRACES-FILE]`
+Usage: `rtcg-gen CONFIG-FILE [TRACES-FILE]`
 
 This `sh` script automates a pipeline of the following steps:
 
 1. `rtcg-read-traces` on `TRACES-FILE`
 2. `rtcg-make-stms` on the output of step 1
-3. `rtcg-gen` on `TEMPLATE-DIR` and the output of step 2
+3. `rtcg-gen` on `CONFIG-FILE` and the output of step 2
 
 95% of the time, this is the correct workflow.
 
@@ -60,13 +60,16 @@ states and transitions which can be used to generate code.
 
 ### `rtcg-gen`: generate C code
 
-Usage: `rtcg-gen [-clean | -output DIR] TEMPLATE-DIR [STM-FILE]`
+Usage: `rtcg-gen [-clean | -output DIR] CONFIG-FILE [STM-FILE]`
 
 **Tool under development**
 
 This tool takes in a `rtcg` state machine suite in JSON format (e.g. from
-`rtcg-make-stms`), as well as some `text/template` templates for
-generating code, and emits automatically generated test code.
+`rtcg-make-stms`), as well as an configuration file telling it which templates
+and other auxiliary data to use, and emits automatically generated test code.
+
+The configuration file format is not yet documented, but you can see examples
+in `examples`: for instance, `examples/bmon/gen.xml`.
 
 To get a quick idea of how `rtcg-gen` works, try:
 
