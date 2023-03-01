@@ -116,7 +116,7 @@ func (a *genAction) generate(stms stm.Suite) error {
 		return fmt.Errorf("couldn't get config for generator: %w", err)
 	}
 
-	g, err := gen.New(config, a.outputDir) // for now
+	g, err := gen.New(*config, a.outputDir) // for now
 	if err != nil {
 		return fmt.Errorf("couldn't create generator: %w", err)
 	}

@@ -2,6 +2,8 @@ package gen_test
 
 import (
 	"encoding/xml"
+	"github.com/UoY-RoboStar/rtcg/internal/gen/cpp"
+	"github.com/UoY-RoboStar/rtcg/internal/gen/makefile"
 	"path/filepath"
 	"reflect"
 	"testing"
@@ -25,19 +27,20 @@ func TestLoadConfig(t *testing.T) {
 					Space: "",
 					Local: "rtcg-gen",
 				},
-				Cpps: []gen.CppTarget{
+				Cpps: []cpp.Config{
 					{
-						Variant: "animate",
+						Variant:  cpp.VariantAnimate,
+						Makefile: &makefile.Config{},
 					},
 					{
-						Variant: "ros",
-						Includes: []gen.Include{
+						Variant: cpp.VariantRos,
+						Includes: []cpp.Include{
 							{Src: "std_msgs/Float32.h", IsSystem: false},
 							{Src: "sensor_msgs/BatteryState.h", IsSystem: false},
 						},
+						Makefile: nil,
 					},
 				},
-				Makefiles: []gen.MakefileTarget{{}},
 			},
 			wantErr: nil,
 		},

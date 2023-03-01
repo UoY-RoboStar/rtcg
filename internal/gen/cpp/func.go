@@ -1,5 +1,4 @@
-// Package cppfunc contains functions used in C++ code generation.
-package cppfunc
+package cpp
 
 import (
 	"fmt"

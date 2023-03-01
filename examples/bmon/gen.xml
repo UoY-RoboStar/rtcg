@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <rtcg-gen>
     <cpp variant="animate">
+        <makefile />
     </cpp>
     <cpp variant="ros">
         <include src="std_msgs/Float32.h" />
         <include src="sensor_msgs/BatteryState.h" />
     </cpp>
-    <makefile />
 </rtcg-gen>

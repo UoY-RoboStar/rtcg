@@ -1,5 +1,5 @@
 // Package stdfunc contains language-agnostic functions for rtcg templates.
-package stdfunc
+package gencommon
 
 import (
 	"strings"

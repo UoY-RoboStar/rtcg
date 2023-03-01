@@ -1,4 +1,4 @@
-package gen
+package gencommon
 
 import (
 	"time"
@@ -7,7 +7,7 @@ import (
 	"github.com/UoY-RoboStar/rtcg/internal/stm/transition"
 )
 
-// Context is the context passed into the template.
+// Context is the context passed into all templates.
 type Context struct {
 	Name string    // Name is the name of the test case being generated.
 	Date time.Time // Date is the time of generation.

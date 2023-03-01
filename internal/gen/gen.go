@@ -2,107 +2,66 @@
 package gen
 
 import (
-	"embed"
-	"errors"
 	"fmt"
-	"io"
-	"io/fs"
-	"os"
-	"path"
-	"path/filepath"
-	"text/template"
-
-	"github.com/UoY-RoboStar/rtcg/internal/gen/cppfunc"
-	"github.com/UoY-RoboStar/rtcg/internal/gen/stdfunc"
+	"github.com/UoY-RoboStar/rtcg/internal/gen/cpp"
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
-)
-
-var (
-	//go:embed embed/templates/*.cpp.tmpl embed/templates/base.Makefile.tmpl
-	baseTemplates embed.FS
-	//go:embed embed/prelude/*
-	prelude embed.FS
+	"os"
 )
 
 const (
-	outputDirPerms = 0o754           // outputDirPerms is the output directory permission mask.
-	srcDir         = "src"           // srcDir is the subdirectory of the output directory for source code.
-	preludeDir     = "rtcg"          // preludeDir is the subdirectory of srcDir where we store the prelude.
-	preludeMount   = "embed/prelude" // preludeMount is the directory in prelude where the prelude is.
+	outputDirPerms = 0o754 // outputDirPerms is the output directory permission mask.
 )
 
 // Generator is a test code generator.
 type Generator struct {
-	cppGenerators []CppGenerator     // cppGenerators is the set of C++ generators.
-	template      *template.Template // template is the template to use for C++ files.
-	makefile      *template.Template // makefile is the template to use for Makefiles.
-	outputDir     string             // outputDir is the output directory for the tests.
+	subgenerators []Subgenerator // subgenerators is the set of configured sub-generators.
+	outputDir     string         // outputDir is the output directory of the generator.
 }
 
-// New creates a new Generator by reading all templates from inFS, and outputting to outDir.
-func New(inFS fs.FS, outDir string) (*Generator, error) {
+func (g *Generator) initCpp(cfgs []cpp.Config) error {
+	for _, cfg := range cfgs {
+		gen, err := cpp.New(cfg, g.outputDir)
+		if err != nil {
+			return fmt.Errorf("couldn't init c++ generator: %w", err)
+		}
 
-	tmpls := os.DirFS(a.configFile)
-	generator := Generator{outputDir: outDir, template: nil, makefile: nil}
+		g.subgenerators = append(g.subgenerators, gen)
+	}
 
-	var err error
+	return nil
+}
 
-	if generator.template, err = parseCppTemplate(inFS); err != nil {
+// Subgenerator captures the idea of a test code sub-generator.
+type Subgenerator interface {
+	// Name gets the name of this item.
+	Name() string
+
+	// Dirs gets the list of directories to make for the given test suite.
+	Dirs(suite stm.Suite) []string
+
+	// Generate generates code for suite.
+	Generate(suite stm.Suite) error
+}
+
+// New creates a new Generator from config, targeting outputDir.
+func New(cfg Config, outputDir string) (*Generator, error) {
+	gen := Generator{
+		subgenerators: make([]Subgenerator, 0, len(cfg.Cpps)),
+		outputDir:     outputDir,
+	}
+
+	if err := gen.initCpp(cfg.Cpps); err != nil {
 		return nil, err
 	}
 
-	if generator.makefile, err = parseMakefileTemplate(inFS); err != nil {
-		return nil, err
-	}
-
-	return &generator, nil
-}
-
-func parseCppTemplate(inFS fs.FS) (*template.Template, error) {
-	base := cppfunc.Funcs(template.New(""))
-	base = stdfunc.Funcs(base)
-
-	base, err := base.ParseFS(baseTemplates, "embed/templates/*.cpp.tmpl")
-	if err != nil {
-		return nil, fmt.Errorf("couldn't open base templates: %w", err)
-	}
-
-	tmpl, err := base.ParseFS(inFS, "*.cpp.tmpl")
-	if err != nil {
-		return nil, fmt.Errorf("couldn't open user templates: %w", err)
-	}
-
-	return tmpl, nil
-}
-
-func parseMakefileTemplate(inFS fs.FS) (*template.Template, error) {
-	base, err := template.ParseFS(baseTemplates, "embed/templates/base.Makefile.tmpl")
-	if err != nil {
-		return nil, fmt.Errorf("couldn't open base Makefile template: %w", err)
-	}
-
-	tmpl, err := base.ParseFS(inFS, "Makefile.tmpl")
-	if err != nil {
-		return nil, fmt.Errorf("couldn't open user Makefile template: %w", err)
-	}
-
-	return tmpl, nil
+	return &gen, nil
 }
 
 func (g *Generator) Generate(suite stm.Suite) error {
 	if err := g.mkdirs(suite); err != nil {
 		return err
 	}
-
-	if err := g.copyPrelude(); err != nil {
-		return err
-	}
-
-	if err := g.generateMakefile(suite); err != nil {
-		return err
-	}
-
-	if err := g.generateSuite(suite); err != nil {
+	if err := g.runSubgens(suite); err != nil {
 		return err
 	}
 
@@ -111,105 +70,27 @@ func (g *Generator) Generate(suite stm.Suite) error {
 
 // mkdirs makes the various directories used by the generator.
 func (g *Generator) mkdirs(suite stm.Suite) error {
-	if err := g.mkdir("test"); err != nil {
-		return err
-	}
+	for _, subg := range g.subgenerators {
+		name := subg.Name()
 
-	if err := g.mkdir("test source", srcDir); err != nil {
-		return err
-	}
-
-	if err := g.mkdir("prelude", srcDir, preludeDir); err != nil {
-		return err
-	}
-
-	for name := range suite {
-		if err := g.mkdir(name, srcDir, name); err != nil {
-			return err
+		for _, dir := range subg.Dirs(suite) {
+			if err := os.MkdirAll(dir, outputDirPerms); err != nil {
+				return fmt.Errorf("couldn't make %s directory at %q: %w", name, dir, err)
+			}
 		}
 	}
 
 	return nil
 }
 
-// mkdir makes an output directory with the given name and path fragments.
-func (g *Generator) mkdir(name string, fragments ...string) error {
-	dirPath := filepath.Join(append([]string{g.outputDir}, fragments...)...)
-
-	if err := os.MkdirAll(dirPath, outputDirPerms); err != nil {
-		return fmt.Errorf("couldn't make %s directory at %q: %w", name, g.outputDir, err)
-	}
-
-	return nil
-}
-
-func (g *Generator) copyPrelude() error {
-	ents, err := fs.ReadDir(prelude, preludeMount)
-	if err != nil {
-		return fmt.Errorf("couldn't find prelude in embedded files: %w", err)
-	}
-
-	for _, e := range ents {
-		if err := g.copyPreludeFile(e.Name()); err != nil {
-			return err
+func (g *Generator) runSubgens(suite stm.Suite) error {
+	// TODO: possibly move the sub-generator logic into here, eg by having the main generator
+	// receive templates to instantiate, files to copy, etc.
+	for _, subg := range g.subgenerators {
+		if err := subg.Generate(suite); err != nil {
+			return fmt.Errorf("generator %s failed: %w", subg.Name(), err)
 		}
 	}
 
 	return nil
-}
-
-func (g *Generator) copyPreludeFile(name string) error {
-	src, err := prelude.Open(path.Join(preludeMount, name))
-	if err != nil {
-		return fmt.Errorf("couldn't open prelude file %q: %w", name, err)
-	}
-
-	dst, err := os.Create(filepath.Join(g.outputDir, srcDir, preludeDir, name))
-	if err != nil {
-		err = fmt.Errorf("couldn't create prelude file %q: %w", name, err)
-
-		return errors.Join(err, src.Close())
-	}
-
-	_, err = io.Copy(dst, src)
-	if err != nil {
-		err = fmt.Errorf("couldn't copy prelude file %q: %w", name, err)
-	}
-
-	return errors.Join(err, dst.Close(), src.Close())
-}
-
-func (g *Generator) generateMakefile(suite stm.Suite) error {
-	outPath := filepath.Join(g.outputDir, "Makefile")
-
-	return executeTemplateOnFile("Makefile", outPath, "Makefile.tmpl", g.makefile, suite)
-}
-
-func (g *Generator) generateSuite(suite stm.Suite) error {
-	for k, v := range suite {
-		if err := g.generateStm(k, v); err != nil {
-			return fmt.Errorf("couldn't generate test %s: %w", k, err)
-		}
-	}
-
-	return nil
-}
-
-func (g *Generator) generateStm(name string, body *stm.Stm) error {
-	outPath := filepath.Join(g.outputDir, srcDir, name, name+".cpp")
-
-	ctx := NewContext(name, body)
-
-	return executeTemplateOnFile("test-case "+name, outPath, "top.cpp.tmpl", g.template, ctx)
-}
-
-func executeTemplateOnFile(name, path, tmplName string, tmpl *template.Template, ctx any) error {
-	file, err := os.Create(path)
-	if err != nil {
-		return fmt.Errorf("couldn't create output file for %s: %w", name, err)
-	}
-
-	err = tmpl.ExecuteTemplate(file, tmplName, ctx)
-
-	return errors.Join(err, file.Close())
 }
