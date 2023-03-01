@@ -57,6 +57,5 @@ examples-cpp: \
   examples \
   bmon-cpp
 
-bmon-cpp: examples/bmon/stms.json
-	$(GEN) -clean -output "out/bmon/animate" "templates/animate" $<
-	$(GEN) -clean -output "out/bmon/ros" "templates/ros" $<
+bmon-cpp: examples/bmon/gen.xml examples/bmon/stms.json
+	$(GEN) -clean -output "out/bmon" examples/bmon/gen.xml examples/bmon/stms.json
