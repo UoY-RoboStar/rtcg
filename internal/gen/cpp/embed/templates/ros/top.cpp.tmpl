@@ -14,6 +14,12 @@ const int INPUT_DELAY_SEC = 3;
   ROS_{{ toUpper . }}
 {{- end -}}
 
+{{- /* Calculates the ROS equivalent of a RoboStar type. */ -}}
+{{- define "type" -}}
+{{- /* TODO: add more types here */}}
+std_msgs::String
+{{- end -}}
+
 {{- /* Returns the argument set of a timeout callback. */ -}}
 {{- define "timeout_args" -}}
   const ros::TimerEvent& event
@@ -26,7 +32,7 @@ const int INPUT_DELAY_SEC = 3;
 
 {{- /* Takes the Channel of an output callback, returns its argument set. */ -}}
 {{- define "out_callback_args" -}}
-  const std_msgs::String::ConstPtr& msg
+  const {{ upcaseFirst .Name }}Type::ConstPtr& msg
 {{- end -}}
 
 {{- /* Takes the Value received in an output callback, compares it against parameter `value`. */ -}}

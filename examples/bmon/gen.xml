@@ -6,5 +6,8 @@
     <cpp variant="ros">
         <include src="std_msgs/Float32.h" />
         <include src="sensor_msgs/BatteryState.h" />
+
+        <!-- Tell the generator that this channel maps non-trivially to a ROS type: -->
+        <channel name="batteryInfo" type="sensor_msgs::BatteryState" />
     </cpp>
 </rtcg-gen>

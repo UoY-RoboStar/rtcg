@@ -19,6 +19,14 @@
 #include "../rtcg/rtcg.h" // Helper definitions (compile with ../rtcg/rtcg.cpp)
 
 //
+// TYPEDEFS
+//
+
+{{- range $cname, $ctype := .ChannelTypes }}
+using {{ upcaseFirst $cname }}Type = {{ if $ctype.HasOverride }}{{ $ctype.Override }}{{ else }}{{ template "type " $ctype.Base}}{{ end }}
+{{- end }}
+
+//
 // CONSTANTS
 //
 {{ block "constants" . }}

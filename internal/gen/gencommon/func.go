@@ -12,6 +12,7 @@ import (
 func Funcs(base *template.Template) *template.Template {
 	return base.Funcs(template.FuncMap{
 		"toUpper":            strings.ToUpper,
+		"upcaseFirst":        strmanip.UpcaseFirst,
 		"toLowerUnderscored": strmanip.ToLowerUnderscored,
 	})
 }

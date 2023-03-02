@@ -14,7 +14,7 @@ func Unify(x, y *RsType) (*RsType, error) {
 		return nil, fmt.Errorf("%w: %s and %s", ErrUnifyDifferentKinds, x, y)
 	}
 
-	// From now, we can just look at x's kind.
+	// Base now, we can just look at x's kind.
 	if x.kind == KindArithmos {
 		return Arithmos(MaxDomain(x.arithmosDomain, y.arithmosDomain)), nil
 	}
