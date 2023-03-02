@@ -53,7 +53,7 @@
 					"test10"
 				],
 				"outcome": "inc",
-				"event": "batteryInfo.in.{| percentage=BATTERY_SAFETY_THRESHOLD |}",
+				"event": "batteryInfo.in.20",
 				"next": [
 					{
 						"tests": [
@@ -84,7 +84,7 @@
 					"test11"
 				],
 				"outcome": "inc",
-				"event": "batteryInfo.in.{| percentage=BATTERY_SAFETY_THRESHOLD |}",
+				"event": "batteryInfo.in.20",
 				"next": [
 					{
 						"tests": [
@@ -115,7 +115,7 @@
 					"test12"
 				],
 				"outcome": "inc",
-				"event": "batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD+1 |}",
+				"event": "batteryInfo.in.100",
 				"next": [
 					{
 						"tests": [
@@ -155,7 +155,7 @@
 					"test13"
 				],
 				"outcome": "inc",
-				"event": "batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD+1 |}",
+				"event": "batteryInfo.in.100",
 				"next": [
 					{
 						"tests": [
@@ -195,7 +195,7 @@
 					"test14"
 				],
 				"outcome": "inc",
-				"event": "batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD+1 |}",
+				"event": "batteryInfo.in.100",
 				"next": [
 					{
 						"tests": [
@@ -235,7 +235,7 @@
 					"test15"
 				],
 				"outcome": "inc",
-				"event": "batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD |}",
+				"event": "batteryInfo.in.30",
 				"next": [
 					{
 						"tests": [
@@ -275,7 +275,7 @@
 					"test16"
 				],
 				"outcome": "inc",
-				"event": "batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD |}",
+				"event": "batteryInfo.in.30",
 				"next": [
 					{
 						"tests": [
@@ -315,7 +315,7 @@
 					"test17"
 				],
 				"outcome": "inc",
-				"event": "batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD |}",
+				"event": "batteryInfo.in.30",
 				"next": [
 					{
 						"tests": [
@@ -355,7 +355,7 @@
 					"test18"
 				],
 				"outcome": "inc",
-				"event": "batteryInfo.in.{| percentage=BATTERY_SAFETY_THRESHOLD |}",
+				"event": "batteryInfo.in.20",
 				"next": [
 					{
 						"tests": [
@@ -395,7 +395,7 @@
 					"test19"
 				],
 				"outcome": "inc",
-				"event": "batteryInfo.in.{| percentage=BATTERY_SAFETY_THRESHOLD |}",
+				"event": "batteryInfo.in.20",
 				"next": [
 					{
 						"tests": [
@@ -457,14 +457,14 @@
 					"test3"
 				],
 				"outcome": "inc",
-				"event": "batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD+1 |}",
+				"event": "batteryInfo.in.100",
 				"next": [
 					{
 						"tests": [
 							"test3"
 						],
 						"outcome": "pass",
-						"event": "batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD+1 |}",
+						"event": "batteryInfo.in.100",
 						"next": [
 							{
 								"tests": [
@@ -488,14 +488,14 @@
 					"test4"
 				],
 				"outcome": "inc",
-				"event": "batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD   |}",
+				"event": "batteryInfo.in.30",
 				"next": [
 					{
 						"tests": [
 							"test4"
 						],
 						"outcome": "pass",
-						"event": "batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD   |}",
+						"event": "batteryInfo.in.30",
 						"next": [
 							{
 								"tests": [
@@ -519,14 +519,14 @@
 					"test5"
 				],
 				"outcome": "inc",
-				"event": "batteryInfo.in.{| percentage=BATTERY_SAFETY_THRESHOLD    |}",
+				"event": "batteryInfo.in.20",
 				"next": [
 					{
 						"tests": [
 							"test5"
 						],
 						"outcome": "pass",
-						"event": "batteryInfo.in.{| percentage=BATTERY_SAFETY_THRESHOLD    |}",
+						"event": "batteryInfo.in.20",
 						"next": [
 							{
 								"tests": [
@@ -550,7 +550,7 @@
 					"test6"
 				],
 				"outcome": "inc",
-				"event": "batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD+1 |}",
+				"event": "batteryInfo.in.100",
 				"next": [
 					{
 						"tests": [
@@ -581,7 +581,7 @@
 					"test7"
 				],
 				"outcome": "inc",
-				"event": "batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD+1 |}",
+				"event": "batteryInfo.in.100",
 				"next": [
 					{
 						"tests": [
@@ -612,7 +612,7 @@
 					"test8"
 				],
 				"outcome": "inc",
-				"event": "batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD |}",
+				"event": "batteryInfo.in.30",
 				"next": [
 					{
 						"tests": [
@@ -643,7 +643,7 @@
 					"test9"
 				],
 				"outcome": "inc",
-				"event": "batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD |}",
+				"event": "batteryInfo.in.30",
 				"next": [
 					{
 						"tests": [

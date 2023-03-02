@@ -1,6 +1,7 @@
 package validate_test
 
 import (
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 	"testing"
 
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
@@ -11,8 +12,8 @@ import (
 func TestRoot(t *testing.T) {
 	t.Parallel()
 
-	add := testlang.Output("add", testlang.NoValue())
-	sub := testlang.Output("sub", testlang.NoValue())
+	add := testlang.Output("add", value.None())
+	sub := testlang.Output("sub", value.None())
 
 	branch1 := testlang.Pass(sub, testlang.Fail())
 	branch2 := testlang.Pass(add, testlang.Fail())

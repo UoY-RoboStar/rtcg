@@ -10,6 +10,7 @@ package stm
 
 import (
 	"fmt"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/rstype"
 	"io"
 
 	"github.com/UoY-RoboStar/rtcg/internal/serial"
@@ -41,15 +42,22 @@ func (s *Suite) Write(w io.Writer) error {
 	return nil
 }
 
-// Stm is a state machine.
+// Stm is a testing state machine.
+//
+// A state machine arranges the nodes of a test tree into a form that is easy to emit as test code:
+// a list of states with lists of transitions to other states, and metadata about the test that is
+// gleaned from the test tree during construction.
 type Stm struct {
 	// States is the list of states in this state machine.
 	//
 	// Conventionally, the first state in the machine is the initial state.
-	States []*State
+	States []*State `json:"states"`
+
+	// Types maps each channel to its inferred type.
+	Types map[string]*rstype.RsType `json:"types"`
 
 	// Tests is the set of names of tests being captured by this state machine.
-	Tests structure.Set[string]
+	Tests structure.Set[string] `json:"tests"`
 }
 
 // InitialState is the node ID of the initial state.

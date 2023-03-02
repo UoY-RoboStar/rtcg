@@ -2,6 +2,7 @@ package testlang
 
 import (
 	"fmt"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 	"strings"
 
 	"github.com/UoY-RoboStar/rtcg/internal/testlang/channel"
@@ -12,21 +13,21 @@ import (
 // An event with an empty channel name is considered to be absent, which is only well-formed for fail nodes.
 type Event struct {
 	Channel channel.Channel `json:"channel,omitempty"` // Channel is the channel on which the event is occurring.
-	Value   Value           `json:"value,omitempty"`   // Value is the value, if any, carried by this event.
+	Value   value.Value     `json:"value,omitempty"`   // Value is the value, if any, carried by this event.
 }
 
 // NewEvent is shorthand for constructing an Event with channel ch, direction d, and value v.
-func NewEvent(ch string, d channel.Kind, v Value) Event {
+func NewEvent(ch string, d channel.Kind, v value.Value) Event {
 	return Event{Channel: channel.Channel{Name: ch, Kind: d}, Value: v}
 }
 
 // Input is shorthand for constructing an Event with direction TypeIn, channel ch, and value v.
-func Input(ch string, v Value) Event {
+func Input(ch string, v value.Value) Event {
 	return NewEvent(ch, channel.KindIn, v)
 }
 
 // Output is shorthand for constructing an Event with direction TypeIn, channel ch, and value v.
-func Output(ch string, v Value) Event {
+func Output(ch string, v value.Value) Event {
 	return NewEvent(ch, channel.KindOut, v)
 }
 
@@ -44,12 +45,12 @@ func (e *Event) MarshalText() ([]byte, error) {
 		return chanBytes, nil
 	}
 
-	value, err := e.Value.MarshalText()
+	val, err := e.Value.MarshalText()
 	if err != nil {
 		return nil, fmt.Errorf("couldn't marshal value of event: %w", err)
 	}
 
-	return channel.EventSepJoin(chanBytes, value), nil
+	return channel.EventSepJoin(chanBytes, val), nil
 }
 
 func (e *Event) String() string {

@@ -1,6 +1,7 @@
 package trace_test
 
 import (
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 	"reflect"
 	"strings"
 	"testing"
@@ -28,9 +29,9 @@ func TestRead(t *testing.T) {
 		t.Fatal("unexpected error:", err)
 	}
 
-	barOut := testlang.Output("bar", testlang.NoValue())
-	fooIn := testlang.Input("foo", testlang.NoValue())
-	bazOut := testlang.Output("baz", testlang.Int(2))
+	barOut := testlang.Output("bar", value.None())
+	fooIn := testlang.Input("foo", value.None())
+	bazOut := testlang.Output("baz", value.Int(2))
 
 	want := []trace.Forbidden{
 		trace.New(barOut),

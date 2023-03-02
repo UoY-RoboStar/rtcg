@@ -56,7 +56,10 @@ func (a *makeStmAction) run() error {
 		return fmt.Errorf("malformed test suite: %w", err)
 	}
 
-	stms := a.buildStms(vs)
+	stms, err := a.buildStms(vs)
+	if err != nil {
+		return fmt.Errorf("couldn't build stms for test suite: %w", err)
+	}
 
 	if err := stms.Write(os.Stdout); err != nil {
 		return fmt.Errorf("couldn't write state machines: %w", err)
@@ -76,7 +79,7 @@ func (a *makeStmAction) readSuite() (testlang.Suite, error) {
 	return suite, errors.Join(err, file.Close())
 }
 
-func (a *makeStmAction) buildStms(tests validate.Suite) stm.Suite {
+func (a *makeStmAction) buildStms(tests validate.Suite) (stm.Suite, error) {
 	var bs stm.Builder
 
 	return bs.BuildSuite(tests)

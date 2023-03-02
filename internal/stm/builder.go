@@ -2,6 +2,7 @@ package stm
 
 import (
 	"fmt"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/rstype"
 
 	"github.com/UoY-RoboStar/rtcg/internal/structure"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
@@ -16,21 +17,25 @@ type Builder struct {
 }
 
 // BuildSuite builds a test suite s into a map of state machines.
-func (b *Builder) BuildSuite(s validate.Suite) Suite {
+func (b *Builder) BuildSuite(s validate.Suite) (Suite, error) {
 	suite := make(Suite, len(s))
 
 	for k, v := range s {
-		m := b.Build(k, v)
+		m, err := b.Build(k, v)
+		if err != nil {
+			return nil, fmt.Errorf("building %s: %w", k, err)
+		}
+
 		suite[k] = &m
 	}
 
-	return suite
+	return suite, nil
 }
 
 // Build builds a single state machine from the given validated test.
-func (b *Builder) Build(name string, test *validate.Test) Stm {
+func (b *Builder) Build(name string, test *validate.Test) (Stm, error) {
 	b.nodeNum = 0
-	b.stm = Stm{States: []*State{}, Tests: structure.NewSet[string]()}
+	b.stm = Stm{States: []*State{}, Tests: structure.NewSet[string](), Types: map[string]*rstype.RsType{}}
 
 	testRoot := test.Root()
 	testRoot.ID = testlang.NodeID(name)
@@ -41,22 +46,51 @@ func (b *Builder) Build(name string, test *validate.Test) Stm {
 	for !b.stack.IsEmpty() {
 		node := b.stack.Pop()
 
-		// We don't emit failing states.
-		if node.Outcome != testlang.OutcomeFail {
-			b.processNode(node)
+		if err := b.processNode(node); err != nil {
+			return b.stm, err
 		}
 	}
 
-	return b.stm
+	return b.stm, nil
 }
 
-func (b *Builder) processNode(node *testlang.Node) {
+func (b *Builder) processNode(node *testlang.Node) error {
+	if node.Outcome == testlang.OutcomeFail {
+		// We don't emit failing states.
+		return nil
+	}
+
 	sn := b.buildState(node)
 	b.stm.States = append(b.stm.States, sn)
 
+	if err := b.inferEventType(node); err != nil {
+		return err
+	}
+
+	b.pushNext(node)
+
+	return nil
+}
+
+func (b *Builder) pushNext(node *testlang.Node) {
 	for i := range node.Next {
 		b.stack.Push(&node.Next[i])
 	}
+}
+
+func (b *Builder) inferEventType(node *testlang.Node) error {
+	if node.Event == nil {
+		return nil
+	}
+
+	var err error
+	chanName := node.Event.Channel.Name
+
+	if b.stm.Types[chanName], err = rstype.Unify(b.stm.Types[chanName], node.Event.Value.Type()); err != nil {
+		return fmt.Errorf("incompatible type information for %s: %w", chanName, err)
+	}
+
+	return nil
 }
 
 func (b *Builder) buildState(node *testlang.Node) *State {

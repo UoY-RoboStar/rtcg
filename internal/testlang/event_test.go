@@ -2,6 +2,7 @@ package testlang_test
 
 import (
 	"errors"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 	"reflect"
 	"testing"
 
@@ -18,15 +19,15 @@ func TestEvent_MarshalText(t *testing.T) {
 		want  string
 	}{
 		"no-value": {
-			input: testlang.Input("foo", testlang.NoValue()),
+			input: testlang.Input("foo", value.None()),
 			want:  "foo.in",
 		},
 		"int-value": {
-			input: testlang.Input("foo", testlang.Int(42)),
+			input: testlang.Input("foo", value.Int(42)),
 			want:  "foo.in.42",
 		},
 		"raw-value": {
-			input: testlang.Output("bar", testlang.Raw("Ok")),
+			input: testlang.Output("bar", value.Enum("Ok")),
 			want:  "bar.out.Ok",
 		},
 	} {
@@ -59,16 +60,16 @@ func TestEvent_UnmarshalText(t *testing.T) {
 	}{
 		"empty":     {input: "", err: channel.BadFieldCountError{Got: 1}},
 		"space":     {input: "  ", err: channel.BadFieldCountError{Got: 1}},
-		"no-value":  {input: "foo.in", want: testlang.Input("foo", testlang.NoValue())},
-		"int-value": {input: "foo.in.42", want: testlang.Input("foo", testlang.Int(42))},
-		"raw-value": {input: "bar.out.Ok", want: testlang.Output("bar", testlang.Raw("Ok"))},
+		"no-value":  {input: "foo.in", want: testlang.Input("foo", value.None())},
+		"int-value": {input: "foo.in.42", want: testlang.Input("foo", value.Int(42))},
+		"raw-value": {input: "bar.out.Ok", want: testlang.Output("bar", value.Enum("Ok"))},
 		// String trimming tests
-		"left-pad-ch":   {input: "  foo.in.42", want: testlang.Input("foo", testlang.Int(42))},
-		"right-pad-ch":  {input: "foo  .in.42", want: testlang.Input("foo", testlang.Int(42))},
-		"left-pad-dir":  {input: "foo.  in.42", want: testlang.Input("foo", testlang.Int(42))},
-		"right-pad-dir": {input: "foo.in  .42", want: testlang.Input("foo", testlang.Int(42))},
-		"left-pad-val":  {input: "foo.in.  42", want: testlang.Input("foo", testlang.Int(42))},
-		"right-pad-val": {input: "foo.in.42  ", want: testlang.Input("foo", testlang.Int(42))},
+		"left-pad-ch":   {input: "  foo.in.42", want: testlang.Input("foo", value.Int(42))},
+		"right-pad-ch":  {input: "foo  .in.42", want: testlang.Input("foo", value.Int(42))},
+		"left-pad-dir":  {input: "foo.  in.42", want: testlang.Input("foo", value.Int(42))},
+		"right-pad-dir": {input: "foo.in  .42", want: testlang.Input("foo", value.Int(42))},
+		"left-pad-val":  {input: "foo.in.  42", want: testlang.Input("foo", value.Int(42))},
+		"right-pad-val": {input: "foo.in.42  ", want: testlang.Input("foo", value.Int(42))},
 	} {
 		input := test.input
 		want := test.want

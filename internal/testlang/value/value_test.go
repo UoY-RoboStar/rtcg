@@ -1,10 +1,9 @@
-package testlang_test
+package value_test
 
 import (
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 	"reflect"
 	"testing"
-
-	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 )
 
 // TestValue_MarshalText tests value text marshaling in several circumstances.
@@ -12,11 +11,11 @@ func TestValue_MarshalText(t *testing.T) {
 	t.Parallel()
 
 	for name, test := range map[string]struct {
-		input testlang.Value
+		input value.Value
 		want  string
 	}{
-		"int": {input: testlang.Int(42), want: "42"},
-		"raw": {input: testlang.Raw("Ok"), want: "Ok"},
+		"int": {input: value.Int(42), want: "42"},
+		"raw": {input: value.Enum("Ok"), want: "Ok"},
 	} {
 		input := test.input
 		want := test.want
@@ -42,15 +41,15 @@ func TestValue_UnmarshalText(t *testing.T) {
 
 	for name, test := range map[string]struct {
 		input string
-		want  testlang.Value
+		want  value.Value
 	}{
-		"int": {input: "42", want: testlang.Int(42)},
-		"raw": {input: "Ok", want: testlang.Raw("Ok")},
+		"int": {input: "42", want: value.Int(42)},
+		"raw": {input: "Ok", want: value.Enum("Ok")},
 		// String trimming tests
-		"int-left-pad":  {input: "  42", want: testlang.Int(42)},
-		"int-right-pad": {input: "42  ", want: testlang.Int(42)},
-		"raw-left-pad":  {input: "  Ok", want: testlang.Raw("Ok")},
-		"raw-right-pad": {input: "Ok  ", want: testlang.Raw("Ok")},
+		"int-left-pad":  {input: "  42", want: value.Int(42)},
+		"int-right-pad": {input: "42  ", want: value.Int(42)},
+		"raw-left-pad":  {input: "  Ok", want: value.Enum("Ok")},
+		"raw-right-pad": {input: "Ok  ", want: value.Enum("Ok")},
 	} {
 		input := test.input
 		want := test.want
@@ -58,7 +57,7 @@ func TestValue_UnmarshalText(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			var got testlang.Value
+			var got value.Value
 			if err := got.UnmarshalText([]byte(input)); err != nil {
 				t.Fatalf("unexpected unmarshalling error: %s", err)
 			}

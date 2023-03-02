@@ -1,6 +1,7 @@
 package stm_test
 
 import (
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 	"reflect"
 	"testing"
 
@@ -15,7 +16,7 @@ import (
 func TestBuilder_Build_EmptyPrefixTrace(t *testing.T) {
 	t.Parallel()
 
-	event := testlang.Output("foo", testlang.Int(42))
+	event := testlang.Output("foo", value.Int(42))
 
 	tree := trace.New(event).Expand("test")
 
@@ -25,7 +26,10 @@ func TestBuilder_Build_EmptyPrefixTrace(t *testing.T) {
 	}
 
 	var builder stm.Builder
-	mach := builder.Build("tree", vtree)
+	mach, err := builder.Build("tree", vtree)
+	if err != nil {
+		t.Fatalf("unexpected error: %s", err)
+	}
 
 	gotTests := mach.Tests.Values()
 	wantTests := []string{"test"}

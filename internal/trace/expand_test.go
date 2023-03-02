@@ -1,6 +1,7 @@
 package trace_test
 
 import (
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 	"reflect"
 	"strings"
 	"testing"
@@ -13,8 +14,8 @@ import (
 func TestTrace_Expand(t *testing.T) {
 	t.Parallel()
 
-	event1 := testlang.Input("foo", testlang.Int(42))
-	event2 := testlang.Output("bar", testlang.Raw("baz"))
+	event1 := testlang.Input("foo", value.Int(42))
+	event2 := testlang.Output("bar", value.Enum("baz"))
 
 	for name, test := range map[string]struct {
 		input trace.Forbidden

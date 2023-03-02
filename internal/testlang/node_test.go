@@ -1,6 +1,7 @@
 package testlang_test
 
 import (
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 	"reflect"
 	"testing"
 
@@ -11,7 +12,7 @@ import (
 func TestPass(t *testing.T) {
 	t.Parallel()
 
-	event := testlang.Output("batteryStatus", testlang.Raw("ok"))
+	event := testlang.Output("batteryStatus", value.Enum("ok"))
 
 	got := testlang.Pass(event)
 	want := testlang.Node{
@@ -29,7 +30,7 @@ func TestPass(t *testing.T) {
 func TestInc(t *testing.T) {
 	t.Parallel()
 
-	event := testlang.Output("batteryStatus", testlang.Raw("ok"))
+	event := testlang.Output("batteryStatus", value.Enum("ok"))
 
 	got := testlang.Inc(event)
 	want := testlang.Node{

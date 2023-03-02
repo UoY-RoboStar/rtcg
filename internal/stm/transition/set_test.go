@@ -1,6 +1,7 @@
 package transition_test
 
 import (
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 	"reflect"
 	"testing"
 
@@ -16,10 +17,10 @@ func TestAddToAggregateSets(t *testing.T) {
 	channel1 := channel.In("foo")
 	channel2 := channel.Out("bar")
 
-	tr1 := transition.Transition{Value: testlang.Int(42), Next: "y"}
-	tr2 := transition.Transition{Value: testlang.Int(56), Next: "z"}
-	tr3 := transition.Transition{Value: testlang.Raw("Out"), Next: "z"}
-	tr4 := transition.Transition{Value: testlang.Int(72), Next: ""}
+	tr1 := transition.Transition{Value: value.Int(42), Next: "y"}
+	tr2 := transition.Transition{Value: value.Int(56), Next: "z"}
+	tr3 := transition.Transition{Value: value.Enum("Out"), Next: "z"}
+	tr4 := transition.Transition{Value: value.Int(72), Next: ""}
 
 	var aggs []transition.AggregateSet
 

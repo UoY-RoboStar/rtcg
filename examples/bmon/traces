@@ -14,49 +14,49 @@ batteryStatus.out.MissionCritical
 batteryStatus.out.SafetyCritical
 
 # The monitor can’t receive a battery information report before handling the preceding one.
-batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD+1 |}, batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD+1 |}
-batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD   |}, batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD   |}
-batteryInfo.in.{| percentage=BATTERY_SAFETY_THRESHOLD    |}, batteryInfo.in.{| percentage=BATTERY_SAFETY_THRESHOLD    |}
+batteryInfo.in.100, batteryInfo.in.100
+batteryInfo.in.30 , batteryInfo.in.30
+batteryInfo.in.20 , batteryInfo.in.20
 
 # The monitor can’t declare an OK battery reading as mission-critical.
-batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD+1 |}, batteryStatus.out.MissionCritical
+batteryInfo.in.100, batteryStatus.out.MissionCritical
 
 # The monitor can’t declare an OK battery reading as safety-critical.
-batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD+1 |}, batteryStatus.out.SafetyCritical
+batteryInfo.in.100, batteryStatus.out.SafetyCritical
 
 # The monitor can’t declare a mission-critical battery reading as OK.
-batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD |}, batteryStatus.out.Ok
+batteryInfo.in.30, batteryStatus.out.Ok
 
 # The monitor can’t declare a mission-critical battery reading as safety-critical.
-batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD |}, batteryStatus.out.SafetyCritical
+batteryInfo.in.30, batteryStatus.out.SafetyCritical
 
 # The monitor can’t declare a safety-critical battery reading as OK.
-batteryInfo.in.{| percentage=BATTERY_SAFETY_THRESHOLD |}, batteryStatus.out.Ok
+batteryInfo.in.20, batteryStatus.out.Ok
 
 # The monitor can’t declare a safety-critical battery reading as mission-critical.
-batteryInfo.in.{| percentage=BATTERY_SAFETY_THRESHOLD |}, batteryStatus.out.MissionCritical
+batteryInfo.in.20, batteryStatus.out.MissionCritical
 
 # The monitor can’t emit Ok then Ok without taking another battery reading in between. (This may be an overspecification)
-batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD+1 |}, batteryStatus.out.Ok, batteryStatus.out.Ok
+batteryInfo.in.100, batteryStatus.out.Ok, batteryStatus.out.Ok
 
 # The monitor can’t emit Ok then MissionCritical without taking another battery reading in between.
-batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD+1 |}, batteryStatus.out.Ok, batteryStatus.out.MissionCritical
+batteryInfo.in.100, batteryStatus.out.Ok, batteryStatus.out.MissionCritical
 
 # The monitor can’t emit Ok then SafetyCritical without taking another battery reading in between.
-batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD+1 |}, batteryStatus.out.Ok, batteryStatus.out.SafetyCritical
+batteryInfo.in.100, batteryStatus.out.Ok, batteryStatus.out.SafetyCritical
 
 # The monitor can’t emit MissionCritical then Ok without taking another battery reading in between.
-batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD |}, batteryStatus.out.MissionCritical, batteryStatus.out.Ok
+batteryInfo.in.30, batteryStatus.out.MissionCritical, batteryStatus.out.Ok
 
 # The monitor can’t emit MissionCritical then MissionCritical without taking another battery reading in between. (This may be an overspecification)
-batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD |}, batteryStatus.out.MissionCritical, batteryStatus.out.MissionCritical
+batteryInfo.in.30, batteryStatus.out.MissionCritical, batteryStatus.out.MissionCritical
 
 # The monitor can’t emit MissionCritical then SafetyCritical without taking another battery reading in between.
-batteryInfo.in.{| percentage=BATTERY_MISSION_THRESHOLD |}, batteryStatus.out.MissionCritical, batteryStatus.out.SafetyCritical
+batteryInfo.in.30, batteryStatus.out.MissionCritical, batteryStatus.out.SafetyCritical
 
 # The monitor can’t emit SafetyCritical then Ok without taking another battery reading in between.
-batteryInfo.in.{| percentage=BATTERY_SAFETY_THRESHOLD |}, batteryStatus.out.SafetyCritical, batteryStatus.out.Ok
+batteryInfo.in.20, batteryStatus.out.SafetyCritical, batteryStatus.out.Ok
 
 # The monitor can’t emit SafetyCritical then MissionCritical without taking another battery reading in between.
-batteryInfo.in.{| percentage=BATTERY_SAFETY_THRESHOLD |}, batteryStatus.out.SafetyCritical, batteryStatus.out.MissionCritical
+batteryInfo.in.20, batteryStatus.out.SafetyCritical, batteryStatus.out.MissionCritical
 
