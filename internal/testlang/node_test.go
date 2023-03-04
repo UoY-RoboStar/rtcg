@@ -1,11 +1,11 @@
 package testlang_test
 
 import (
-	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 	"reflect"
 	"testing"
 
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 )
 
 // TestPass tests that the 'pass' constructor works.

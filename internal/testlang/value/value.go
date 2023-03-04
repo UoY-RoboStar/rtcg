@@ -6,8 +6,9 @@ import (
 	"encoding"
 	"errors"
 	"fmt"
-	"github.com/UoY-RoboStar/rtcg/internal/testlang/rstype"
 	"reflect"
+
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/rstype"
 )
 
 // Value is a value in a trace event.

@@ -2,8 +2,9 @@ package value
 
 import (
 	"fmt"
-	"github.com/UoY-RoboStar/rtcg/internal/testlang/rstype"
 	"strconv"
+
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/rstype"
 )
 
 // IntValue is a value that is an integer.

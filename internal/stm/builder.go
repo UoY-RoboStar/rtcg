@@ -2,10 +2,10 @@ package stm
 
 import (
 	"fmt"
-	"github.com/UoY-RoboStar/rtcg/internal/testlang/rstype"
 
 	"github.com/UoY-RoboStar/rtcg/internal/structure"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/rstype"
 	"github.com/UoY-RoboStar/rtcg/internal/validate"
 )
 
@@ -20,13 +20,13 @@ type Builder struct {
 func (b *Builder) BuildSuite(s validate.Suite) (Suite, error) {
 	suite := make(Suite, len(s))
 
-	for k, v := range s {
-		m, err := b.Build(k, v)
+	for name, test := range s {
+		m, err := b.Build(name, test)
 		if err != nil {
-			return nil, fmt.Errorf("building %s: %w", k, err)
+			return nil, fmt.Errorf("building %s: %w", name, err)
 		}
 
-		suite[k] = &m
+		suite[name] = &m
 	}
 
 	return suite, nil
@@ -63,7 +63,7 @@ func (b *Builder) processNode(node *testlang.Node) error {
 	sn := b.buildState(node)
 	b.stm.States = append(b.stm.States, sn)
 
-	if err := b.inferEventType(node); err != nil {
+	if err := b.inferNodeEventType(node); err != nil {
 		return err
 	}
 
@@ -78,15 +78,20 @@ func (b *Builder) pushNext(node *testlang.Node) {
 	}
 }
 
-func (b *Builder) inferEventType(node *testlang.Node) error {
+func (b *Builder) inferNodeEventType(node *testlang.Node) error {
 	if node.Event == nil {
 		return nil
 	}
 
-	var err error
-	chanName := node.Event.Channel.Name
+	return b.inferEventType(node.Event)
+}
 
-	if b.stm.Types[chanName], err = rstype.Unify(b.stm.Types[chanName], node.Event.Value.Type()); err != nil {
+func (b *Builder) inferEventType(event *testlang.Event) error {
+	var err error
+
+	chanName := event.Channel.Name
+
+	if b.stm.Types[chanName], err = rstype.Unify(b.stm.Types[chanName], event.Value.Type()); err != nil {
 		return fmt.Errorf("incompatible type information for %s: %w", chanName, err)
 	}
 

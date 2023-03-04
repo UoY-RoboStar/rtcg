@@ -3,9 +3,10 @@ package gen
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/UoY-RoboStar/rtcg/internal/gen/cpp"
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
-	"os"
 )
 
 const (
@@ -61,6 +62,7 @@ func (g *Generator) Generate(suite stm.Suite) error {
 	if err := g.mkdirs(suite); err != nil {
 		return err
 	}
+
 	if err := g.runSubgens(suite); err != nil {
 		return err
 	}

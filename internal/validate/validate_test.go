@@ -1,10 +1,10 @@
 package validate_test
 
 import (
-	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 	"testing"
 
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 	"github.com/UoY-RoboStar/rtcg/internal/validate"
 )
 

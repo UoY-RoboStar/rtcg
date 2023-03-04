@@ -2,13 +2,13 @@ package gen_test
 
 import (
 	"encoding/xml"
-	"github.com/UoY-RoboStar/rtcg/internal/gen/cpp"
-	"github.com/UoY-RoboStar/rtcg/internal/gen/makefile"
 	"path/filepath"
 	"reflect"
 	"testing"
 
 	"github.com/UoY-RoboStar/rtcg/internal/gen"
+	"github.com/UoY-RoboStar/rtcg/internal/gen/cpp"
+	"github.com/UoY-RoboStar/rtcg/internal/gen/makefile"
 )
 
 // TestLoadConfig tests LoadConfig on sample configs.

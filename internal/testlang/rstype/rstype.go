@@ -42,6 +42,7 @@ func (t *RsType) IsArithmos(domain ArithmosDomain) bool {
 	if t.kind != KindArithmos {
 		return false
 	}
+
 	return t.arithmosDomain == domain
 }
 
@@ -63,23 +64,20 @@ func (t *RsType) String() string {
 
 func (t *RsType) tryString() (string, bool) {
 	// TODO: factor into primitive and non-primitive types
-	if t.IsEmpty() {
+	switch {
+	case t.IsEmpty():
 		return "()", true
-	}
-	if t.IsNat() {
+	case t.IsNat():
 		return "nat", true
-	}
-	if t.IsInt() {
+	case t.IsInt():
 		return "int", true
-	}
-	if t.IsReal() {
+	case t.IsReal():
 		return "real", true
-	}
-	if t.IsEnum() {
+	case t.IsEnum():
 		return "enum", true
+	default:
+		return "", false
 	}
-
-	return "", false
 }
 
 func (t *RsType) UnmarshalText(text []byte) error {
@@ -91,25 +89,23 @@ func (t *RsType) UnmarshalText(text []byte) error {
 	switch typeStr {
 	case "()":
 		t.kind = KindEmpty
-		return nil
 	case "enum":
 		t.kind = KindEnum
-		return nil
 	case "nat":
 		t.kind = KindArithmos
 		t.arithmosDomain = ArithmosDomainNat
-		return nil
 	case "int":
 		t.kind = KindArithmos
 		t.arithmosDomain = ArithmosDomainInt
-		return nil
 	case "real":
 		t.kind = KindArithmos
 		t.arithmosDomain = ArithmosDomainReal
-		return nil
+	default:
+		// unsupported type
+		return TypeUnmarshalError{TypeName: typeStr}
 	}
 
-	return TypeUnmarshalError{TypeName: typeStr}
+	return nil
 }
 
 //

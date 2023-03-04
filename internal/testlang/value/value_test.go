@@ -1,9 +1,10 @@
 package value_test
 
 import (
-	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 	"reflect"
 	"testing"
+
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 )
 
 // TestValue_MarshalText tests value text marshaling in several circumstances.

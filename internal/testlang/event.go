@@ -2,10 +2,10 @@ package testlang
 
 import (
 	"fmt"
-	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 	"strings"
 
 	"github.com/UoY-RoboStar/rtcg/internal/testlang/channel"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 )
 
 // Event is the type of events in a trace.
@@ -31,6 +31,7 @@ func Output(ch string, v value.Value) Event {
 	return NewEvent(ch, channel.KindOut, v)
 }
 
+// Equals checks whether this event equals other.
 func (e *Event) Equals(other Event) bool {
 	return e.Channel.Equals(other.Channel) && e.Value.Equals(other.Value)
 }

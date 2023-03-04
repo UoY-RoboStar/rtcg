@@ -3,9 +3,9 @@ package transition
 
 import (
 	"fmt"
-	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 )
 
 // Transition is a transition from one state to another.

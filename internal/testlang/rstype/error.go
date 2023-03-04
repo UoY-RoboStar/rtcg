@@ -23,7 +23,5 @@ func (e TypeUnmarshalError) Error() string {
 	return fmt.Sprintf("unknown type name: %s", e.TypeName)
 }
 
-var (
-	// ErrUnifyDifferentKinds occurs when we try to unify two types with different kinds.
-	ErrUnifyDifferentKinds = errors.New("can't unify types of different kinds")
-)
+// ErrUnifyDifferentKinds occurs when we try to unify two types with different kinds.
+var ErrUnifyDifferentKinds = errors.New("can't unify types of different kinds")

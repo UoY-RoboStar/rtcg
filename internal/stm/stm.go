@@ -10,13 +10,13 @@ package stm
 
 import (
 	"fmt"
-	"github.com/UoY-RoboStar/rtcg/internal/testlang/rstype"
 	"io"
 
 	"github.com/UoY-RoboStar/rtcg/internal/serial"
 	"github.com/UoY-RoboStar/rtcg/internal/stm/transition"
 	"github.com/UoY-RoboStar/rtcg/internal/structure"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/rstype"
 )
 
 // Suite is a test suite, in state machine format.

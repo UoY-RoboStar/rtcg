@@ -3,11 +3,12 @@ package cpp
 
 import (
 	"fmt"
+	"path/filepath"
+	"text/template"
+
 	"github.com/UoY-RoboStar/rtcg/internal/gen/gencommon"
 	"github.com/UoY-RoboStar/rtcg/internal/gen/makefile"
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
-	"path/filepath"
-	"text/template"
 )
 
 const (
@@ -60,25 +61,34 @@ func (g *Generator) generateMakefile(suite stm.Suite) error {
 		return nil
 	}
 
-	return g.makefile.Generate(suite)
+	if err := g.makefile.Generate(suite); err != nil {
+		return fmt.Errorf("couldn't generate makefile: %w", err)
+	}
+
+	return nil
 }
 
 func (g *Generator) generateSuite(suite stm.Suite) error {
-	for k, v := range suite {
-		if err := g.generateStm(k, v); err != nil {
-			return fmt.Errorf("couldn't generate test %s: %w", k, err)
+	for name, test := range suite {
+		if err := g.generateStm(name, test); err != nil {
+			return err
 		}
 	}
 
 	return nil
 }
 
-func (g *Generator) generateStm(name string, body *stm.Stm) error {
+func (g *Generator) generateStm(name string, test *stm.Stm) error {
 	outPath := filepath.Join(g.outputDir, srcDir, name, name+".cpp")
 
-	ctx := NewContext(name, body, g.config)
+	ctx := NewContext(name, test, g.config)
 
-	return gencommon.ExecuteTemplateOnFile(outPath, "top.cpp.tmpl", g.template, ctx)
+	err := gencommon.ExecuteTemplateOnFile(outPath, "top.cpp.tmpl", g.template, ctx)
+	if err != nil {
+		return fmt.Errorf("couldn't generate C++ for %s: %w", name, err)
+	}
+
+	return nil
 }
 
 // New constructs a new C++ code generator from config, rooted at outputDir.

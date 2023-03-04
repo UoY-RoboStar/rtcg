@@ -82,5 +82,10 @@ func (a *makeStmAction) readSuite() (testlang.Suite, error) {
 func (a *makeStmAction) buildStms(tests validate.Suite) (stm.Suite, error) {
 	var bs stm.Builder
 
-	return bs.BuildSuite(tests)
+	suite, err := bs.BuildSuite(tests)
+	if err != nil {
+		return nil, fmt.Errorf("couldn't build state machines: %w", err)
+	}
+
+	return suite, nil
 }

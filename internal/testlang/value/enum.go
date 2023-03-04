@@ -2,6 +2,7 @@ package value
 
 import (
 	"fmt"
+
 	"github.com/UoY-RoboStar/rtcg/internal/testlang/rstype"
 )
 

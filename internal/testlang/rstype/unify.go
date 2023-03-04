@@ -3,22 +3,19 @@ package rstype
 import "fmt"
 
 // Unify tries to unify two types together.
-func Unify(x, y *RsType) (*RsType, error) {
-	if x == nil {
-		return y, nil
+func Unify(lhs, rhs *RsType) (*RsType, error) {
+	switch {
+	case lhs == nil:
+		return rhs, nil
+	case rhs == nil:
+		return lhs, nil
+	case lhs.kind != rhs.kind:
+		return nil, fmt.Errorf("%w: %s and %s", ErrUnifyDifferentKinds, lhs, rhs)
+	case lhs.kind == KindArithmos:
+		// Arithmos types need to be unified on their domain, which is currently totally ordered.
+		return Arithmos(MaxDomain(lhs.arithmosDomain, rhs.arithmosDomain)), nil
+	default:
+		// The other kinds don't have other things we need to unify (yet):
+		return lhs, nil
 	}
-	if y == nil {
-		return x, nil
-	}
-	if x.kind != y.kind {
-		return nil, fmt.Errorf("%w: %s and %s", ErrUnifyDifferentKinds, x, y)
-	}
-
-	// Base now, we can just look at x's kind.
-	if x.kind == KindArithmos {
-		return Arithmos(MaxDomain(x.arithmosDomain, y.arithmosDomain)), nil
-	}
-
-	// The other kinds don't have other things we need to unify (yet):
-	return x, nil
 }

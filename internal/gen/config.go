@@ -4,8 +4,9 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
-	"github.com/UoY-RoboStar/rtcg/internal/gen/cpp"
 	"os"
+
+	"github.com/UoY-RoboStar/rtcg/internal/gen/cpp"
 )
 
 // Config contains configuration for the generator.

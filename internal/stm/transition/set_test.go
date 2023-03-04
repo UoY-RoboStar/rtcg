@@ -1,13 +1,13 @@
 package transition_test
 
 import (
-	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 	"reflect"
 	"testing"
 
 	"github.com/UoY-RoboStar/rtcg/internal/stm/transition"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang/channel"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 )
 
 // TestAddToAggregateSets performs a test run of transition.AddToAggregateSets.

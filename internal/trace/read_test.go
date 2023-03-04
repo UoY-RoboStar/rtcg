@@ -1,12 +1,12 @@
 package trace_test
 
 import (
-	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 	"reflect"
 	"strings"
 	"testing"
 
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 	"github.com/UoY-RoboStar/rtcg/internal/trace"
 )
 

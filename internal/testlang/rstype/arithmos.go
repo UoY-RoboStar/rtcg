@@ -14,11 +14,12 @@ real,    // A real number.
 // Any type that is not of kind KindArithmos will return ArithmosKindUnknown here.
 type ArithmosDomain uint8
 
-func MaxDomain(x, y ArithmosDomain) ArithmosDomain {
+// MaxDomain gets the maximum (least-specific) domain between lhs and rhs.
+func MaxDomain(lhs, rhs ArithmosDomain) ArithmosDomain {
 	// All the domain enums are in ascending order, so we can just do this:
-	if x <= y {
-		return y
+	if lhs <= rhs {
+		return rhs
 	}
 
-	return x
+	return lhs
 }

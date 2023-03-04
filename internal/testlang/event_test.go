@@ -2,12 +2,12 @@ package testlang_test
 
 import (
 	"errors"
-	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 	"reflect"
 	"testing"
 
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang/channel"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 )
 
 // TestEvent_MarshalText tests event text marshaling in several circumstances.

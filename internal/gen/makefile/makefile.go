@@ -2,10 +2,12 @@
 package makefile
 
 import (
-	"github.com/UoY-RoboStar/rtcg/internal/gen/gencommon"
-	"github.com/UoY-RoboStar/rtcg/internal/stm"
+	"fmt"
 	"path/filepath"
 	"text/template"
+
+	"github.com/UoY-RoboStar/rtcg/internal/gen/gencommon"
+	"github.com/UoY-RoboStar/rtcg/internal/stm"
 )
 
 // Generator is a generator for Makefiles.
@@ -17,7 +19,12 @@ type Generator struct {
 func (g *Generator) Generate(suite stm.Suite) error {
 	outPath := filepath.Join(g.outputDir, "Makefile")
 
-	return gencommon.ExecuteTemplateOnFile(outPath, "Makefile.tmpl", g.template, suite)
+	err := gencommon.ExecuteTemplateOnFile(outPath, "Makefile.tmpl", g.template, suite)
+	if err != nil {
+		return fmt.Errorf("couldn't generate Makefile: %w", err)
+	}
+
+	return nil
 }
 
 // New constructs a new Makefile generator.

@@ -1,13 +1,13 @@
 package stm_test
 
 import (
-	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 	"reflect"
 	"testing"
 
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
 	"github.com/UoY-RoboStar/rtcg/internal/stm/verdict"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 	"github.com/UoY-RoboStar/rtcg/internal/trace"
 	"github.com/UoY-RoboStar/rtcg/internal/validate"
 )
@@ -26,6 +26,7 @@ func TestBuilder_Build_EmptyPrefixTrace(t *testing.T) {
 	}
 
 	var builder stm.Builder
+
 	mach, err := builder.Build("tree", vtree)
 	if err != nil {
 		t.Fatalf("unexpected error: %s", err)

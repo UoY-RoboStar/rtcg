@@ -3,10 +3,11 @@ package cpp
 import (
 	"embed"
 	"fmt"
-	"github.com/UoY-RoboStar/rtcg/internal/gen/gencommon"
 	"io/fs"
 	"path"
 	"text/template"
+
+	"github.com/UoY-RoboStar/rtcg/internal/gen/gencommon"
 )
 
 var (
@@ -53,7 +54,6 @@ func variantFS(variant Variant) fs.FS {
 		return rosTemplates
 	default:
 		// TODO: throw error if unknown variant?
-
 		return nil
 	}
 }
