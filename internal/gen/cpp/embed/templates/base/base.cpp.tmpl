@@ -22,8 +22,10 @@
 // TYPEDEFS
 //
 
-{{- range $cname, $ctype := .ChannelTypes }}
-using {{ upcaseFirst $cname }}Type = {{ if $ctype.HasOverride }}{{ $ctype.Override }}{{ else }}{{ template "type " $ctype.Base}}{{ end }}
+{{- range $i, $tr := .Transitions.All -}}
+{{-   with $ctype := index $.ChannelTypes $tr.Channel.Name }}
+using {{ cppChannelType $tr.Channel }} = {{ if $ctype.HasOverride }}{{ $ctype.Override }}{{ else }}{{ template "type" $ctype.Base}}{{ end }};
+{{-   end }}
 {{- end }}
 
 //

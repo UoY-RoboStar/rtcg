@@ -16,23 +16,27 @@ type Context struct {
 
 // NewContext creates a new template context from a named state machine.
 func NewContext(name string, machine *stm.Stm, config Config) Context {
-	return Context{
+	ctx := Context{
 		Context:      gencommon.NewContext(name, machine),
 		Includes:     config.Includes,
-		ChannelTypes: channelTypes(config, machine),
+		ChannelTypes: nil,
 	}
+
+	ctx.setupChannelTypes(config)
+
+	return ctx
 }
 
-func channelTypes(config Config, machine *stm.Stm) map[string]ChannelType {
-	overrides := make(map[string]ChannelType, len(config.Channels))
+func (c *Context) setupChannelTypes(config Config) {
+	c.ChannelTypes = make(map[string]ChannelType, len(c.Transitions.All))
 
-	for _, ccfg := range config.Channels {
-		if ccfg.Type != "" {
-			overrides[ccfg.Name] = ChannelType{Base: machine.Types[ccfg.Name], Override: ccfg.Type}
-		}
+	overrides := config.ChannelMap()
+
+	for _, tra := range c.Transitions.All {
+		cname := tra.Channel.Name
+
+		c.ChannelTypes[cname] = ChannelType{Base: c.Stm.Types[cname], Override: overrides[cname]}
 	}
-
-	return overrides
 }
 
 // ChannelType defines a type override for a channel.

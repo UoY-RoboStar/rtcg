@@ -16,7 +16,7 @@ const int INPUT_DELAY_SEC = 3;
 
 {{- /* Calculates the ROS equivalent of a RoboStar type. */ -}}
 {{- define "type" -}}
-{{- /* TODO: add more types here */}}
+{{- /* TODO: add more types here */ -}}
 std_msgs::String
 {{- end -}}
 
@@ -32,7 +32,7 @@ std_msgs::String
 
 {{- /* Takes the Channel of an output callback, returns its argument set. */ -}}
 {{- define "out_callback_args" -}}
-  const {{ upcaseFirst .Name }}Type::ConstPtr& msg
+  const {{ cppChannelType . }}Type::ConstPtr& msg
 {{- end -}}
 
 {{- /* Takes the Value received in an output callback, compares it against parameter `value`. */ -}}

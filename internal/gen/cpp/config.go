@@ -10,6 +10,17 @@ type Config struct {
 	Channels []Channel        `xml:"channel"`      // Channels contains channel configuration.
 }
 
+// ChannelMap gets the Channels field of this Config as a map from channel names to type overrides.
+func (c *Config) ChannelMap() map[string]string {
+	cmap := make(map[string]string, len(c.Channels))
+
+	for _, over := range c.Channels {
+		cmap[over.Name] = over.Type
+	}
+
+	return cmap
+}
+
 // Include captures a custom include header.
 type Include struct {
 	Src      string `xml:"src,attr"`    // Src is the source to include.

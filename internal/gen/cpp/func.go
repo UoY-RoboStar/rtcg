@@ -5,6 +5,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/UoY-RoboStar/rtcg/internal/strmanip"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang/channel"
 )
@@ -12,7 +13,8 @@ import (
 // Funcs adds the C++ function map to base.
 func Funcs(base *template.Template) *template.Template {
 	return base.Funcs(template.FuncMap{
-		"cppCallbackName": ChannelName,
+		"cppCallbackName": CallbackName,
+		"cppChannelType":  ChannelTypeName,
 		"cppEnumField":    EnumField,
 		"cppOutcomeEnum":  OutcomeEnum,
 		"cppStateEntry":   StateEntry,
@@ -21,9 +23,14 @@ func Funcs(base *template.Template) *template.Template {
 	})
 }
 
-// ChannelName gets the name of the callback for the channel cha.
-func ChannelName(cha channel.Channel) string {
+// CallbackName gets the name of the callback for the channel cha.
+func CallbackName(cha channel.Channel) string {
 	return cha.Name + "Callback"
+}
+
+// ChannelTypeName gets the name of the defined type for the channel chan.
+func ChannelTypeName(cha channel.Channel) string {
+	return strmanip.UpcaseFirst(cha.Name) + "Msg"
 }
 
 // StateEntry gets the name of the entry method for the state with the given id.

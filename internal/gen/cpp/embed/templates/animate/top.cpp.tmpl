@@ -10,6 +10,21 @@
   /* {{ . }} */ printf
 {{- end -}}
 
+{{- /* Calculates the C++ equivalent of a RoboStar type. */ -}}
+{{- define "type" -}}
+{{-   if .IsEnum -}}
+  const char *
+{{-   else if .IsNat -}}
+  unsigned int
+{{-   else if .IsInt -}}
+  int
+{{-   else if .IsReal -}}
+  double
+{{-   else -}}
+  void *
+{{-   end -}}
+{{- end -}}
+
 {{- /* Returns the argument set of a timeout callback. */ -}}
 {{- define "timeout_args" -}}
   {{- "" -}}{{- /* This template intentionally left blank. */ -}}
@@ -22,7 +37,7 @@
 
 {{- /* Takes the Channel of an output callback, returns its argument set. */ -}}
 {{- define "out_callback_args" -}}
-  const char* value
+  {{ cppChannelType . }} value
 {{- end -}}
 
 {{- /* Takes the Value received in an output callback, compares it against parameter `value`. */ -}}
