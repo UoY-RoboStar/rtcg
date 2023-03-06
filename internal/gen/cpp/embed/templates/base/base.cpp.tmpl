@@ -21,7 +21,7 @@
 //
 // MESSAGE TYPES
 //
-// For each channel T, we construct a type alias to stand for the base type
+// For each channel, we construct a type alias to stand for the base type
 // of its values, and use that alias to refer to that type throughout.
 //
 {{ template "ctypes.cpp.tmpl" . }}
@@ -53,7 +53,9 @@
 
 
 //
-// STATE MACHINE
+// MAIN TEST CLASS
+//
+// Most of the working parts of the test are here.
 //
 {{ template "stm.cpp.tmpl" . }}
 
