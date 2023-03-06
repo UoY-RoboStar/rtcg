@@ -27,7 +27,7 @@ func TestBuilder_Build_EmptyPrefixTrace(t *testing.T) {
 
 	var builder stm.Builder
 
-	mach, err := builder.Build("tree", vtree)
+	mach, err := builder.Build(vtree)
 	if err != nil {
 		t.Fatalf("unexpected error: %s", err)
 	}
@@ -59,8 +59,8 @@ func emptyPrefixTraceStates(t *testing.T, mach stm.Stm) {
 func emptyPrefixTraceNode1(t *testing.T, state *stm.State) {
 	t.Helper()
 
-	if state.ID != "tree" {
-		t.Errorf("expected first state to have name of test-tree, got %q", state.ID)
+	if state.ID != "initial" {
+		t.Errorf("expected first state to be 'initial', got %q", state.ID)
 	}
 
 	assertVerdict(t, state.Verdict, testlang.OutcomeInc, false)
@@ -71,7 +71,7 @@ func emptyPrefixTraceNode1(t *testing.T, state *stm.State) {
 func emptyPrefixTraceNode2(t *testing.T, state *stm.State) {
 	t.Helper()
 
-	if state.ID != "node0" {
+	if state.ID != "step0" {
 		t.Errorf("expected second state to have generated name, got %q", state.ID)
 	}
 

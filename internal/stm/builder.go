@@ -21,7 +21,7 @@ func (b *Builder) BuildSuite(s validate.Suite) (Suite, error) {
 	suite := make(Suite, len(s))
 
 	for name, test := range s {
-		m, err := b.Build(name, test)
+		m, err := b.Build(test)
 		if err != nil {
 			return nil, fmt.Errorf("building %s: %w", name, err)
 		}
@@ -33,12 +33,12 @@ func (b *Builder) BuildSuite(s validate.Suite) (Suite, error) {
 }
 
 // Build builds a single state machine from the given validated test.
-func (b *Builder) Build(name string, test *validate.Test) (Stm, error) {
+func (b *Builder) Build(test *validate.Test) (Stm, error) {
 	b.nodeNum = 0
 	b.stm = Stm{States: []*State{}, Tests: structure.NewSet[string](), Types: map[string]*rstype.RsType{}}
 
 	testRoot := test.Root()
-	testRoot.ID = testlang.NodeID(name)
+	testRoot.ID = "initial"
 
 	b.stack.Clear()
 	b.stack.Push(testRoot)
@@ -113,8 +113,10 @@ func (b *Builder) buildState(node *testlang.Node) *State {
 }
 
 func (b *Builder) ensureNodeID(n *testlang.Node) {
-	if n.ID == "" {
-		n.ID = testlang.NodeID(fmt.Sprintf("node%d", b.nodeNum))
-		b.nodeNum++
+	if n.ID != "" {
+		return
 	}
+
+	n.ID = testlang.NodeID(fmt.Sprintf("step%d", b.nodeNum))
+	b.nodeNum++
 }
