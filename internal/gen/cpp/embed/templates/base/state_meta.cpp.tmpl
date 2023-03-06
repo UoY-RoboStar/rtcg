@@ -4,7 +4,8 @@ state_meta.cpp.tmpl expands into various bits of state metadata.
 It expects a slice of state ID strings as its dot.
 */}}
 // A numerical identifier for each state in the testing state machine.
-enum class State {
+enum class State
+{
 {{- range $i, $v := . }}
   {{ cppEnumField $v.ID }},
 {{- end }}
