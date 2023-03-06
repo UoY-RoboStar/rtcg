@@ -32,7 +32,7 @@ const char* rtcg::outstr(rtcg::Outcome o)
 // Status
 //
 
-const char* rtcg::explain(Status s)
+const char* rtcg::status::explain(Status s)
 {
   switch (s) {
   case Status::RUNNING:
@@ -50,7 +50,7 @@ const char* rtcg::explain(Status s)
   }
 }
 
-int rtcg::exitCode(Status s)
+int rtcg::status::exitCode(Status s)
 {
   switch (s) {
   case Status::FAIL:

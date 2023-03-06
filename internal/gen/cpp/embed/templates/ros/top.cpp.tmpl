@@ -1,3 +1,10 @@
+{{- /*
+The top-level ROS1 template.
+
+This overrides and implements various parts of the base C++ template to use
+ROS primitives and concepts, then delegates to that template.
+*/ -}}
+
 {{- define "system_includes" }}
 #include "ros/ros.h"
 #include "std_msgs/Bool.h"
@@ -20,8 +27,13 @@ const int INPUT_DELAY_SEC = 3;
 std_msgs::String
 {{- end -}}
 
-{{- /* Returns the argument set of a timeout callback. */ -}}
-{{- define "timeout_args" -}}
+{{- /* Returns the argument set of the timeout callback. */ -}}
+{{- define "timeout_callback_args" -}}
+  const ros::TimerEvent& event
+{{- end -}}
+
+{{- /* Returns the argument set of the initial delay callback. */ -}}
+{{- define "initial_delay_callback_args" -}}
   const ros::TimerEvent& event
 {{- end -}}
 
@@ -32,7 +44,7 @@ std_msgs::String
 
 {{- /* Takes the Channel of an output callback, returns its argument set. */ -}}
 {{- define "out_callback_args" -}}
-  const {{ cppChannelType . }}Type::ConstPtr& msg
+  const {{ cppChannelType . }}::ConstPtr& msg
 {{- end -}}
 
 {{- /* Takes the Value received in an output callback, compares it against parameter `value`. */ -}}
@@ -51,7 +63,7 @@ std_msgs::String
 
   // Publishers
 {{-   range .Transitions.In }}
-  auto {{ template "publisher_name" . }} = nh.advertise</* TODO */ sensor_msgs::BatteryState>("{{ template "topic_name" . }}", 1000);
+  auto {{ template "publisher_name" . }} = nh.advertise<{{ cppChannelType .Channel }}>("{{ template "topic_name" . }}", 1000);
 {{-   end }}
 
   // Subscribers
@@ -59,17 +71,16 @@ std_msgs::String
   auto input_accepted_sub = nh.subscribe("input_accepted", 10, &StateMachine::inputAcceptedCallback, &stm);
 {{-   end }}
 {{   range .Transitions.Out }}
-  auto {{ template "subscriber_name" . }} = nh.subscribe("{{ template "topic_name" . }}", 10, &StateMachine::{{ cppCallbackName .Channel }}, &stm)
-{{-   end -}}
+  auto {{ template "subscriber_name" . }} = nh.subscribe("{{ template "topic_name" . }}", 10, &StateMachine::{{ cppCallbackName .Channel }}, &stm);
+{{-   end }}
 
   // Timers
   auto timeout_timer = nh.createTimer(ros::Duration(TIMEOUT_SEC), &StateMachine::timeoutCallback, &stm);
 
 {{- /* If the first state has an input transition, we delay the test to allow the SUT to warm up: */ -}}
 {{-   if .Transitions.FirstStateHasIn }}
-  auto input_delay_timer = nh.createTimer(ros::Duration(INPUT_DELAY_SEC, &StateMachine::, &stm);
+  auto input_delay_timer = nh.createTimer(ros::Duration(INPUT_DELAY_SEC), &StateMachine::inputDelayCallback, &stm);
 {{-   end }}
-  ros::Timer Pub_timer=nh.createTimer(ros::Duration(Init_Wait),Pub_timer_Callback);
 {{- end -}}
 
 {{-
@@ -78,21 +89,16 @@ std_msgs::String
  */
 -}}
 
-{{- /* Adding the ROS handles to the state machine and its constructor: */ -}}
-
+{{- /* Adding the ROS handles to the state machine fields: */ -}}
 {{- define "stm_fields" }}
 
   // Publisher handles
 {{-   range .Transitions.In }}
   ros::Publisher {{ template "publisher_name" . }}_;
-{{-   end -}}
-
-  // Subscriber handles
-{{-   range .Transitions.Out }}
-  ros::Subscriber {{ template "subscriber_name" . }}_;
-{{-   end -}}
+{{-   end }}
 {{- end -}}
 
+{{- /* Adding them to the constructor also: */ -}}
 {{- define "stm_ctor_params" -}}
 {{-   range $i, $t := .Transitions.In -}}
 {{-     if ne $i 0 -}}, {{ end -}}
@@ -108,6 +114,7 @@ ros::Publisher {{ template "publisher_name" $t }}
 {{- end -}}
 
 {{- define "stm_ctor" }}
+
   // Install the publisher handles
 {{-   range .Transitions.In }}
   {{ template "publisher_name" . }}_ = {{ template "publisher_name" . }};

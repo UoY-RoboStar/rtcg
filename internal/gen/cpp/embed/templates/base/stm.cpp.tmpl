@@ -9,19 +9,33 @@ class StateMachine : public rtcg::TestCase
 public:
   StateMachine({{ block "stm_ctor_params" . }}{{ end }});
   Verdict& getVerdict(); // Gets the current verdict.
+
+  //
+  // Callbacks
+  //
+
+  // Called when the test has run out of time.
+  void timeoutCallback({{ template "timeout_callback_args" }});
+
+{{- if .Transitions.FirstStateHasIn }}
+
+  // Called when the initial delay timer has run out.
+  void initialDelayCallback({{ template "initial_delay_callback_args" }});
+{{- end }}
+
+{{- if .Transitions.HasIn }}
+
+  // Called when an input is accepted by the SUT.
+  void inputAcceptedCallback({{ template "in_callback_args" }});
+{{- end }}
+
+{{- range .Transitions.Out }}
+  void {{ cppCallbackName .Channel }}({{ template "out_callback_args" .Channel }});
+{{- end }}
 private:
   Verdict verdict_;
   State state_ = {{ (index .Stm.States 0).ID | cppStateEnum }};
 {{- block "stm_fields" . -}}{{- end }}
-
-  // Callbacks
-  void timeoutCallback({{ template "timeout_args" }});
-{{- if .Transitions.HasIn }}
-  void inputAcceptedCallback({{ template "in_callback_args" }});
-{{- end }}
-{{- range .Transitions.Out }}
-  void {{ cppCallbackName .Channel }}({{ template "out_callback_args" .Channel }});
-{{- end }}
 
   // State entry functions
 {{- range .Stm.States }}
@@ -34,8 +48,13 @@ private:
 
 StateMachine::StateMachine({{ template "stm_ctor_params" . }})
 {
+{{- if .Transitions.FirstStateHasIn }}
+  // This test's first state has an input, so we delay entry into the initial
+  // state to initialDelayCallback.
+{{- else }}
   {{ cppStateEntry .Stm.InitialState }}();
-  {{- block "stm_ctor" . }}{{ end }}
+{{- end -}}
+{{- block "stm_ctor" . }}{{ end }}
 }
 
 Verdict& StateMachine::getVerdict()
@@ -52,7 +71,7 @@ void StateMachine::end(rtcg::Status s)
 {
   if (status_ != rtcg::Status::RUNNING)
   {
-    {{ template "log" "error" }}("tried to end test twice (first as %s, then as %s)\n", rtcg::explain(status_), rtcg::explain(s));
+    {{ template "log" "error" }}("tried to end test twice (first as %s, then as %s)\n", rtcg::status::explain(status_), rtcg::status::explain(s));
     return;
   }
 
@@ -72,11 +91,20 @@ void StateMachine::end(rtcg::Status s)
 // Callback functions
 //
 
-void StateMachine::timeoutCallback({{ template "timeout_args" }})
+void StateMachine::timeoutCallback({{ template "timeout_callback_args" }})
 {
   {{ template "log" "info" }}("timeout");
   end(rtcg::Status::TIMEOUT);
 }
+
+{{- if .Transitions.FirstStateHasIn }}
+
+void StateMachine::initialDelayCallback({{ template "initial_delay_callback_args" }})
+{
+  {{ template "log" "info" }}("initial delay finished, now entering first state");
+  {{ cppStateEntry .Stm.InitialState }}();
+}
+{{- end }}
 
 {{- if .Transitions.HasIn }}
 

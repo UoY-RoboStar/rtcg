@@ -12,11 +12,11 @@ int main({{ block "main_args" . }}int argc, char** argv{{ end }})
 {{ template "spin" . }}
 
   auto status = stm.getStatus();
-  {{ template "log" "info" }}("test {{ .Name }} finished: %s\n", rtcg::explain(status));
+  {{ template "log" "info" }}("test {{ .Name }} finished: %s\n", rtcg::status::explain(status));
   stm.getVerdict().dump();
 
 {{- block "cleanup" . }}
 {{- end }}
 
-  return rtcg::exitCode(status);
+  return rtcg::status::exitCode(status);
 }

@@ -41,11 +41,15 @@ namespace rtcg
     BUG,        // Something went internally wrong inside the test.
   };
 
-  // Returns a (static) description of a status.
-  const char* explain(Status s);
+  namespace status
+  {
+    // Returns a (static) description of a status.
+    const char* explain(Status s);
 
-  // Converts a status into an exit code.
-  int exitCode(Status s);
+    // Converts a status into an exit code.
+    int exitCode(Status s);
+  }
+
 
   //
   // Test case
