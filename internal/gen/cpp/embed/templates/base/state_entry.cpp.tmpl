@@ -5,11 +5,38 @@ It expects the state in question as its dot.
 
 Base indent is set at 2, as we are inside a top-level function.
 */}}
+  {{ template "log" "info" }}"Entered state {{ .ID }}."{{ template "end_log" }}
 
 {{- range $t, $o := .Verdict }}
   verdict_.{{ $t }}({{ cppOutcomeEnum $o }});
 {{- end }}
+
+{{- /* Assuming that this is a valid state, ie at most one input, and no mix of inputs/outputs. */ -}}
 {{- if .Verdict.IsFail }}
 
   end(rtcg::Status::FAIL); // This state fails at least one test
+{{- else if .HasIn }}
+
+  // This state provides an input to the SUT
+  status_ = rtcg::Status::WAIT_IN;
+
+{{-   with .In }}
+
+  {{ template "log" "info" }}"State '{{ $.ID }}' sends {{ .Value.StringValue }} to SUT on {{ .Channel.Name }}; " <<
+    "if accepted, next state will be '{{ .Next }}'."{{ template "end_log" }}
+{{      template "input" . -}}
+{{-   end }}
+{{- else }}
+
+  // This state expects an output from the SUT
+  status_ = rtcg::Status::WAIT_OUT;
+
+{{- /* The actual handling of these is done in the callbacks. */ -}}
+{{-  range $outSet := .TransitionSets }}
+{{-    range index .Transitions }}
+
+  {{ template "log" "info" }}"State '{{ $.ID }}' can receive {{ .Value.StringValue }} from SUT on {{ $outSet.Channel.Name }}; " <<
+    "if received, next state will be '{{ .Next }}'."{{ template "end_log" }}
+{{-    end }}
+{{-  end }}
 {{- end -}}

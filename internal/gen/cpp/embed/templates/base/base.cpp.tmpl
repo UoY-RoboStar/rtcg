@@ -23,6 +23,7 @@
 //
 // For each channel, we construct a type alias to stand for the base type
 // of its values, and use that alias to refer to that type throughout.
+// We also create conversion functions for use in the test.
 //
 {{ template "ctypes.cpp.tmpl" . }}
 

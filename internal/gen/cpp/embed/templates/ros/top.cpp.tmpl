@@ -16,16 +16,57 @@ const int TIMEOUT_SEC     = 15;
 const int INPUT_DELAY_SEC = 3;
 {{- end -}}
 
-{{- /* Expand to the name of a printf-style function used for logging. */ -}}
-{{- define "log" -}}
-  ROS_{{ toUpper . }}
-{{- end -}}
+{{- /* Starts and ends a stream-style log statement. */ -}}
+{{- define "log" -}}ROS_{{ toUpper . }}_STREAM({{- end -}}
+{{- define "end_log" }} << std::endl);{{- end -}}
+
+{{- /* Calculates the message type of a channel. */ -}}
+{{- define "msg_type" -}}const {{ cppChannelType . }}::ConstPtr&{{- end -}}
 
 {{- /* Calculates the ROS equivalent of a RoboStar type. */ -}}
 {{- define "type" -}}
 {{- /* TODO: add more types here */ -}}
 std_msgs::String
 {{- end -}}
+
+{{- /* Performs conversion from a channel type to a value type.
+
+Receives the value type as dot.
+
+Indent is set at 2 spaces, as this is the body of a root function. */ -}}
+{{- define "convert_from" -}}
+{{-   if .IsEnum }}
+  return std::string(msg->data.c_str());
+{{-   else }}
+  // No conversion required
+  return msg->data;
+{{-   end -}}
+{{- end -}}
+
+{{- /* Performs conversion from a value type to a channel type.
+
+Receives the value type as dot.
+
+Indent is set at 2 spaces, as this is the body of a root function. */ -}}
+{{- define "convert_to" -}}
+{{-   if .IsEnum }}
+  std_msgs::String msg;
+  msg.data = value.c_str();
+  return msg;
+{{-   else }}
+  // No conversion required
+  return value;
+{{-   end -}}
+{{- end -}}
+
+{{- define "topic_name" -}}{{ toLowerUnderscored .Channel.Name }}{{- end -}}
+{{- define "publisher_name" -}}{{ template "topic_name" . }}_pub{{- end -}}
+{{- define "subscriber_name" -}}{{ template "topic_name" . }}_sub{{- end -}}
+
+{{- /* Placeholder for when an input is required. */ -}}
+{{- define "input" }}
+  {{ template "publisher_name" . }}_.publish({{ cppConvertTo .Channel }}(value));
+{{- end }}
 
 {{- /* Returns the argument set of the timeout callback. */ -}}
 {{- define "timeout_callback_args" -}}
@@ -44,17 +85,8 @@ std_msgs::String
 
 {{- /* Takes the Channel of an output callback, returns its argument set. */ -}}
 {{- define "out_callback_args" -}}
-  const {{ cppChannelType . }}::ConstPtr& msg
+  {{ template "msg_type" . }} msg
 {{- end -}}
-
-{{- /* Takes the Value received in an output callback, compares it against parameter `value`. */ -}}
-{{- define "callback_compare" -}}
-  std::string(msg->data.c_str()).compare("{{ .StringValue }}") == 0
-{{- end -}}
-
-{{- define "topic_name" -}}{{ toLowerUnderscored .Channel.Name }}{{- end -}}
-{{- define "publisher_name" -}}{{ template "topic_name" . }}_pub{{- end -}}
-{{- define "subscriber_name" -}}{{ template "topic_name" . }}_sub{{- end -}}
 
 {{/* ROS initialisation code. */}}
 {{- define "init" }}
@@ -131,8 +163,7 @@ The main loop or spin of the test driver, coming between initialisation and clea
 
 Should have an indent of 2, and has the state machine as dot.
 */}}
-{{- define "spin" }}
-  ros::spin();
+{{- define "main_body" }}
 {{- end -}}
 
 {{/* We don't override "main_args" here. */}}

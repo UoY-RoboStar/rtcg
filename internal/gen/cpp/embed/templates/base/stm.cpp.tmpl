@@ -51,6 +51,7 @@ StateMachine::StateMachine({{ template "stm_ctor_params" . }})
 {{- if .Transitions.FirstStateHasIn }}
   // This test's first state has an input, so we delay entry into the initial
   // state to initialDelayCallback.
+  status_ = rtcg::Status::WAIT_START;
 {{- else }}
   {{ cppStateEntry .Stm.InitialState }}();
 {{- end -}}
@@ -69,15 +70,15 @@ const char* StateMachine::stateName()
 
 void StateMachine::end(rtcg::Status s)
 {
-  if (status_ != rtcg::Status::RUNNING)
+  if (!rtcg::status::isRunning(status_))
   {
-    {{ template "log" "error" }}("tried to end test twice (first as %s, then as %s)\n", rtcg::status::explain(status_), rtcg::status::explain(s));
+    {{ template "log" "error" }}"Tried to end test twice (first as " << rtcg::status::explain(status_) << ", then as " << rtcg::status::explain(s) << "."{{ template "end_log" }}
     return;
   }
 
-  if (s == rtcg::Status::RUNNING)
+  if (rtcg::status::isRunning(s))
   {
-    {{ template "log" "error" }}("tried to end with 'running' status\n");
+    {{ template "log" "error" }}"Tried to end with a non-ending status " << rtcg::status::explain(s) << "."{{ template "end_log" }}
     s = rtcg::Status::BUG;
   }
 
@@ -93,7 +94,7 @@ void StateMachine::end(rtcg::Status s)
 
 void StateMachine::timeoutCallback({{ template "timeout_callback_args" }})
 {
-  {{ template "log" "info" }}("timeout");
+  {{ template "log" "info" }}"Timeout!"{{ template "end_log" }}
   end(rtcg::Status::TIMEOUT);
 }
 
@@ -101,7 +102,7 @@ void StateMachine::timeoutCallback({{ template "timeout_callback_args" }})
 
 void StateMachine::initialDelayCallback({{ template "initial_delay_callback_args" }})
 {
-  {{ template "log" "info" }}("initial delay finished, now entering first state");
+  {{ template "log" "info" }}"Initial delay finished, now entering first state."{{ template "end_log" }}
   {{ cppStateEntry .Stm.InitialState }}();
 }
 {{- end }}

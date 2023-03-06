@@ -4,6 +4,8 @@ package transition
 import (
 	"fmt"
 
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/channel"
+
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 )
@@ -17,4 +19,11 @@ type Transition struct {
 
 func (t Transition) String() string {
 	return fmt.Sprintf("-[%s]-> %s", &t.Value, t.Next)
+}
+
+// Flat is a Transition with its channel attached.
+type Flat struct {
+	Transition
+
+	Channel channel.Channel // Channel is the transition's channel.
 }

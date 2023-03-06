@@ -6,7 +6,37 @@ It expects the full context as dot.
 Base indent is set at 0.
 */}}
 {{- range $i, $tr := .Transitions.All -}}
-{{-   with $ctype := index $.ChannelTypes $tr.Channel.Name }}
-using {{ cppChannelType $tr.Channel }} = {{ if $ctype.HasOverride }}{{ $ctype.Override }}{{ else }}{{ template "type" $ctype.Base}}{{ end }};
+{{-   with index $.ChannelTypes $tr.Channel.Name }}
+using {{ cppChannelType $tr.Channel }} = {{ if .HasOverride }}{{ .Override }}{{ else }}{{ template "type" .Base }}{{ end }};
+{{-   end }}
+{{- end }}
+
+// Converting from channel types to value types
+{{- range $i, $tr := .Transitions.All -}}
+{{-   with index $.ChannelTypes $tr.Channel.Name }}
+
+{{ cppType .Base }} {{ cppConvertFrom $tr.Channel }}({{ template "msg_type" $tr.Channel }} msg)
+{{-     if .HasOverride -}}
+; // User override supplied
+{{-     else }}
+{
+{{- template "convert_from" .Base }}
+}
+{{-     end -}}
+{{-   end }}
+{{- end }}
+
+// Converting from value types to channel types
+{{- range $i, $tr := .Transitions.All -}}
+{{-   with index $.ChannelTypes $tr.Channel.Name }}
+
+{{ cppChannelType $tr.Channel }} {{ cppConvertTo $tr.Channel }}({{ cppType .Base }} value)
+{{-     if .HasOverride -}}
+    ; // User override supplied
+{{-     else }}
+{
+{{- template "convert_to" .Base }}
+}
+{{-     end -}}
 {{-   end }}
 {{- end }}

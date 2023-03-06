@@ -79,3 +79,30 @@ func (s *State) transitionString() string {
 
 	return tsetStr
 }
+
+// HasIn gets whether this State has an input transition.
+//
+// A valid State should have at most one input transition, and no mixture of inputs and outputs.
+func (s *State) HasIn() bool {
+	for _, tra := range s.TransitionSets {
+		if tra.Channel.IsIn() {
+			return true
+		}
+	}
+
+	return false
+}
+
+// In gets the first valid input transition on this State.
+func (s *State) In() *transition.Flat {
+	for _, tra := range s.TransitionSets {
+		if tra.Channel.IsIn() && len(tra.Transitions) == 1 {
+			return &transition.Flat{
+				Channel:    tra.Channel,
+				Transition: tra.Transitions[0],
+			}
+		}
+	}
+
+	return nil
+}

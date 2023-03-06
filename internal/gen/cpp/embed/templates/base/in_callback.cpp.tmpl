@@ -9,12 +9,12 @@ Base indent is set at 2, as we are inside a top-level function.
   {
 {{- range $s, $ts := . }}
   case {{ cppStateEnum $s }}:
-    {{ template "log" "info" }}("accepted input on state {{ $s }} as expected");
+    {{ template "log" "info" }}"Accepted input on state {{ $s }} as expected."{{ template "end_log" }}
     {{ cppStateEntry (index $ts 0).Next }}();
     break;
 {{- end }}
   default:
     // We shouldn't be seeing an input acknowledgement in this state.
-    {{ template "log" "error" }}("accepted input in unexpected state %s", stateName());
+    {{ template "log" "error" }}"Accepted input in unexpected state" << stateName(){{ template "end_log" }}
     end(rtcg::Status::BUG);
   }

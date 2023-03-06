@@ -1,0 +1,55 @@
+{{- if .Transitions.FirstStateHasIn }}
+  std::cout << "[!] Test is waiting for the SUT to initialise before sending an input.\n";
+{{- end }}
+
+  for (auto s = stm.getStatus(); rtcg::status::isRunning(s); s = stm.getStatus())
+  {
+    std::cout << "\nType one of the following:\n";
+{{- if .Transitions.HasIn }}
+{{-   if .Transitions.FirstStateHasIn }}
+    if (s == rtcg::Status::WAIT_START)
+      std::cout << "  ready (prepares SUT for inputs)\n";
+    else if
+{{-   else }}
+    if
+{{ end -}}
+    (s == rtcg::Status::WAIT_IN)
+      std::cout << "  accept (accepts an input)\n";
+{{- end }}
+    std::cout << "  timeout (quits the test with a timeout)\n";
+
+    std::cout << "\n To enter an output, type its name and the desired value: \n";
+{{- range .Transitions.Out }}
+    std::cout << "  {{ .Channel.Name }} ({{ (index $.ChannelTypes .Channel.Name).Base }})\n";
+{{- else }}
+    std::cout << "  No outputs available for this test-case.\n";
+{{- end }}
+
+    std::cout << "\n> ";
+    std::string choice;
+    std::cin >> choice;
+
+    if (choice == "timeout")
+      stm.timeoutCallback();
+{{- if .Transitions.FirstStateHasIn }}
+    else if (choice == "ready" && s == rtcg::Status::WAIT_START)
+    stm.initialDelayCallback();
+{{- end }}
+{{- if .Transitions.HasIn }}
+    else if (choice == "accept" && s == rtcg::Status::WAIT_IN)
+      stm.inputAcceptedCallback();
+{{- end }}
+{{- range .Transitions.Out -}}
+{{-   $cn := .Channel.Name }}
+{{-   $ctype := index $.ChannelTypes $cn }}
+    else if (choice == "{{ $cn }}")
+    {
+      {{ cppType $ctype.Base }} in;
+      std::cin >> in;
+
+      stm.{{ cppCallbackName .Channel }}({{ cppConvertTo .Channel }}(in));
+    }
+{{- end }}
+    else
+      std::cout << "Sorry, try again.\n";
+  }

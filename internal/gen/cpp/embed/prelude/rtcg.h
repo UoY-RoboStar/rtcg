@@ -34,7 +34,11 @@ namespace rtcg
   // Statuses of a test-case.
   enum class Status
   {
-    RUNNING,    // Test is still running.
+  // Test is running:
+    WAIT_START, // Test is waiting to start.
+    WAIT_IN,    // Test is waiting for an input acknowledgement.
+    WAIT_OUT,   // Test is waiting for an output acknowledgement.
+  // Test is not running:
     OFF_SCRIPT, // We saw something that didn't match a transition.
     TIMEOUT,    // We timed out waiting for something to happen.
     FAIL,       // We failed a test.
@@ -45,6 +49,9 @@ namespace rtcg
   {
     // Returns a (static) description of a status.
     const char* explain(Status s);
+
+    // Gets whether this status means the test is still running.
+    bool isRunning(Status s);
 
     // Converts a status into an exit code.
     int exitCode(Status s);
@@ -61,7 +68,7 @@ namespace rtcg
   public:
     Status getStatus(); // Gets the current status of the test.
   protected:
-    Status status_ = Status::RUNNING; // Current status of the test.
+    Status status_ = Status::WAIT_START; // Current status of the test.
   };
 }
 

@@ -5,6 +5,8 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/rstype"
+
 	"github.com/UoY-RoboStar/rtcg/internal/strmanip"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang/channel"
@@ -15,11 +17,14 @@ func Funcs(base *template.Template) *template.Template {
 	return base.Funcs(template.FuncMap{
 		"cppCallbackName": CallbackName,
 		"cppChannelType":  ChannelTypeName,
+		"cppConvertFrom":  ConvertFrom,
+		"cppConvertTo":    ConvertTo,
 		"cppEnumField":    EnumField,
 		"cppOutcomeEnum":  OutcomeEnum,
 		"cppStateEntry":   StateEntry,
 		"cppStateEnum":    StateEnum,
 		"cppTestEnum":     TestEnum,
+		"cppType":         StdType,
 	})
 }
 
@@ -28,9 +33,23 @@ func CallbackName(cha channel.Channel) string {
 	return cha.Name + "Callback"
 }
 
-// ChannelTypeName gets the name of the defined type for the channel chan.
+// ChannelTypeName gets the name of the defined type for the channel cha.
 func ChannelTypeName(cha channel.Channel) string {
 	return strmanip.UpcaseFirst(cha.Name) + "Msg"
+}
+
+// ConvertTo gets the to-conversion function name for the channel cha.
+func ConvertTo(cha channel.Channel) string {
+	return convert("to", cha)
+}
+
+// ConvertFrom gets the from-conversion function name for channel cha.
+func ConvertFrom(cha channel.Channel) string {
+	return convert("from", cha)
+}
+
+func convert(dir string, cha channel.Channel) string {
+	return dir + strmanip.UpcaseFirst(cha.Name)
 }
 
 // StateEntry gets the name of the entry method for the state with the given id.
@@ -56,6 +75,22 @@ func TestEnum(name string) string {
 // EnumField massages variant to become suitable as an enum field name.
 func EnumField(variant any) string {
 	return strings.ToUpper(fmt.Sprint(variant))
+}
+
+// StdType gets the standard C++ type for the given RoboStar type.
+func StdType(ty rstype.RsType) string {
+	switch {
+	case ty.IsEnum():
+		return "std::string"
+	case ty.IsNat():
+		return "unsigned int"
+	case ty.IsInt():
+		return "int"
+	case ty.IsReal():
+		return "double"
+	default:
+		return "void *"
+	}
 }
 
 func rtcgEnumName(name string, variant any) string {

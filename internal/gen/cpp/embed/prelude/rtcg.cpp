@@ -35,8 +35,12 @@ const char* rtcg::outstr(rtcg::Outcome o)
 const char* rtcg::status::explain(Status s)
 {
   switch (s) {
-  case Status::RUNNING:
-    return "still running";
+  case Status::WAIT_START:
+    return "waiting to start";
+  case Status::WAIT_IN:
+    return "waiting for input acknowledgement";
+  case Status::WAIT_OUT:
+    return "waiting for output";
   case Status::OFF_SCRIPT:
     return "an event happened that took the test off-script";
   case Status::TIMEOUT:
@@ -47,6 +51,19 @@ const char* rtcg::status::explain(Status s)
     return "an internal error occurred";
   default:
     return "unknown (this should not occur)";
+  }
+}
+
+bool rtcg::status::isRunning(Status s)
+{
+  switch (s)
+  {
+  case Status::WAIT_START:
+  case Status::WAIT_IN:
+  case Status::WAIT_OUT:
+    return true;
+  default:
+    return false;
   }
 }
 
