@@ -35,7 +35,7 @@ func ChannelTypeName(cha channel.Channel) string {
 
 // StateEntry gets the name of the entry method for the state with the given id.
 func StateEntry(id testlang.NodeID) string {
-	return string(id) + "Entry"
+	return "enter" + strmanip.UpcaseFirst(string(id))
 }
 
 // OutcomeEnum gets a reference to the enum member for outcome.
