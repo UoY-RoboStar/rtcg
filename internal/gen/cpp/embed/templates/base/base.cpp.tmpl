@@ -19,14 +19,13 @@
 #include "../rtcg/rtcg.h" // Helper definitions (compile with ../rtcg/rtcg.cpp)
 
 //
-// TYPEDEFS
+// MESSAGE TYPES
 //
+// For each channel T, we construct a type alias to stand for the base type
+// of its values, and use that alias to refer to that type throughout.
+//
+{{ template "ctypes.cpp.tmpl" . }}
 
-{{- range $i, $tr := .Transitions.All -}}
-{{-   with $ctype := index $.ChannelTypes $tr.Channel.Name }}
-using {{ cppChannelType $tr.Channel }} = {{ if $ctype.HasOverride }}{{ $ctype.Override }}{{ else }}{{ template "type" $ctype.Base}}{{ end }};
-{{-   end }}
-{{- end }}
 
 //
 // CONSTANTS

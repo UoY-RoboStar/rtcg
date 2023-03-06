@@ -1,0 +1,12 @@
+{{/*
+ctypes.cpp.tmpl expands into the list of channel type definitions.
+
+It expects the full context as dot.
+
+Base indent is set at 0.
+*/}}
+{{- range $i, $tr := .Transitions.All -}}
+{{-   with $ctype := index $.ChannelTypes $tr.Channel.Name }}
+using {{ cppChannelType $tr.Channel }} = {{ if $ctype.HasOverride }}{{ $ctype.Override }}{{ else }}{{ template "type" $ctype.Base}}{{ end }};
+{{-   end }}
+{{- end }}
