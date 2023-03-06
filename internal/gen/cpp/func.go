@@ -5,11 +5,10 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/UoY-RoboStar/rtcg/internal/testlang/rstype"
-
 	"github.com/UoY-RoboStar/rtcg/internal/strmanip"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang/channel"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/rstype"
 )
 
 // Funcs adds the C++ function map to base.
@@ -78,15 +77,15 @@ func EnumField(variant any) string {
 }
 
 // StdType gets the standard C++ type for the given RoboStar type.
-func StdType(ty rstype.RsType) string {
+func StdType(rsType rstype.RsType) string {
 	switch {
-	case ty.IsEnum():
+	case rsType.IsEnum():
 		return "std::string"
-	case ty.IsNat():
+	case rsType.IsNat():
 		return "unsigned int"
-	case ty.IsInt():
+	case rsType.IsInt():
 		return "int"
-	case ty.IsReal():
+	case rsType.IsReal():
 		return "double"
 	default:
 		return "void *"

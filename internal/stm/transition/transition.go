@@ -4,9 +4,8 @@ package transition
 import (
 	"fmt"
 
-	"github.com/UoY-RoboStar/rtcg/internal/testlang/channel"
-
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/channel"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 )
 
