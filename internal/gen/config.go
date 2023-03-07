@@ -5,14 +5,16 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/UoY-RoboStar/rtcg/internal/gen/cpp"
 )
 
 // Config contains configuration for the generator.
 type Config struct {
-	XMLName xml.Name     `xml:"rtcg-gen"` // XMLName sets the name of the Config struct in XML.
-	Cpps    []cpp.Config `xml:"cpp"`      // Cpps contains CppTarget elements.
+	XMLName   xml.Name     `xml:"rtcg-gen"`            // XMLName sets the name of the Config struct in XML.
+	Cpps      []cpp.Config `xml:"cpp"`                 // Cpps contains CppTarget elements.
+	Directory string       `xml:"directory,omitempty"` // Directory contains the root directory for generator files.
 }
 
 // LoadConfig loads a generator config at path.
@@ -32,6 +34,10 @@ func LoadConfig(path string) (*Config, error) {
 
 	if err := file.Close(); err != nil {
 		return nil, fmt.Errorf("couldn't close config file %q: %w", path, err)
+	}
+
+	if config.Directory == "" {
+		config.Directory = filepath.Dir(path)
 	}
 
 	return &config, nil

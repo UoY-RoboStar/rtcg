@@ -11,39 +11,84 @@ import (
 )
 
 var (
-	//go:embed embed/templates/base/*.cpp.tmpl
+	//go:embed embed/templates/base/*.cpp.tmpl embed/templates/base/convert/*.h.tmpl
 	baseTemplates embed.FS
-	//go:embed embed/templates/animate/*.cpp.tmpl
+	//go:embed embed/templates/animate/*.cpp.tmpl embed/templates/animate/convert/*.h.tmpl
 	animateTemplates embed.FS
-	//go:embed embed/templates/ros/*.cpp.tmpl
+	//go:embed embed/templates/ros/*.cpp.tmpl embed/templates/ros/convert/*.h.tmpl
 	rosTemplates embed.FS
 )
 
-// parseTemplate parses the C++ templates for the given variant.
-func parseTemplate(variant Variant) (*template.Template, error) {
-	var err error
+// TemplateSet maps filenames to templates to use to generate them.
+type TemplateSet map[string]*template.Template
 
-	tmpl := Funcs(template.New(""))
-	tmpl = gencommon.Funcs(tmpl)
+// NewTemplateSet constructs a template set for a C++ variant, given the file list files.
+func NewTemplateSet(variant Variant, files []TestFile) (TemplateSet, error) {
+	tset := make(TemplateSet, len(files))
 
-	if tmpl, err = parseTemplateFS(tmpl, baseTemplates, "base"); err != nil {
-		return nil, err
+	varFS := variantFS(variant)
+	varStr := variant.String()
+
+	for _, file := range files {
+		tmpl, err := parseTemplate(file, varFS, varStr)
+		if err != nil {
+			return nil, err
+		}
+
+		tset[file.Name] = tmpl
 	}
 
-	if tmpl, err = parseTemplateFS(tmpl, variantFS(variant), variant.String()); err != nil {
-		return nil, err
-	}
-
-	return tmpl, nil
+	return tset, nil
 }
 
-func parseTemplateFS(tmpl *template.Template, fsys fs.FS, dir string) (*template.Template, error) {
-	base, err := tmpl.ParseFS(fsys, path.Join("embed", "templates", dir, "*.cpp.tmpl"))
-	if err != nil {
-		return nil, fmt.Errorf("couldn't open %s templates: %w", dir, err)
+// TODO: migrate this to a more generic package
+
+func parseTemplate(file TestFile, varFS fs.FS, varStr string) (*template.Template, error) {
+	builder := templateBuilder{
+		tmpl:   template.New(file.Name),
+		glob:   file.SrcGlob,
+		varFS:  varFS,
+		varStr: varStr,
 	}
 
-	return base, nil
+	if err := builder.parse(); err != nil {
+		return nil, err
+	}
+
+	return builder.tmpl, nil
+}
+
+type templateBuilder struct {
+	tmpl   *template.Template
+	glob   string
+	varFS  fs.FS
+	varStr string
+}
+
+func (t *templateBuilder) parse() error {
+	t.tmpl = Funcs(t.tmpl)
+	t.tmpl = gencommon.Funcs(t.tmpl)
+
+	if err := t.parseFS(baseTemplates, "base"); err != nil {
+		return err
+	}
+
+	if err := t.parseFS(t.varFS, t.varStr); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (t *templateBuilder) parseFS(fsys fs.FS, dir string) error {
+	var err error
+
+	t.tmpl, err = t.tmpl.ParseFS(fsys, path.Join("embed", "templates", dir, t.glob))
+	if err != nil {
+		return fmt.Errorf("couldn't open %s templates: %w", dir, err)
+	}
+
+	return nil
 }
 
 func variantFS(variant Variant) fs.FS {

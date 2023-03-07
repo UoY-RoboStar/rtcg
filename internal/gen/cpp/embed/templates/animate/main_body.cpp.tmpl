@@ -18,7 +18,7 @@
 {{- end }}
     std::cout << "  timeout (quits the test with a timeout)\n";
 
-    std::cout << "\n To enter an output, type its name and the desired value: \n";
+    std::cout << "\nTo enter an output, type its name and the desired value: \n";
 {{- range .Transitions.Out }}
     std::cout << "  {{ .Channel.Name }} ({{ (index $.ChannelTypes .Channel.Name).Base }})\n";
 {{- else }}

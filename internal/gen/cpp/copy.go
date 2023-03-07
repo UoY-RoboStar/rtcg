@@ -40,16 +40,31 @@ func (g *Generator) copyPreludeFile(name string) error {
 		return fmt.Errorf("couldn't open prelude file %q: %w", name, err)
 	}
 
-	dst, err := os.Create(filepath.Join(g.outputDir, srcDir, preludeDir, name))
+	return writeFile(src, filepath.Join(g.outputDir, srcDir, preludeDir, name))
+}
+
+func (g *Generator) copyLocalFile(name string) error {
+	srcPath := filepath.Join(g.inputDir, name)
+	dstPath := filepath.Join(g.srcBaseDir, name)
+
+	src, err := os.Open(srcPath)
 	if err != nil {
-		err = fmt.Errorf("couldn't create prelude file %q: %w", name, err)
+		return fmt.Errorf("couldn't open file %q: %w", srcPath, err)
+	}
+
+	return writeFile(src, dstPath)
+}
+
+func writeFile(src io.ReadCloser, outFile string) error {
+	dst, err := os.Create(outFile)
+	if err != nil {
+		err = fmt.Errorf("couldn't create file %q: %w", outFile, err)
 
 		return errors.Join(err, src.Close())
 	}
 
-	_, err = io.Copy(dst, src)
-	if err != nil {
-		err = fmt.Errorf("couldn't copy prelude file %q: %w", name, err)
+	if _, err = io.Copy(dst, src); err != nil {
+		err = fmt.Errorf("couldn't copy file %q: %w", outFile, err)
 	}
 
 	return errors.Join(err, dst.Close(), src.Close())

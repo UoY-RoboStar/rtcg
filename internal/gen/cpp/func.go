@@ -14,16 +14,17 @@ import (
 // Funcs adds the C++ function map to base.
 func Funcs(base *template.Template) *template.Template {
 	return base.Funcs(template.FuncMap{
-		"cppCallbackName": CallbackName,
-		"cppChannelType":  ChannelTypeName,
-		"cppConvertFrom":  ConvertFrom,
-		"cppConvertTo":    ConvertTo,
-		"cppEnumField":    EnumField,
-		"cppOutcomeEnum":  OutcomeEnum,
-		"cppStateEntry":   StateEntry,
-		"cppStateEnum":    StateEnum,
-		"cppTestEnum":     TestEnum,
-		"cppType":         StdType,
+		"cppCallbackName":     CallbackName,
+		"cppChannelMsgType":   ChannelMsgType,
+		"cppChannelValueType": ChannelValueType,
+		"cppConvertFrom":      ConvertFrom,
+		"cppConvertTo":        ConvertTo,
+		"cppEnumField":        EnumField,
+		"cppOutcomeEnum":      OutcomeEnum,
+		"cppStateEntry":       StateEntry,
+		"cppStateEnum":        StateEnum,
+		"cppTestEnum":         TestEnum,
+		"cppType":             StdType,
 	})
 }
 
@@ -32,9 +33,16 @@ func CallbackName(cha channel.Channel) string {
 	return cha.Name + "Callback"
 }
 
-// ChannelTypeName gets the name of the defined type for the channel cha.
-func ChannelTypeName(cha channel.Channel) string {
+// ChannelMsgType gets the name of the defined message type for the channel cha.
+// This is usually a pointer to the value type.
+func ChannelMsgType(cha channel.Channel) string {
 	return strmanip.UpcaseFirst(cha.Name) + "Msg"
+}
+
+// ChannelValueType gets the name of the defined message type for the channel cha.
+// This is usually a pointer to the value type.
+func ChannelValueType(cha channel.Channel) string {
+	return strmanip.UpcaseFirst(cha.Name) + "Val"
 }
 
 // ConvertTo gets the to-conversion function name for the channel cha.

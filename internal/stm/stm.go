@@ -42,6 +42,24 @@ func (s *Suite) Write(w io.Writer) error {
 	return nil
 }
 
+// UnifiedTypes returns a map of unified inferred types for each channel across each test in s.
+func (s *Suite) UnifiedTypes() (TypeMap, error) {
+	tmap := make(TypeMap)
+
+	for _, test := range *s {
+		for cName, cType := range test.Types {
+			uType, err := rstype.Unify(cType, tmap[cName])
+			if err != nil {
+				return nil, fmt.Errorf("couldn't reconcile types for channel %s: %w", cName, err)
+			}
+
+			tmap[cName] = uType
+		}
+	}
+
+	return tmap, nil
+}
+
 // Stm is a testing state machine.
 //
 // A state machine arranges the nodes of a test tree into a form that is easy to emit as test code:
@@ -54,11 +72,13 @@ type Stm struct {
 	States []*State `json:"states"`
 
 	// Types maps each channel to its inferred type.
-	Types map[string]*rstype.RsType `json:"types"`
+	Types TypeMap `json:"types"`
 
 	// Tests is the set of names of tests being captured by this state machine.
 	Tests structure.Set[string] `json:"tests"`
 }
+
+type TypeMap map[string]*rstype.RsType
 
 // InitialState is the node ID of the initial state.
 func (s *Stm) InitialState() testlang.NodeID {

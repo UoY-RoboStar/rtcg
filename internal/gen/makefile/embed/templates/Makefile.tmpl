@@ -1,17 +1,18 @@
+{{- define "output" -}}bin/{{ . }}{{- end -}}
+{{- define "reg_inputs" -}}src/{{ . }}/main.cpp src/rtcg/rtcg.cpp{{- end -}}
+{{- define "convert" -}}{{- if .HasConversion }} src/convert.cpp{{- end -}}{{- end -}}
+
 .POSIX:
 
-CXXFLAGS   = {{ block "cxxflags" . }}-std=c++11 -Wall -Wextra{{ end }}
-INPUT_DIR  = src
-OUTPUT_DIR = bin
-PRELUDE    = $(INPUT_DIR)/rtcg/rtcg.cpp
+CXXFLAGS = {{ block "cxxflags" . }}-std=c++11 -Wall -Wextra{{ end }}
 
 .PHONY: all mkdir
 
-all: mkdir {{- range $k, $v := . }} $(OUTPUT_DIR)/{{ $k }}{{- end }}
+all: mkdir {{- range $k, $v := .Tests }} {{ template "output" $k }}{{- end }}
 
 mkdir:
-	mkdir -p $(OUTPUT_DIR)
-{{ range $k, $v := . }}
-$(OUTPUT_DIR)/{{ $k }}: $(INPUT_DIR)/{{ $k }}/{{ $k }}.cpp $(PRELUDE)
-	$(CXX) $(CXXFLAGS) -o $@ $< $(PRELUDE)
+	mkdir -p bin
+{{ range $k, $v := .Tests }}
+{{ template "output" $k }}: {{ template "reg_inputs" $k }} {{- template "convert" $ }}
+	$(CXX) $(CXXFLAGS) -o $@ {{ template "reg_inputs" $k }} {{- template "convert" $ -}}
 {{- end }}

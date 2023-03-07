@@ -20,45 +20,6 @@ const int INPUT_DELAY_SEC = 3;
 {{- define "log" -}}ROS_{{ toUpper . }}_STREAM({{- end -}}
 {{- define "end_log" }} << std::endl);{{- end -}}
 
-{{- /* Calculates the message type of a channel. */ -}}
-{{- define "msg_type" -}}const {{ cppChannelType . }}::ConstPtr&{{- end -}}
-
-{{- /* Calculates the ROS equivalent of a RoboStar type. */ -}}
-{{- define "type" -}}
-{{- /* TODO: add more types here */ -}}
-std_msgs::String
-{{- end -}}
-
-{{- /* Performs conversion from a channel type to a value type.
-
-Receives the value type as dot.
-
-Indent is set at 2 spaces, as this is the body of a root function. */ -}}
-{{- define "convert_from" -}}
-{{-   if .IsEnum }}
-  return std::string(msg->data.c_str());
-{{-   else }}
-  // No conversion required
-  return msg->data;
-{{-   end -}}
-{{- end -}}
-
-{{- /* Performs conversion from a value type to a channel type.
-
-Receives the value type as dot.
-
-Indent is set at 2 spaces, as this is the body of a root function. */ -}}
-{{- define "convert_to" -}}
-{{-   if .IsEnum }}
-  std_msgs::String msg;
-  msg.data = value.c_str();
-  return msg;
-{{-   else }}
-  // No conversion required
-  return value;
-{{-   end -}}
-{{- end -}}
-
 {{- define "topic_name" -}}{{ toLowerUnderscored .Channel.Name }}{{- end -}}
 {{- define "publisher_name" -}}{{ template "topic_name" . }}_pub{{- end -}}
 {{- define "subscriber_name" -}}{{ template "topic_name" . }}_sub{{- end -}}
@@ -83,11 +44,6 @@ Indent is set at 2 spaces, as this is the body of a root function. */ -}}
   const std_msgs::Bool::ConstPtr& msg
 {{- end -}}
 
-{{- /* Takes the Channel of an output callback, returns its argument set. */ -}}
-{{- define "out_callback_args" -}}
-  {{ template "msg_type" . }} msg
-{{- end -}}
-
 {{/* ROS initialisation code. */}}
 {{- define "init" }}
   ros::init(argc, argv, "{{ .Name }}");
@@ -95,7 +51,7 @@ Indent is set at 2 spaces, as this is the body of a root function. */ -}}
 
   // Publishers
 {{-   range .Transitions.In }}
-  auto {{ template "publisher_name" . }} = nh.advertise<{{ cppChannelType .Channel }}>("{{ template "topic_name" . }}", 1000);
+  auto {{ template "publisher_name" . }} = nh.advertise<{{ cppChannelValueType .Channel }}>("{{ template "topic_name" . }}", 1000);
 {{-   end }}
 
   // Subscribers

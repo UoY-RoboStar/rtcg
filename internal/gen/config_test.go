@@ -8,7 +8,6 @@ import (
 
 	"github.com/UoY-RoboStar/rtcg/internal/gen"
 	"github.com/UoY-RoboStar/rtcg/internal/gen/cpp"
-	"github.com/UoY-RoboStar/rtcg/internal/gen/makefile"
 )
 
 // TestLoadConfig tests LoadConfig on sample configs.
@@ -30,7 +29,7 @@ func TestLoadConfig(t *testing.T) {
 				Cpps: []cpp.Config{
 					{
 						Variant:  cpp.VariantAnimate,
-						Makefile: &makefile.Config{},
+						Makefile: &cpp.Makefile{},
 					},
 					{
 						Variant: cpp.VariantRos,
@@ -41,6 +40,7 @@ func TestLoadConfig(t *testing.T) {
 						Makefile: nil,
 					},
 				},
+				Directory: filepath.Clean("testdata"),
 			},
 			wantErr: nil,
 		},

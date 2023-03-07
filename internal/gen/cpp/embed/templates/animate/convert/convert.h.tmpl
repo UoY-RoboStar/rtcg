@@ -1,0 +1,27 @@
+{{- /* convert.h.tmpl is the animate-specific template for convert.h. */ -}}
+
+{{- /* Performs conversion from a channel type to a value type.
+
+Receives the value type as dot.
+
+Indent is set at 2 spaces, as this is the body of a root function. */ -}}
+{{- define "convert_from" -}}
+    return msg;  // No conversion required for animate
+{{- end -}}
+
+{{- /* Performs conversion from a value type to a channel type.
+
+Receives the value type as dot.
+
+Indent is set at 2 spaces, as this is the body of a root function. */ -}}
+{{- define "convert_to" -}}
+    return value;  // No conversion required for animate
+{{- end -}}
+
+{{- /* Calculates the C++ equivalent of a RoboStar type. */ -}}
+{{- define "type" -}}{{ cppType . }}{{- end -}}
+
+{{- /* Calculates the message type of a channel. */ -}}
+{{- define "msg_type" -}}{{ cppChannelValueType . }}{{- end -}}
+
+{{- template "convert_base.h.tmpl" . -}}

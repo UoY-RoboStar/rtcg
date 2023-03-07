@@ -3,6 +3,8 @@ package gencommon
 import (
 	"time"
 
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/channel"
+
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
 	"github.com/UoY-RoboStar/rtcg/internal/stm/transition"
 )
@@ -31,6 +33,8 @@ func NewContext(name string, machine *stm.Stm) Context {
 //
 // This context, unlike Stm, has a lot of sub-normalised fields.
 type TransitionContext struct {
+	Channels []channel.Channel // Channels is the list of all channels.
+
 	All []transition.AggregateSet // All is the list of all transitions.
 	In  []transition.AggregateSet // In is the list of all transitions that are inputs.
 	Out []transition.AggregateSet // Out is the list of all transitions that are outputs.
@@ -52,6 +56,8 @@ func (c *TransitionContext) addInput(t transition.AggregateSet) {
 
 func (c *TransitionContext) populateFilters() {
 	for _, t := range c.All {
+		c.Channels = append(c.Channels, t.Channel)
+
 		if t.Channel.IsIn() {
 			c.addInput(t)
 		} else {
@@ -65,6 +71,7 @@ func makeTransitions(machine *stm.Stm) TransitionContext {
 	count := len(all)
 
 	tctx := TransitionContext{
+		Channels:        make([]channel.Channel, 0, count),
 		All:             all,
 		In:              make([]transition.AggregateSet, 0, count),
 		Out:             make([]transition.AggregateSet, 0, count),

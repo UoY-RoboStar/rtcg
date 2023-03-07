@@ -1,0 +1,40 @@
+{{- /* convert.h.tmpl is the ROS1-specific template for convert.h. */ -}}
+
+{{- /* Performs conversion from a channel type to a value type.
+
+Receives the value type as dot.
+
+Indent is set at 2 spaces, as this is the body of a root function. */ -}}
+{{- define "convert_from" -}}
+{{-   if .IsEnum }}
+  return std::string(msg->data.c_str());
+{{-   else }}
+  return msg->data;  // No conversion required
+{{-   end -}}
+{{- end -}}
+
+{{- /* Performs conversion from a value type to a channel type.
+
+Receives the value type as dot.
+
+Indent is set at 2 spaces, as this is the body of a root function. */ -}}
+{{- define "convert_to" -}}
+{{-   if .IsEnum }}
+  std_msgs::String msg;
+  msg.data = value.c_str();
+  return msg;
+{{-   else }}
+  return value;  // No conversion required
+{{-   end -}}
+{{- end -}}
+
+{{- /* Calculates the ROS equivalent of a RoboStar type. */ -}}
+{{- define "type" -}}
+{{- /* TODO: add more types here */ -}}
+  std_msgs::String
+{{- end -}}
+
+{{- /* Calculates the message type of a channel. */ -}}
+{{- define "msg_type" -}}{{ cppChannelValueType . }}::ConstPtr&{{- end -}}
+
+{{- template "convert_base.h.tmpl" . -}}

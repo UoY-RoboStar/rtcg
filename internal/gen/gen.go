@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/UoY-RoboStar/rtcg/internal/gen/makefile"
+
 	"github.com/UoY-RoboStar/rtcg/internal/gen/cpp"
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
 )
@@ -16,18 +18,45 @@ const (
 // Generator is a test code generator.
 type Generator struct {
 	subgenerators []Subgenerator // subgenerators is the set of configured sub-generators.
+	inputDir      string         // inputDir is the input directory of the generator.
 	outputDir     string         // outputDir is the output directory of the generator.
 }
 
 func (g *Generator) initCpp(cfgs []cpp.Config) error {
 	for _, cfg := range cfgs {
-		gen, err := cpp.New(cfg, g.outputDir)
-		if err != nil {
-			return fmt.Errorf("couldn't init c++ generator: %w", err)
+		if err := g.initCppMain(cfg); err != nil {
+			return err
 		}
 
-		g.subgenerators = append(g.subgenerators, gen)
+		if err := g.initCppMakefile(cfg); err != nil {
+			return err
+		}
 	}
+
+	return nil
+}
+
+func (g *Generator) initCppMain(cfg cpp.Config) error {
+	gen, err := cpp.New(cfg, g.inputDir, g.outputDir)
+	if err != nil {
+		return fmt.Errorf("couldn't init c++ generator: %w", err)
+	}
+
+	g.subgenerators = append(g.subgenerators, gen)
+	return nil
+}
+
+func (g *Generator) initCppMakefile(cfg cpp.Config) error {
+	if cfg.Makefile == nil {
+		return nil
+	}
+
+	gen, err := makefile.New(cfg, g.outputDir)
+	if err != nil {
+		return fmt.Errorf("couldn't init Makefile generator: %w", err)
+	}
+
+	g.subgenerators = append(g.subgenerators, gen)
 
 	return nil
 }
@@ -48,6 +77,7 @@ type Subgenerator interface {
 func New(cfg Config, outputDir string) (*Generator, error) {
 	gen := Generator{
 		subgenerators: make([]Subgenerator, 0, len(cfg.Cpps)),
+		inputDir:      cfg.Directory,
 		outputDir:     outputDir,
 	}
 

@@ -1,13 +1,11 @@
 package cpp
 
-import "github.com/UoY-RoboStar/rtcg/internal/gen/makefile"
-
 // Config contains configuration for a C++ generator.
 type Config struct {
-	Variant  Variant          `xml:"variant,attr"` // Variant gives the variant of C++ to generate (e.g. ROS).
-	Includes []Include        `xml:"include"`      // Includes contains custom includes.
-	Makefile *makefile.Config `xml:"makefile"`     // Makefile, if given, configures a Makefile.
-	Channels []Channel        `xml:"channel"`      // Channels contains channel configuration.
+	Variant  Variant   `xml:"variant,attr"` // Variant gives the variant of C++ to generate (e.g. ROS).
+	Includes []Include `xml:"include"`      // Includes contains custom includes.
+	Makefile *Makefile `xml:"makefile"`     // Makefile, if given, configures a Makefile.
+	Channels []Channel `xml:"channel"`      // Channels contains channel configuration.
 }
 
 // ChannelMap gets the Channels field of this Config as a map from channel names to type overrides.
@@ -36,3 +34,6 @@ type Channel struct {
 	Name string `xml:"name,attr"` // Name is the name of the affected channel.
 	Type string `xml:"type,attr"` // Type is the C++ value type of the channel.
 }
+
+// Makefile configures a Makefile for C++.
+type Makefile struct{}

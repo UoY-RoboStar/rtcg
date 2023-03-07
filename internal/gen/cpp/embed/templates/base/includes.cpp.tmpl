@@ -1,0 +1,19 @@
+{{- /*
+includes.cpp.tmpl expands to the list of includes at the top of the C++ test file.
+
+Dot is set to the context.
+Indent is at 0.
+*/ -}}
+#include <string>
+
+{{- /* Allow variants to add more system includes (such as ROS) here: */ -}}
+{{- block "system_includes" . }}
+{{- end -}}
+
+{{- /* Allow the config file to add even more includes here: */ -}}
+{{- range .Includes }}
+#include {{ if .IsSystem -}} < {{- else -}} " {{- end -}} {{ .Src }} {{- if .IsSystem -}} > {{- else -}} " {{- end }}
+{{- end }}
+
+#include "../rtcg/rtcg.h" // Helper definitions (compile with ../rtcg/rtcg.cpp)
+#include "convert.h"      // Channel type definitions and conversion functions

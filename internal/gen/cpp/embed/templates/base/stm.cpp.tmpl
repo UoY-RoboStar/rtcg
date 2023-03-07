@@ -26,7 +26,7 @@ public:
 
   // Output callbacks:
 {{- range .Transitions.Out }}
-  void {{ cppCallbackName .Channel }}({{ template "out_callback_args" .Channel }});
+  void {{ cppCallbackName .Channel }}(const {{ cppChannelMsgType .Channel }} msg);
 {{- end }}
 private:
   Verdict verdict_;
@@ -115,7 +115,7 @@ void StateMachine::inputAcceptedCallback({{ template "in_callback_args" }})
 
 {{- range .Transitions.Out }}
 
-void StateMachine::{{ cppCallbackName .Channel }}({{ template "out_callback_args" .Channel }})
+void StateMachine::{{ cppCallbackName .Channel }}(const {{ cppChannelMsgType .Channel }} msg)
 {
 {{- block "out_callback" . }}
 {{-   template "out_callback.cpp.tmpl" . }}

@@ -4,10 +4,7 @@ package cpp
 import (
 	"fmt"
 	"path/filepath"
-	"text/template"
 
-	"github.com/UoY-RoboStar/rtcg/internal/gen/gencommon"
-	"github.com/UoY-RoboStar/rtcg/internal/gen/makefile"
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
 )
 
@@ -17,10 +14,14 @@ const (
 
 // Generator is a C++ code generator.
 type Generator struct {
-	config    Config              // config is the configuration for this Generator.
-	template  *template.Template  // template is the template to use for C++ files.
-	makefile  *makefile.Generator // makefile is the optional generator for Makefiles.
-	outputDir string              // outputDir is the output directory for this Generator.
+	config Config // config is the configuration for this Generator.
+
+	testFiles []TestFile  // testFiles is the list of files this generator will make.
+	templates TemplateSet // templates is the map of templates to use for files in testFiles.
+
+	inputDir   string // inputDir is the output directory for this Generator.
+	srcBaseDir string // srcBaseDir is the output source directory for this Generator.
+	outputDir  string // outputDir is the output directory for this Generator.
 }
 
 func (g *Generator) Name() string {
@@ -28,7 +29,7 @@ func (g *Generator) Name() string {
 }
 
 func (g *Generator) Dirs(suite stm.Suite) []string {
-	baseDir := filepath.Join(g.outputDir, srcDir)
+	baseDir := g.srcBaseDir
 
 	dirs := make([]string, 1, len(suite)+1)
 	dirs[0] = filepath.Join(baseDir, preludeDir)
@@ -45,71 +46,40 @@ func (g *Generator) Generate(suite stm.Suite) error {
 		return err
 	}
 
-	if err := g.generateMakefile(suite); err != nil {
+	if err := g.generateTests(suite); err != nil {
 		return err
-	}
-
-	if err := g.generateSuite(suite); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (g *Generator) generateMakefile(suite stm.Suite) error {
-	if g.makefile == nil {
-		return nil
-	}
-
-	if err := g.makefile.Generate(suite); err != nil {
-		return fmt.Errorf("couldn't generate makefile: %w", err)
-	}
-
-	return nil
-}
-
-func (g *Generator) generateSuite(suite stm.Suite) error {
-	for name, test := range suite {
-		if err := g.generateStm(name, test); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (g *Generator) generateStm(name string, test *stm.Stm) error {
-	outPath := filepath.Join(g.outputDir, srcDir, name, name+".cpp")
-
-	ctx := NewContext(name, test, g.config)
-
-	err := gencommon.ExecuteTemplateOnFile(outPath, "top.cpp.tmpl", g.template, ctx)
-	if err != nil {
-		return fmt.Errorf("couldn't generate C++ for %s: %w", name, err)
 	}
 
 	return nil
 }
 
 // New constructs a new C++ code generator from config, rooted at outputDir.
-func New(config Config, outputDir string) (*Generator, error) {
+func New(config Config, inputDir, outputDir string) (*Generator, error) {
 	var (
 		gen Generator
 		err error
 	)
 
 	gen.config = config
-	gen.outputDir = filepath.Join(outputDir, config.Variant.String())
+	gen.inputDir = config.Variant.Dir(inputDir)
+	gen.outputDir = config.Variant.Dir(outputDir)
+	gen.srcBaseDir = filepath.Join(gen.outputDir, srcDir)
 
-	if gen.template, err = parseTemplate(config.Variant); err != nil {
+	gen.testFiles = []TestFile{
+		{Name: "main.cpp", Desc: "main C++ file", SrcGlob: "*.cpp.tmpl"},
+		{Name: "convert.h", Desc: "type conversion header file", SrcGlob: "convert/*.h.tmpl"},
+	}
+
+	if gen.templates, err = NewTemplateSet(config.Variant, gen.testFiles); err != nil {
 		return nil, err
 	}
 
-	if gen.config.Makefile != nil {
-		if gen.makefile, err = makefile.New(*gen.config.Makefile, gen.outputDir); err != nil {
-			return nil, fmt.Errorf("couldn't construct Makefile generator: %w", err)
-		}
-	}
-
 	return &gen, nil
+}
+
+// TestFile holds information about a test file.
+type TestFile struct {
+	Name    string // Name is the filename of this file.
+	Desc    string // Desc is a human-readable description for this file.
+	SrcGlob string // SrcGlob is the slash-delimited glob of source templates for this file.
 }

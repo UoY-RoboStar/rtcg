@@ -1,5 +1,7 @@
 package cpp
 
+import "path/filepath"
+
 //go:generate go-enum --marshal -nocase
 
 // Variant is the type of C++ template variants.
@@ -18,5 +20,9 @@ ros,     // Variant targeting ROS1 Noetic.
 //     action at each stage;
 //   - 'VariantRos', which targets ROS1 Noetic.
 //
-//
 type Variant uint8
+
+// Dir gets the subdirectory of dir relating to this variant.
+func (v Variant) Dir(dir string) string {
+	return filepath.Join(dir, v.String())
+}

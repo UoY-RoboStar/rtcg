@@ -9,32 +9,6 @@
 {{- define "log" -}}std::cerr << "[{{ . }}] " << {{ end -}}
 {{- define "end_log" }} << std::endl;{{- end -}}
 
-{{- /* Calculates the message type of a channel. */ -}}
-{{- define "msg_type" -}}{{ cppChannelType . }}{{- end -}}
-
-{{- /* Calculates the C++ equivalent of a RoboStar type. */ -}}
-{{- define "type" -}}{{ cppType . }}{{- end -}}
-
-{{- /* Performs conversion from a channel type to a value type.
-
-Receives the value type as dot.
-
-Indent is set at 2 spaces, as this is the body of a root function. */ -}}
-{{- define "convert_from" -}}
-  // No conversion required:
-  return msg;
-{{- end -}}
-
-{{- /* Performs conversion from a value type to a channel type.
-
-Receives the value type as dot.
-
-Indent is set at 2 spaces, as this is the body of a root function. */ -}}
-{{- define "convert_to" -}}
-  // No conversion required:
-  return value;
-{{- end -}}
-
 {{- /* Placeholder for when an input is required. */ -}}
 {{- define "input" }}
   // No input is actually sent to the SUT in animate mode.
@@ -53,11 +27,6 @@ Indent is set at 2 spaces, as this is the body of a root function. */ -}}
 {{- /* Returns the argument set of an input-accepted callback. */ -}}
 {{- define "in_callback_args" -}}
   {{- "" -}}{{- /* This template intentionally left blank. */ -}}
-{{- end -}}
-
-{{- /* Takes the Channel of an output callback, returns its argument set. */ -}}
-{{- define "out_callback_args" -}}
-  {{ template "msg_type" . }} msg
 {{- end -}}
 
 {{/*
