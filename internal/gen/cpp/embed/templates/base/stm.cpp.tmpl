@@ -14,21 +14,17 @@ public:
   // Callbacks
   //
 
-  // Called when the test has run out of time.
-  void timeoutCallback({{ template "timeout_callback_args" }});
+  void timeoutCallback({{ template "timeout_callback_args" }});  // Called when the test has run out of time.
 
 {{- if .Transitions.FirstStateHasIn }}
-
-  // Called when the initial delay timer has run out.
-  void initialDelayCallback({{ template "initial_delay_callback_args" }});
+  void initialDelayCallback({{ template "initial_delay_callback_args" }});  // Called after the initial delay timer.
 {{- end }}
 
 {{- if .Transitions.HasIn }}
-
-  // Called when an input is accepted by the SUT.
-  void inputAcceptedCallback({{ template "in_callback_args" }});
+  void inputAcceptedCallback({{ template "in_callback_args" }});  // Called when the SUT accepts an input.
 {{- end }}
 
+  // Output callbacks:
 {{- range .Transitions.Out }}
   void {{ cppCallbackName .Channel }}({{ template "out_callback_args" .Channel }});
 {{- end }}
