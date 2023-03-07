@@ -3,10 +3,9 @@ package gencommon
 import (
 	"time"
 
-	"github.com/UoY-RoboStar/rtcg/internal/testlang/channel"
-
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
 	"github.com/UoY-RoboStar/rtcg/internal/stm/transition"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/channel"
 )
 
 // Context is the context passed into all templates.
@@ -55,13 +54,13 @@ func (c *TransitionContext) addInput(t transition.AggregateSet) {
 }
 
 func (c *TransitionContext) populateFilters() {
-	for _, t := range c.All {
-		c.Channels = append(c.Channels, t.Channel)
+	for _, tra := range c.All {
+		c.Channels = append(c.Channels, tra.Channel)
 
-		if t.Channel.IsIn() {
-			c.addInput(t)
+		if tra.Channel.IsIn() {
+			c.addInput(tra)
 		} else {
-			c.Out = append(c.Out, t)
+			c.Out = append(c.Out, tra)
 		}
 	}
 }

@@ -34,8 +34,9 @@ type ConfigContext struct {
 // It expects a type environment for all channels involved in the context.
 func (c *Config) Process(types stm.TypeMap) ConfigContext {
 	ctx := ConfigContext{
-		Includes:     c.Includes,
-		ChannelTypes: make(map[string]ChannelType, len(types)),
+		Includes:      c.Includes,
+		ChannelTypes:  make(map[string]ChannelType, len(types)),
+		HasConversion: false,
 	}
 
 	overrides := c.ChannelMap()

@@ -49,10 +49,12 @@ func (g *Generator) generateTestTemplatedFiles(ctx *Context) error {
 
 func (g *Generator) generateTestFile(ctx *Context, file TestFile) error {
 	outPath := g.testSourcePath(ctx.Name, file.Name)
+
 	err := gencommon.ExecuteTemplateOnFile(outPath, file.Name+".tmpl", g.templates[file.Name], ctx)
 	if err != nil {
 		return fmt.Errorf("couldn't generate %s for %s: %w", file.Desc, ctx.Name, err)
 	}
+
 	return nil
 }
 

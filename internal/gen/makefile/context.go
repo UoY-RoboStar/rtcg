@@ -1,6 +1,8 @@
 package makefile
 
 import (
+	"fmt"
+
 	"github.com/UoY-RoboStar/rtcg/internal/gen/cpp"
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
 )
@@ -16,7 +18,7 @@ type Context struct {
 func NewContext(tests stm.Suite, cfg cpp.Config) (*Context, error) {
 	types, err := tests.UnifiedTypes()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("couldn't get channel types to agree: %w", err)
 	}
 
 	ctx := Context{

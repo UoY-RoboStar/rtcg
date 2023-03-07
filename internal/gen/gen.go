@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/UoY-RoboStar/rtcg/internal/gen/makefile"
-
 	"github.com/UoY-RoboStar/rtcg/internal/gen/cpp"
+	"github.com/UoY-RoboStar/rtcg/internal/gen/makefile"
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
 )
 
@@ -43,6 +42,7 @@ func (g *Generator) initCppMain(cfg cpp.Config) error {
 	}
 
 	g.subgenerators = append(g.subgenerators, gen)
+
 	return nil
 }
 
