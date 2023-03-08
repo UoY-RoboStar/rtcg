@@ -9,6 +9,5 @@
 
         <!-- Tell the generator that this channel maps non-trivially to a ROS type: -->
         <channel name="batteryInfo" type="sensor_msgs::BatteryState" />
-        <makefile />
     </cpp>
 </rtcg-gen>
