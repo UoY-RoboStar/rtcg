@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"strings"
 
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 )
@@ -57,6 +58,10 @@ func parseRow(row []string) (Forbidden, error) {
 	}
 
 	for cellIndex, cell := range row {
+		if cellIndex == 0 {
+			cell = tryParseName(cell, &trace)
+		}
+
 		ptr := selectEvent(cellIndex, prefixLen, &trace)
 
 		if err := ptr.UnmarshalText([]byte(cell)); err != nil {
@@ -65,6 +70,15 @@ func parseRow(row []string) (Forbidden, error) {
 	}
 
 	return trace, nil
+}
+
+func tryParseName(cell string, trace *Forbidden) string {
+	if name, rest, ok := strings.Cut(cell, ":"); ok {
+		trace.Name = strings.TrimSpace(name)
+		cell = strings.TrimSpace(rest)
+	}
+
+	return cell
 }
 
 func selectEvent(index int, prefixLen int, trace *Forbidden) *testlang.Event {

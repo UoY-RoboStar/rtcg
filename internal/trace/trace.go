@@ -14,6 +14,11 @@ import (
 // Trace is the type of traces.
 type Trace []testlang.Event // Events is the list of events in this trace.
 
+// New constructs a Trace with the given events.
+func New(events ...testlang.Event) Trace {
+	return events
+}
+
 func (t Trace) String() string {
 	eventStrs := make([]string, len(t))
 
@@ -44,19 +49,32 @@ func (t Trace) IsPrefixOf(other Trace) bool {
 	return true
 }
 
+// Forbid constructs a Forbidden trace test with passing trace t and forbidden event forbid.
+func (t Trace) Forbid(forbid testlang.Event) Forbidden {
+	return t.ForbidWithName(forbid, "")
+}
+
+// ForbidWithName constructs a Forbidden with passing trace t, forbidden event forbid, and name.
+func (t Trace) ForbidWithName(forbid testlang.Event, name string) Forbidden {
+	return Forbidden{Name: name, Prefix: t, Forbid: forbid}
+}
+
 // Forbidden is the type of 'flat' forbidden-trace tests.
 type Forbidden struct {
+	Name   string         // Name is an optional name for the test.
 	Prefix Trace          // Prefix is the sequence of events that must occur for the test to pass.
 	Forbid testlang.Event // Forbid is the event that must not occur after Prefix.
 }
 
-// New constructs a trace with forbidden event forbid and prefix after.
-func New(forbid testlang.Event, after ...testlang.Event) Forbidden {
-	return Forbidden{Prefix: after, Forbid: forbid}
-}
-
+// String gets a string representation of a forbidden-trace test.
 func (t Forbidden) String() string {
-	return fmt.Sprintf("%s!%s", &t.Prefix, &t.Forbid)
+	var nameTag string
+
+	if t.Name != "" {
+		nameTag = t.Name + ":"
+	}
+
+	return fmt.Sprintf("%s%s!%s", nameTag, &t.Prefix, &t.Forbid)
 }
 
 // Name assigns a systematic name to each trace in traces.

@@ -5,58 +5,60 @@
 #
 
 # The monitor can’t report that the battery is OK before receiving a battery reading.
-batteryStatus.out.Ok
+b1a: batteryStatus.out.Ok
 
 # The monitor can’t report that the battery is mission-critical before receiving a battery reading.
-batteryStatus.out.MissionCritical
+b1b: batteryStatus.out.MissionCritical
 
 # The monitor can’t report that the battery is safety-critical before receiving a battery reading.
-batteryStatus.out.SafetyCritical
+b1c: batteryStatus.out.SafetyCritical
 
 # The monitor can’t receive a battery information report before handling the preceding one.
-batteryInfo.in.100, batteryInfo.in.100
-batteryInfo.in.30 , batteryInfo.in.30
-batteryInfo.in.20 , batteryInfo.in.20
+b2a: batteryInfo.in.100, batteryInfo.in.100
+b2b: batteryInfo.in.30 , batteryInfo.in.30
+b2c: batteryInfo.in.20 , batteryInfo.in.20
 
 # The monitor can’t declare an OK battery reading as mission-critical.
-batteryInfo.in.100, batteryStatus.out.MissionCritical
+b3a: batteryInfo.in.100, batteryStatus.out.MissionCritical
 
 # The monitor can’t declare an OK battery reading as safety-critical.
-batteryInfo.in.100, batteryStatus.out.SafetyCritical
+b3b: batteryInfo.in.100, batteryStatus.out.SafetyCritical
 
 # The monitor can’t declare a mission-critical battery reading as OK.
-batteryInfo.in.30, batteryStatus.out.Ok
+b3c: batteryInfo.in.30, batteryStatus.out.Ok
 
 # The monitor can’t declare a mission-critical battery reading as safety-critical.
-batteryInfo.in.30, batteryStatus.out.SafetyCritical
+b3d: batteryInfo.in.30, batteryStatus.out.SafetyCritical
 
 # The monitor can’t declare a safety-critical battery reading as OK.
-batteryInfo.in.20, batteryStatus.out.Ok
+b3e: batteryInfo.in.20, batteryStatus.out.Ok
 
 # The monitor can’t declare a safety-critical battery reading as mission-critical.
-batteryInfo.in.20, batteryStatus.out.MissionCritical
+b3f: batteryInfo.in.20, batteryStatus.out.MissionCritical
 
 # The monitor can’t emit Ok then Ok without taking another battery reading in between. (This may be an overspecification)
-batteryInfo.in.100, batteryStatus.out.Ok, batteryStatus.out.Ok
+b4a: batteryInfo.in.100, batteryStatus.out.Ok, batteryStatus.out.Ok
 
 # The monitor can’t emit Ok then MissionCritical without taking another battery reading in between.
-batteryInfo.in.100, batteryStatus.out.Ok, batteryStatus.out.MissionCritical
+b4b: batteryInfo.in.100, batteryStatus.out.Ok, batteryStatus.out.MissionCritical
 
 # The monitor can’t emit Ok then SafetyCritical without taking another battery reading in between.
-batteryInfo.in.100, batteryStatus.out.Ok, batteryStatus.out.SafetyCritical
+b4c: batteryInfo.in.100, batteryStatus.out.Ok, batteryStatus.out.SafetyCritical
 
 # The monitor can’t emit MissionCritical then Ok without taking another battery reading in between.
-batteryInfo.in.30, batteryStatus.out.MissionCritical, batteryStatus.out.Ok
+b4d: batteryInfo.in.30, batteryStatus.out.MissionCritical, batteryStatus.out.Ok
 
 # The monitor can’t emit MissionCritical then MissionCritical without taking another battery reading in between. (This may be an overspecification)
-batteryInfo.in.30, batteryStatus.out.MissionCritical, batteryStatus.out.MissionCritical
+b4e: batteryInfo.in.30, batteryStatus.out.MissionCritical, batteryStatus.out.MissionCritical
 
 # The monitor can’t emit MissionCritical then SafetyCritical without taking another battery reading in between.
-batteryInfo.in.30, batteryStatus.out.MissionCritical, batteryStatus.out.SafetyCritical
+b4f: batteryInfo.in.30, batteryStatus.out.MissionCritical, batteryStatus.out.SafetyCritical
 
 # The monitor can’t emit SafetyCritical then Ok without taking another battery reading in between.
-batteryInfo.in.20, batteryStatus.out.SafetyCritical, batteryStatus.out.Ok
+b4g: batteryInfo.in.20, batteryStatus.out.SafetyCritical, batteryStatus.out.Ok
 
 # The monitor can’t emit SafetyCritical then MissionCritical without taking another battery reading in between.
-batteryInfo.in.20, batteryStatus.out.SafetyCritical, batteryStatus.out.MissionCritical
+b4h: batteryInfo.in.20, batteryStatus.out.SafetyCritical, batteryStatus.out.MissionCritical
 
+# The monitor can’t emit SafetyCritical then SafetyCritical without taking another battery reading in between. (This may be an overspecification)
+b4i: batteryInfo.in.20, batteryStatus.out.SafetyCritical, batteryStatus.out.SafetyCritical

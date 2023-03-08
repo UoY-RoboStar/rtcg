@@ -13,7 +13,7 @@ import (
 const readTestCase = `
 bar.out
 foo.in, bar.out
-foo.in, baz.out.2, foo.in, bar.out
+named: foo.in, baz.out.2, foo.in, bar.out
 `
 
 // TestRead tests the happy path of reading a trace.
@@ -34,9 +34,9 @@ func TestRead(t *testing.T) {
 	bazOut := testlang.Output("baz", value.Int(2))
 
 	want := []trace.Forbidden{
-		trace.New(barOut),
-		trace.New(barOut, fooIn),
-		trace.New(barOut, fooIn, bazOut, fooIn),
+		trace.New().Forbid(barOut),
+		trace.New(fooIn).Forbid(barOut),
+		trace.New(fooIn, bazOut, fooIn).ForbidWithName(barOut, "named"),
 	}
 
 	if len(got) != len(want) {
