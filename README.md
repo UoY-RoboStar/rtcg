@@ -5,6 +5,9 @@ forbidden-trace tests, and using them to generate C code.
 
 `rtcg` is licenced under the MIT licence; see `LICENSE.md`.
 
+For more in-depth documentation, try the [wiki](https://github.com/UoY-RoboStar/rtcg/wiki).
+We welcome all contributions to the tool and its documentation.
+
 
 ## How to build
 
@@ -83,7 +86,7 @@ $ ls out/bmon/ros/src
 
 ### Is this ready for production use?
 
-Not yet!  This is a work-in-progress being explored as part of some work on
+Not yet!  This is a prototype being explored as part of some work on
 testing RoboChart models, and should not be considered a main-line RoboStar
 tool in the same way as RoboTool.
 
