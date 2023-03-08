@@ -1,19 +1,19 @@
 {
-	"test0": {
+	"b1a": {
 		"tests": [
-			"test0"
+			"b1a"
 		],
 		"next": [
 			{
 				"tests": [
-					"test0"
+					"b1a"
 				],
 				"outcome": "pass",
 				"event": "batteryStatus.out.Ok",
 				"next": [
 					{
 						"tests": [
-							"test0"
+							"b1a"
 						],
 						"outcome": "fail"
 					}
@@ -21,21 +21,21 @@
 			}
 		]
 	},
-	"test1": {
+	"b1b": {
 		"tests": [
-			"test1"
+			"b1b"
 		],
 		"next": [
 			{
 				"tests": [
-					"test1"
+					"b1b"
 				],
 				"outcome": "pass",
 				"event": "batteryStatus.out.MissionCritical",
 				"next": [
 					{
 						"tests": [
-							"test1"
+							"b1b"
 						],
 						"outcome": "fail"
 					}
@@ -43,403 +43,21 @@
 			}
 		]
 	},
-	"test10": {
+	"b1c": {
 		"tests": [
-			"test10"
+			"b1c"
 		],
 		"next": [
 			{
 				"tests": [
-					"test10"
-				],
-				"outcome": "inc",
-				"event": "batteryInfo.in.20",
-				"next": [
-					{
-						"tests": [
-							"test10"
-						],
-						"outcome": "pass",
-						"event": "batteryStatus.out.Ok",
-						"next": [
-							{
-								"tests": [
-									"test10"
-								],
-								"outcome": "fail"
-							}
-						]
-					}
-				]
-			}
-		]
-	},
-	"test11": {
-		"tests": [
-			"test11"
-		],
-		"next": [
-			{
-				"tests": [
-					"test11"
-				],
-				"outcome": "inc",
-				"event": "batteryInfo.in.20",
-				"next": [
-					{
-						"tests": [
-							"test11"
-						],
-						"outcome": "pass",
-						"event": "batteryStatus.out.MissionCritical",
-						"next": [
-							{
-								"tests": [
-									"test11"
-								],
-								"outcome": "fail"
-							}
-						]
-					}
-				]
-			}
-		]
-	},
-	"test12": {
-		"tests": [
-			"test12"
-		],
-		"next": [
-			{
-				"tests": [
-					"test12"
-				],
-				"outcome": "inc",
-				"event": "batteryInfo.in.100",
-				"next": [
-					{
-						"tests": [
-							"test12"
-						],
-						"outcome": "inc",
-						"event": "batteryStatus.out.Ok",
-						"next": [
-							{
-								"tests": [
-									"test12"
-								],
-								"outcome": "pass",
-								"event": "batteryStatus.out.Ok",
-								"next": [
-									{
-										"tests": [
-											"test12"
-										],
-										"outcome": "fail"
-									}
-								]
-							}
-						]
-					}
-				]
-			}
-		]
-	},
-	"test13": {
-		"tests": [
-			"test13"
-		],
-		"next": [
-			{
-				"tests": [
-					"test13"
-				],
-				"outcome": "inc",
-				"event": "batteryInfo.in.100",
-				"next": [
-					{
-						"tests": [
-							"test13"
-						],
-						"outcome": "inc",
-						"event": "batteryStatus.out.Ok",
-						"next": [
-							{
-								"tests": [
-									"test13"
-								],
-								"outcome": "pass",
-								"event": "batteryStatus.out.MissionCritical",
-								"next": [
-									{
-										"tests": [
-											"test13"
-										],
-										"outcome": "fail"
-									}
-								]
-							}
-						]
-					}
-				]
-			}
-		]
-	},
-	"test14": {
-		"tests": [
-			"test14"
-		],
-		"next": [
-			{
-				"tests": [
-					"test14"
-				],
-				"outcome": "inc",
-				"event": "batteryInfo.in.100",
-				"next": [
-					{
-						"tests": [
-							"test14"
-						],
-						"outcome": "inc",
-						"event": "batteryStatus.out.Ok",
-						"next": [
-							{
-								"tests": [
-									"test14"
-								],
-								"outcome": "pass",
-								"event": "batteryStatus.out.SafetyCritical",
-								"next": [
-									{
-										"tests": [
-											"test14"
-										],
-										"outcome": "fail"
-									}
-								]
-							}
-						]
-					}
-				]
-			}
-		]
-	},
-	"test15": {
-		"tests": [
-			"test15"
-		],
-		"next": [
-			{
-				"tests": [
-					"test15"
-				],
-				"outcome": "inc",
-				"event": "batteryInfo.in.30",
-				"next": [
-					{
-						"tests": [
-							"test15"
-						],
-						"outcome": "inc",
-						"event": "batteryStatus.out.MissionCritical",
-						"next": [
-							{
-								"tests": [
-									"test15"
-								],
-								"outcome": "pass",
-								"event": "batteryStatus.out.Ok",
-								"next": [
-									{
-										"tests": [
-											"test15"
-										],
-										"outcome": "fail"
-									}
-								]
-							}
-						]
-					}
-				]
-			}
-		]
-	},
-	"test16": {
-		"tests": [
-			"test16"
-		],
-		"next": [
-			{
-				"tests": [
-					"test16"
-				],
-				"outcome": "inc",
-				"event": "batteryInfo.in.30",
-				"next": [
-					{
-						"tests": [
-							"test16"
-						],
-						"outcome": "inc",
-						"event": "batteryStatus.out.MissionCritical",
-						"next": [
-							{
-								"tests": [
-									"test16"
-								],
-								"outcome": "pass",
-								"event": "batteryStatus.out.MissionCritical",
-								"next": [
-									{
-										"tests": [
-											"test16"
-										],
-										"outcome": "fail"
-									}
-								]
-							}
-						]
-					}
-				]
-			}
-		]
-	},
-	"test17": {
-		"tests": [
-			"test17"
-		],
-		"next": [
-			{
-				"tests": [
-					"test17"
-				],
-				"outcome": "inc",
-				"event": "batteryInfo.in.30",
-				"next": [
-					{
-						"tests": [
-							"test17"
-						],
-						"outcome": "inc",
-						"event": "batteryStatus.out.MissionCritical",
-						"next": [
-							{
-								"tests": [
-									"test17"
-								],
-								"outcome": "pass",
-								"event": "batteryStatus.out.SafetyCritical",
-								"next": [
-									{
-										"tests": [
-											"test17"
-										],
-										"outcome": "fail"
-									}
-								]
-							}
-						]
-					}
-				]
-			}
-		]
-	},
-	"test18": {
-		"tests": [
-			"test18"
-		],
-		"next": [
-			{
-				"tests": [
-					"test18"
-				],
-				"outcome": "inc",
-				"event": "batteryInfo.in.20",
-				"next": [
-					{
-						"tests": [
-							"test18"
-						],
-						"outcome": "inc",
-						"event": "batteryStatus.out.SafetyCritical",
-						"next": [
-							{
-								"tests": [
-									"test18"
-								],
-								"outcome": "pass",
-								"event": "batteryStatus.out.Ok",
-								"next": [
-									{
-										"tests": [
-											"test18"
-										],
-										"outcome": "fail"
-									}
-								]
-							}
-						]
-					}
-				]
-			}
-		]
-	},
-	"test19": {
-		"tests": [
-			"test19"
-		],
-		"next": [
-			{
-				"tests": [
-					"test19"
-				],
-				"outcome": "inc",
-				"event": "batteryInfo.in.20",
-				"next": [
-					{
-						"tests": [
-							"test19"
-						],
-						"outcome": "inc",
-						"event": "batteryStatus.out.SafetyCritical",
-						"next": [
-							{
-								"tests": [
-									"test19"
-								],
-								"outcome": "pass",
-								"event": "batteryStatus.out.MissionCritical",
-								"next": [
-									{
-										"tests": [
-											"test19"
-										],
-										"outcome": "fail"
-									}
-								]
-							}
-						]
-					}
-				]
-			}
-		]
-	},
-	"test2": {
-		"tests": [
-			"test2"
-		],
-		"next": [
-			{
-				"tests": [
-					"test2"
+					"b1c"
 				],
 				"outcome": "pass",
 				"event": "batteryStatus.out.SafetyCritical",
 				"next": [
 					{
 						"tests": [
-							"test2"
+							"b1c"
 						],
 						"outcome": "fail"
 					}
@@ -447,28 +65,28 @@
 			}
 		]
 	},
-	"test3": {
+	"b2a": {
 		"tests": [
-			"test3"
+			"b2a"
 		],
 		"next": [
 			{
 				"tests": [
-					"test3"
+					"b2a"
 				],
 				"outcome": "inc",
 				"event": "batteryInfo.in.100",
 				"next": [
 					{
 						"tests": [
-							"test3"
+							"b2a"
 						],
 						"outcome": "pass",
 						"event": "batteryInfo.in.100",
 						"next": [
 							{
 								"tests": [
-									"test3"
+									"b2a"
 								],
 								"outcome": "fail"
 							}
@@ -478,28 +96,28 @@
 			}
 		]
 	},
-	"test4": {
+	"b2b": {
 		"tests": [
-			"test4"
+			"b2b"
 		],
 		"next": [
 			{
 				"tests": [
-					"test4"
+					"b2b"
 				],
 				"outcome": "inc",
 				"event": "batteryInfo.in.30",
 				"next": [
 					{
 						"tests": [
-							"test4"
+							"b2b"
 						],
 						"outcome": "pass",
 						"event": "batteryInfo.in.30",
 						"next": [
 							{
 								"tests": [
-									"test4"
+									"b2b"
 								],
 								"outcome": "fail"
 							}
@@ -509,28 +127,28 @@
 			}
 		]
 	},
-	"test5": {
+	"b2c": {
 		"tests": [
-			"test5"
+			"b2c"
 		],
 		"next": [
 			{
 				"tests": [
-					"test5"
+					"b2c"
 				],
 				"outcome": "inc",
 				"event": "batteryInfo.in.20",
 				"next": [
 					{
 						"tests": [
-							"test5"
+							"b2c"
 						],
 						"outcome": "pass",
 						"event": "batteryInfo.in.20",
 						"next": [
 							{
 								"tests": [
-									"test5"
+									"b2c"
 								],
 								"outcome": "fail"
 							}
@@ -540,28 +158,28 @@
 			}
 		]
 	},
-	"test6": {
+	"b3a": {
 		"tests": [
-			"test6"
+			"b3a"
 		],
 		"next": [
 			{
 				"tests": [
-					"test6"
+					"b3a"
 				],
 				"outcome": "inc",
 				"event": "batteryInfo.in.100",
 				"next": [
 					{
 						"tests": [
-							"test6"
+							"b3a"
 						],
 						"outcome": "pass",
 						"event": "batteryStatus.out.MissionCritical",
 						"next": [
 							{
 								"tests": [
-									"test6"
+									"b3a"
 								],
 								"outcome": "fail"
 							}
@@ -571,28 +189,28 @@
 			}
 		]
 	},
-	"test7": {
+	"b3b": {
 		"tests": [
-			"test7"
+			"b3b"
 		],
 		"next": [
 			{
 				"tests": [
-					"test7"
+					"b3b"
 				],
 				"outcome": "inc",
 				"event": "batteryInfo.in.100",
 				"next": [
 					{
 						"tests": [
-							"test7"
+							"b3b"
 						],
 						"outcome": "pass",
 						"event": "batteryStatus.out.SafetyCritical",
 						"next": [
 							{
 								"tests": [
-									"test7"
+									"b3b"
 								],
 								"outcome": "fail"
 							}
@@ -602,28 +220,28 @@
 			}
 		]
 	},
-	"test8": {
+	"b3c": {
 		"tests": [
-			"test8"
+			"b3c"
 		],
 		"next": [
 			{
 				"tests": [
-					"test8"
+					"b3c"
 				],
 				"outcome": "inc",
 				"event": "batteryInfo.in.30",
 				"next": [
 					{
 						"tests": [
-							"test8"
+							"b3c"
 						],
 						"outcome": "pass",
 						"event": "batteryStatus.out.Ok",
 						"next": [
 							{
 								"tests": [
-									"test8"
+									"b3c"
 								],
 								"outcome": "fail"
 							}
@@ -633,30 +251,452 @@
 			}
 		]
 	},
-	"test9": {
+	"b3d": {
 		"tests": [
-			"test9"
+			"b3d"
 		],
 		"next": [
 			{
 				"tests": [
-					"test9"
+					"b3d"
 				],
 				"outcome": "inc",
 				"event": "batteryInfo.in.30",
 				"next": [
 					{
 						"tests": [
-							"test9"
+							"b3d"
 						],
 						"outcome": "pass",
 						"event": "batteryStatus.out.SafetyCritical",
 						"next": [
 							{
 								"tests": [
-									"test9"
+									"b3d"
 								],
 								"outcome": "fail"
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"b3e": {
+		"tests": [
+			"b3e"
+		],
+		"next": [
+			{
+				"tests": [
+					"b3e"
+				],
+				"outcome": "inc",
+				"event": "batteryInfo.in.20",
+				"next": [
+					{
+						"tests": [
+							"b3e"
+						],
+						"outcome": "pass",
+						"event": "batteryStatus.out.Ok",
+						"next": [
+							{
+								"tests": [
+									"b3e"
+								],
+								"outcome": "fail"
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"b3f": {
+		"tests": [
+			"b3f"
+		],
+		"next": [
+			{
+				"tests": [
+					"b3f"
+				],
+				"outcome": "inc",
+				"event": "batteryInfo.in.20",
+				"next": [
+					{
+						"tests": [
+							"b3f"
+						],
+						"outcome": "pass",
+						"event": "batteryStatus.out.MissionCritical",
+						"next": [
+							{
+								"tests": [
+									"b3f"
+								],
+								"outcome": "fail"
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"b4a": {
+		"tests": [
+			"b4a"
+		],
+		"next": [
+			{
+				"tests": [
+					"b4a"
+				],
+				"outcome": "inc",
+				"event": "batteryInfo.in.100",
+				"next": [
+					{
+						"tests": [
+							"b4a"
+						],
+						"outcome": "inc",
+						"event": "batteryStatus.out.Ok",
+						"next": [
+							{
+								"tests": [
+									"b4a"
+								],
+								"outcome": "pass",
+								"event": "batteryStatus.out.Ok",
+								"next": [
+									{
+										"tests": [
+											"b4a"
+										],
+										"outcome": "fail"
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"b4b": {
+		"tests": [
+			"b4b"
+		],
+		"next": [
+			{
+				"tests": [
+					"b4b"
+				],
+				"outcome": "inc",
+				"event": "batteryInfo.in.100",
+				"next": [
+					{
+						"tests": [
+							"b4b"
+						],
+						"outcome": "inc",
+						"event": "batteryStatus.out.Ok",
+						"next": [
+							{
+								"tests": [
+									"b4b"
+								],
+								"outcome": "pass",
+								"event": "batteryStatus.out.MissionCritical",
+								"next": [
+									{
+										"tests": [
+											"b4b"
+										],
+										"outcome": "fail"
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"b4c": {
+		"tests": [
+			"b4c"
+		],
+		"next": [
+			{
+				"tests": [
+					"b4c"
+				],
+				"outcome": "inc",
+				"event": "batteryInfo.in.100",
+				"next": [
+					{
+						"tests": [
+							"b4c"
+						],
+						"outcome": "inc",
+						"event": "batteryStatus.out.Ok",
+						"next": [
+							{
+								"tests": [
+									"b4c"
+								],
+								"outcome": "pass",
+								"event": "batteryStatus.out.SafetyCritical",
+								"next": [
+									{
+										"tests": [
+											"b4c"
+										],
+										"outcome": "fail"
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"b4d": {
+		"tests": [
+			"b4d"
+		],
+		"next": [
+			{
+				"tests": [
+					"b4d"
+				],
+				"outcome": "inc",
+				"event": "batteryInfo.in.30",
+				"next": [
+					{
+						"tests": [
+							"b4d"
+						],
+						"outcome": "inc",
+						"event": "batteryStatus.out.MissionCritical",
+						"next": [
+							{
+								"tests": [
+									"b4d"
+								],
+								"outcome": "pass",
+								"event": "batteryStatus.out.Ok",
+								"next": [
+									{
+										"tests": [
+											"b4d"
+										],
+										"outcome": "fail"
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"b4e": {
+		"tests": [
+			"b4e"
+		],
+		"next": [
+			{
+				"tests": [
+					"b4e"
+				],
+				"outcome": "inc",
+				"event": "batteryInfo.in.30",
+				"next": [
+					{
+						"tests": [
+							"b4e"
+						],
+						"outcome": "inc",
+						"event": "batteryStatus.out.MissionCritical",
+						"next": [
+							{
+								"tests": [
+									"b4e"
+								],
+								"outcome": "pass",
+								"event": "batteryStatus.out.MissionCritical",
+								"next": [
+									{
+										"tests": [
+											"b4e"
+										],
+										"outcome": "fail"
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"b4f": {
+		"tests": [
+			"b4f"
+		],
+		"next": [
+			{
+				"tests": [
+					"b4f"
+				],
+				"outcome": "inc",
+				"event": "batteryInfo.in.30",
+				"next": [
+					{
+						"tests": [
+							"b4f"
+						],
+						"outcome": "inc",
+						"event": "batteryStatus.out.MissionCritical",
+						"next": [
+							{
+								"tests": [
+									"b4f"
+								],
+								"outcome": "pass",
+								"event": "batteryStatus.out.SafetyCritical",
+								"next": [
+									{
+										"tests": [
+											"b4f"
+										],
+										"outcome": "fail"
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"b4g": {
+		"tests": [
+			"b4g"
+		],
+		"next": [
+			{
+				"tests": [
+					"b4g"
+				],
+				"outcome": "inc",
+				"event": "batteryInfo.in.20",
+				"next": [
+					{
+						"tests": [
+							"b4g"
+						],
+						"outcome": "inc",
+						"event": "batteryStatus.out.SafetyCritical",
+						"next": [
+							{
+								"tests": [
+									"b4g"
+								],
+								"outcome": "pass",
+								"event": "batteryStatus.out.Ok",
+								"next": [
+									{
+										"tests": [
+											"b4g"
+										],
+										"outcome": "fail"
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"b4h": {
+		"tests": [
+			"b4h"
+		],
+		"next": [
+			{
+				"tests": [
+					"b4h"
+				],
+				"outcome": "inc",
+				"event": "batteryInfo.in.20",
+				"next": [
+					{
+						"tests": [
+							"b4h"
+						],
+						"outcome": "inc",
+						"event": "batteryStatus.out.SafetyCritical",
+						"next": [
+							{
+								"tests": [
+									"b4h"
+								],
+								"outcome": "pass",
+								"event": "batteryStatus.out.MissionCritical",
+								"next": [
+									{
+										"tests": [
+											"b4h"
+										],
+										"outcome": "fail"
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"b4i": {
+		"tests": [
+			"b4i"
+		],
+		"next": [
+			{
+				"tests": [
+					"b4i"
+				],
+				"outcome": "inc",
+				"event": "batteryInfo.in.20",
+				"next": [
+					{
+						"tests": [
+							"b4i"
+						],
+						"outcome": "inc",
+						"event": "batteryStatus.out.SafetyCritical",
+						"next": [
+							{
+								"tests": [
+									"b4i"
+								],
+								"outcome": "pass",
+								"event": "batteryStatus.out.SafetyCritical",
+								"next": [
+									{
+										"tests": [
+											"b4i"
+										],
+										"outcome": "fail"
+									}
+								]
 							}
 						]
 					}

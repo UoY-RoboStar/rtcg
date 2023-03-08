@@ -77,14 +77,44 @@ func (t Forbidden) String() string {
 	return fmt.Sprintf("%s%s!%s", nameTag, &t.Prefix, &t.Forbid)
 }
 
-// Name assigns a systematic name to each trace in traces.
+// Name assigns a unique name to each trace in traces.
+// If the trace already has a name, we use that; otherwise, we synthesise one.
 func Name(traces []Forbidden) map[string]Forbidden {
 	result := make(map[string]Forbidden, len(traces))
 
-	for i, t := range traces {
-		name := fmt.Sprintf("test%d", i)
-		result[name] = t
+	for _, trace := range traces {
+		// Always try to get the provided name.
+		base := trace.Name
+
+		if base == "" {
+			base = "test"
+		}
+
+		insertName(result, base, trace)
 	}
 
 	return result
+}
+
+func insertName(result map[string]Forbidden, base string, trace Forbidden) {
+	for i := 0; ; i++ {
+		name := synthesiseName(base, i)
+
+		if _, ok := result[name]; !ok {
+			result[name] = trace
+
+			return
+		}
+	}
+}
+
+func synthesiseName(base string, attempt int) string {
+	// Make it so that we get 'test0', 'test1', etc., but 'foo', 'foo0', etc.
+	if base == "test" {
+		return fmt.Sprintf("%s%d", base, attempt)
+	} else if 0 < attempt {
+		return fmt.Sprintf("%s%d", base, attempt-1)
+	} else {
+		return base
+	}
 }

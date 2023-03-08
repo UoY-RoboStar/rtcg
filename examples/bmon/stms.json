@@ -1,5 +1,5 @@
 {
-	"test0": {
+	"b1a": {
 		"states": [
 			{
 				"id": "initial",
@@ -15,13 +15,13 @@
 					}
 				],
 				"verdicts": {
-					"test0": "pass"
+					"b1a": "pass"
 				}
 			},
 			{
 				"id": "step0",
 				"verdicts": {
-					"test0": "fail"
+					"b1a": "fail"
 				}
 			}
 		],
@@ -29,10 +29,10 @@
 			"batteryStatus": "enum"
 		},
 		"tests": [
-			"test0"
+			"b1a"
 		]
 	},
-	"test1": {
+	"b1b": {
 		"states": [
 			{
 				"id": "initial",
@@ -48,13 +48,13 @@
 					}
 				],
 				"verdicts": {
-					"test1": "pass"
+					"b1b": "pass"
 				}
 			},
 			{
 				"id": "step0",
 				"verdicts": {
-					"test1": "fail"
+					"b1b": "fail"
 				}
 			}
 		],
@@ -62,112 +62,43 @@
 			"batteryStatus": "enum"
 		},
 		"tests": [
-			"test1"
+			"b1b"
 		]
 	},
-	"test10": {
+	"b1c": {
 		"states": [
 			{
 				"id": "initial",
 				"transitionSets": [
 					{
-						"channel": "batteryInfo.in",
+						"channel": "batteryStatus.out",
 						"transitions": [
 							{
-								"value": "20",
+								"value": "SafetyCritical",
 								"next": "step0"
 							}
 						]
 					}
 				],
 				"verdicts": {
-					"test10": "inc"
+					"b1c": "pass"
 				}
 			},
 			{
 				"id": "step0",
-				"transitionSets": [
-					{
-						"channel": "batteryStatus.out",
-						"transitions": [
-							{
-								"value": "Ok",
-								"next": "step1"
-							}
-						]
-					}
-				],
 				"verdicts": {
-					"test10": "pass"
-				}
-			},
-			{
-				"id": "step1",
-				"verdicts": {
-					"test10": "fail"
+					"b1c": "fail"
 				}
 			}
 		],
 		"types": {
-			"batteryInfo": "nat",
 			"batteryStatus": "enum"
 		},
 		"tests": [
-			"test10"
+			"b1c"
 		]
 	},
-	"test11": {
-		"states": [
-			{
-				"id": "initial",
-				"transitionSets": [
-					{
-						"channel": "batteryInfo.in",
-						"transitions": [
-							{
-								"value": "20",
-								"next": "step0"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test11": "inc"
-				}
-			},
-			{
-				"id": "step0",
-				"transitionSets": [
-					{
-						"channel": "batteryStatus.out",
-						"transitions": [
-							{
-								"value": "MissionCritical",
-								"next": "step1"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test11": "pass"
-				}
-			},
-			{
-				"id": "step1",
-				"verdicts": {
-					"test11": "fail"
-				}
-			}
-		],
-		"types": {
-			"batteryInfo": "nat",
-			"batteryStatus": "enum"
-		},
-		"tests": [
-			"test11"
-		]
-	},
-	"test12": {
+	"b2a": {
 		"states": [
 			{
 				"id": "initial",
@@ -183,584 +114,7 @@
 					}
 				],
 				"verdicts": {
-					"test12": "inc"
-				}
-			},
-			{
-				"id": "step0",
-				"transitionSets": [
-					{
-						"channel": "batteryStatus.out",
-						"transitions": [
-							{
-								"value": "Ok",
-								"next": "step1"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test12": "inc"
-				}
-			},
-			{
-				"id": "step1",
-				"transitionSets": [
-					{
-						"channel": "batteryStatus.out",
-						"transitions": [
-							{
-								"value": "Ok",
-								"next": "step2"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test12": "pass"
-				}
-			},
-			{
-				"id": "step2",
-				"verdicts": {
-					"test12": "fail"
-				}
-			}
-		],
-		"types": {
-			"batteryInfo": "nat",
-			"batteryStatus": "enum"
-		},
-		"tests": [
-			"test12"
-		]
-	},
-	"test13": {
-		"states": [
-			{
-				"id": "initial",
-				"transitionSets": [
-					{
-						"channel": "batteryInfo.in",
-						"transitions": [
-							{
-								"value": "100",
-								"next": "step0"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test13": "inc"
-				}
-			},
-			{
-				"id": "step0",
-				"transitionSets": [
-					{
-						"channel": "batteryStatus.out",
-						"transitions": [
-							{
-								"value": "Ok",
-								"next": "step1"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test13": "inc"
-				}
-			},
-			{
-				"id": "step1",
-				"transitionSets": [
-					{
-						"channel": "batteryStatus.out",
-						"transitions": [
-							{
-								"value": "MissionCritical",
-								"next": "step2"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test13": "pass"
-				}
-			},
-			{
-				"id": "step2",
-				"verdicts": {
-					"test13": "fail"
-				}
-			}
-		],
-		"types": {
-			"batteryInfo": "nat",
-			"batteryStatus": "enum"
-		},
-		"tests": [
-			"test13"
-		]
-	},
-	"test14": {
-		"states": [
-			{
-				"id": "initial",
-				"transitionSets": [
-					{
-						"channel": "batteryInfo.in",
-						"transitions": [
-							{
-								"value": "100",
-								"next": "step0"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test14": "inc"
-				}
-			},
-			{
-				"id": "step0",
-				"transitionSets": [
-					{
-						"channel": "batteryStatus.out",
-						"transitions": [
-							{
-								"value": "Ok",
-								"next": "step1"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test14": "inc"
-				}
-			},
-			{
-				"id": "step1",
-				"transitionSets": [
-					{
-						"channel": "batteryStatus.out",
-						"transitions": [
-							{
-								"value": "SafetyCritical",
-								"next": "step2"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test14": "pass"
-				}
-			},
-			{
-				"id": "step2",
-				"verdicts": {
-					"test14": "fail"
-				}
-			}
-		],
-		"types": {
-			"batteryInfo": "nat",
-			"batteryStatus": "enum"
-		},
-		"tests": [
-			"test14"
-		]
-	},
-	"test15": {
-		"states": [
-			{
-				"id": "initial",
-				"transitionSets": [
-					{
-						"channel": "batteryInfo.in",
-						"transitions": [
-							{
-								"value": "30",
-								"next": "step0"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test15": "inc"
-				}
-			},
-			{
-				"id": "step0",
-				"transitionSets": [
-					{
-						"channel": "batteryStatus.out",
-						"transitions": [
-							{
-								"value": "MissionCritical",
-								"next": "step1"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test15": "inc"
-				}
-			},
-			{
-				"id": "step1",
-				"transitionSets": [
-					{
-						"channel": "batteryStatus.out",
-						"transitions": [
-							{
-								"value": "Ok",
-								"next": "step2"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test15": "pass"
-				}
-			},
-			{
-				"id": "step2",
-				"verdicts": {
-					"test15": "fail"
-				}
-			}
-		],
-		"types": {
-			"batteryInfo": "nat",
-			"batteryStatus": "enum"
-		},
-		"tests": [
-			"test15"
-		]
-	},
-	"test16": {
-		"states": [
-			{
-				"id": "initial",
-				"transitionSets": [
-					{
-						"channel": "batteryInfo.in",
-						"transitions": [
-							{
-								"value": "30",
-								"next": "step0"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test16": "inc"
-				}
-			},
-			{
-				"id": "step0",
-				"transitionSets": [
-					{
-						"channel": "batteryStatus.out",
-						"transitions": [
-							{
-								"value": "MissionCritical",
-								"next": "step1"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test16": "inc"
-				}
-			},
-			{
-				"id": "step1",
-				"transitionSets": [
-					{
-						"channel": "batteryStatus.out",
-						"transitions": [
-							{
-								"value": "MissionCritical",
-								"next": "step2"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test16": "pass"
-				}
-			},
-			{
-				"id": "step2",
-				"verdicts": {
-					"test16": "fail"
-				}
-			}
-		],
-		"types": {
-			"batteryInfo": "nat",
-			"batteryStatus": "enum"
-		},
-		"tests": [
-			"test16"
-		]
-	},
-	"test17": {
-		"states": [
-			{
-				"id": "initial",
-				"transitionSets": [
-					{
-						"channel": "batteryInfo.in",
-						"transitions": [
-							{
-								"value": "30",
-								"next": "step0"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test17": "inc"
-				}
-			},
-			{
-				"id": "step0",
-				"transitionSets": [
-					{
-						"channel": "batteryStatus.out",
-						"transitions": [
-							{
-								"value": "MissionCritical",
-								"next": "step1"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test17": "inc"
-				}
-			},
-			{
-				"id": "step1",
-				"transitionSets": [
-					{
-						"channel": "batteryStatus.out",
-						"transitions": [
-							{
-								"value": "SafetyCritical",
-								"next": "step2"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test17": "pass"
-				}
-			},
-			{
-				"id": "step2",
-				"verdicts": {
-					"test17": "fail"
-				}
-			}
-		],
-		"types": {
-			"batteryInfo": "nat",
-			"batteryStatus": "enum"
-		},
-		"tests": [
-			"test17"
-		]
-	},
-	"test18": {
-		"states": [
-			{
-				"id": "initial",
-				"transitionSets": [
-					{
-						"channel": "batteryInfo.in",
-						"transitions": [
-							{
-								"value": "20",
-								"next": "step0"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test18": "inc"
-				}
-			},
-			{
-				"id": "step0",
-				"transitionSets": [
-					{
-						"channel": "batteryStatus.out",
-						"transitions": [
-							{
-								"value": "SafetyCritical",
-								"next": "step1"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test18": "inc"
-				}
-			},
-			{
-				"id": "step1",
-				"transitionSets": [
-					{
-						"channel": "batteryStatus.out",
-						"transitions": [
-							{
-								"value": "Ok",
-								"next": "step2"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test18": "pass"
-				}
-			},
-			{
-				"id": "step2",
-				"verdicts": {
-					"test18": "fail"
-				}
-			}
-		],
-		"types": {
-			"batteryInfo": "nat",
-			"batteryStatus": "enum"
-		},
-		"tests": [
-			"test18"
-		]
-	},
-	"test19": {
-		"states": [
-			{
-				"id": "initial",
-				"transitionSets": [
-					{
-						"channel": "batteryInfo.in",
-						"transitions": [
-							{
-								"value": "20",
-								"next": "step0"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test19": "inc"
-				}
-			},
-			{
-				"id": "step0",
-				"transitionSets": [
-					{
-						"channel": "batteryStatus.out",
-						"transitions": [
-							{
-								"value": "SafetyCritical",
-								"next": "step1"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test19": "inc"
-				}
-			},
-			{
-				"id": "step1",
-				"transitionSets": [
-					{
-						"channel": "batteryStatus.out",
-						"transitions": [
-							{
-								"value": "MissionCritical",
-								"next": "step2"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test19": "pass"
-				}
-			},
-			{
-				"id": "step2",
-				"verdicts": {
-					"test19": "fail"
-				}
-			}
-		],
-		"types": {
-			"batteryInfo": "nat",
-			"batteryStatus": "enum"
-		},
-		"tests": [
-			"test19"
-		]
-	},
-	"test2": {
-		"states": [
-			{
-				"id": "initial",
-				"transitionSets": [
-					{
-						"channel": "batteryStatus.out",
-						"transitions": [
-							{
-								"value": "SafetyCritical",
-								"next": "step0"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test2": "pass"
-				}
-			},
-			{
-				"id": "step0",
-				"verdicts": {
-					"test2": "fail"
-				}
-			}
-		],
-		"types": {
-			"batteryStatus": "enum"
-		},
-		"tests": [
-			"test2"
-		]
-	},
-	"test3": {
-		"states": [
-			{
-				"id": "initial",
-				"transitionSets": [
-					{
-						"channel": "batteryInfo.in",
-						"transitions": [
-							{
-								"value": "100",
-								"next": "step0"
-							}
-						]
-					}
-				],
-				"verdicts": {
-					"test3": "inc"
+					"b2a": "inc"
 				}
 			},
 			{
@@ -777,13 +131,13 @@
 					}
 				],
 				"verdicts": {
-					"test3": "pass"
+					"b2a": "pass"
 				}
 			},
 			{
 				"id": "step1",
 				"verdicts": {
-					"test3": "fail"
+					"b2a": "fail"
 				}
 			}
 		],
@@ -791,10 +145,10 @@
 			"batteryInfo": "nat"
 		},
 		"tests": [
-			"test3"
+			"b2a"
 		]
 	},
-	"test4": {
+	"b2b": {
 		"states": [
 			{
 				"id": "initial",
@@ -810,7 +164,7 @@
 					}
 				],
 				"verdicts": {
-					"test4": "inc"
+					"b2b": "inc"
 				}
 			},
 			{
@@ -827,13 +181,13 @@
 					}
 				],
 				"verdicts": {
-					"test4": "pass"
+					"b2b": "pass"
 				}
 			},
 			{
 				"id": "step1",
 				"verdicts": {
-					"test4": "fail"
+					"b2b": "fail"
 				}
 			}
 		],
@@ -841,10 +195,10 @@
 			"batteryInfo": "nat"
 		},
 		"tests": [
-			"test4"
+			"b2b"
 		]
 	},
-	"test5": {
+	"b2c": {
 		"states": [
 			{
 				"id": "initial",
@@ -860,7 +214,7 @@
 					}
 				],
 				"verdicts": {
-					"test5": "inc"
+					"b2c": "inc"
 				}
 			},
 			{
@@ -877,13 +231,13 @@
 					}
 				],
 				"verdicts": {
-					"test5": "pass"
+					"b2c": "pass"
 				}
 			},
 			{
 				"id": "step1",
 				"verdicts": {
-					"test5": "fail"
+					"b2c": "fail"
 				}
 			}
 		],
@@ -891,10 +245,10 @@
 			"batteryInfo": "nat"
 		},
 		"tests": [
-			"test5"
+			"b2c"
 		]
 	},
-	"test6": {
+	"b3a": {
 		"states": [
 			{
 				"id": "initial",
@@ -910,7 +264,7 @@
 					}
 				],
 				"verdicts": {
-					"test6": "inc"
+					"b3a": "inc"
 				}
 			},
 			{
@@ -927,13 +281,13 @@
 					}
 				],
 				"verdicts": {
-					"test6": "pass"
+					"b3a": "pass"
 				}
 			},
 			{
 				"id": "step1",
 				"verdicts": {
-					"test6": "fail"
+					"b3a": "fail"
 				}
 			}
 		],
@@ -942,10 +296,10 @@
 			"batteryStatus": "enum"
 		},
 		"tests": [
-			"test6"
+			"b3a"
 		]
 	},
-	"test7": {
+	"b3b": {
 		"states": [
 			{
 				"id": "initial",
@@ -961,7 +315,7 @@
 					}
 				],
 				"verdicts": {
-					"test7": "inc"
+					"b3b": "inc"
 				}
 			},
 			{
@@ -978,13 +332,13 @@
 					}
 				],
 				"verdicts": {
-					"test7": "pass"
+					"b3b": "pass"
 				}
 			},
 			{
 				"id": "step1",
 				"verdicts": {
-					"test7": "fail"
+					"b3b": "fail"
 				}
 			}
 		],
@@ -993,10 +347,10 @@
 			"batteryStatus": "enum"
 		},
 		"tests": [
-			"test7"
+			"b3b"
 		]
 	},
-	"test8": {
+	"b3c": {
 		"states": [
 			{
 				"id": "initial",
@@ -1012,7 +366,7 @@
 					}
 				],
 				"verdicts": {
-					"test8": "inc"
+					"b3c": "inc"
 				}
 			},
 			{
@@ -1029,13 +383,13 @@
 					}
 				],
 				"verdicts": {
-					"test8": "pass"
+					"b3c": "pass"
 				}
 			},
 			{
 				"id": "step1",
 				"verdicts": {
-					"test8": "fail"
+					"b3c": "fail"
 				}
 			}
 		],
@@ -1044,10 +398,10 @@
 			"batteryStatus": "enum"
 		},
 		"tests": [
-			"test8"
+			"b3c"
 		]
 	},
-	"test9": {
+	"b3d": {
 		"states": [
 			{
 				"id": "initial",
@@ -1063,7 +417,7 @@
 					}
 				],
 				"verdicts": {
-					"test9": "inc"
+					"b3d": "inc"
 				}
 			},
 			{
@@ -1080,13 +434,13 @@
 					}
 				],
 				"verdicts": {
-					"test9": "pass"
+					"b3d": "pass"
 				}
 			},
 			{
 				"id": "step1",
 				"verdicts": {
-					"test9": "fail"
+					"b3d": "fail"
 				}
 			}
 		],
@@ -1095,7 +449,721 @@
 			"batteryStatus": "enum"
 		},
 		"tests": [
-			"test9"
+			"b3d"
+		]
+	},
+	"b3e": {
+		"states": [
+			{
+				"id": "initial",
+				"transitionSets": [
+					{
+						"channel": "batteryInfo.in",
+						"transitions": [
+							{
+								"value": "20",
+								"next": "step0"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b3e": "inc"
+				}
+			},
+			{
+				"id": "step0",
+				"transitionSets": [
+					{
+						"channel": "batteryStatus.out",
+						"transitions": [
+							{
+								"value": "Ok",
+								"next": "step1"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b3e": "pass"
+				}
+			},
+			{
+				"id": "step1",
+				"verdicts": {
+					"b3e": "fail"
+				}
+			}
+		],
+		"types": {
+			"batteryInfo": "nat",
+			"batteryStatus": "enum"
+		},
+		"tests": [
+			"b3e"
+		]
+	},
+	"b3f": {
+		"states": [
+			{
+				"id": "initial",
+				"transitionSets": [
+					{
+						"channel": "batteryInfo.in",
+						"transitions": [
+							{
+								"value": "20",
+								"next": "step0"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b3f": "inc"
+				}
+			},
+			{
+				"id": "step0",
+				"transitionSets": [
+					{
+						"channel": "batteryStatus.out",
+						"transitions": [
+							{
+								"value": "MissionCritical",
+								"next": "step1"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b3f": "pass"
+				}
+			},
+			{
+				"id": "step1",
+				"verdicts": {
+					"b3f": "fail"
+				}
+			}
+		],
+		"types": {
+			"batteryInfo": "nat",
+			"batteryStatus": "enum"
+		},
+		"tests": [
+			"b3f"
+		]
+	},
+	"b4a": {
+		"states": [
+			{
+				"id": "initial",
+				"transitionSets": [
+					{
+						"channel": "batteryInfo.in",
+						"transitions": [
+							{
+								"value": "100",
+								"next": "step0"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4a": "inc"
+				}
+			},
+			{
+				"id": "step0",
+				"transitionSets": [
+					{
+						"channel": "batteryStatus.out",
+						"transitions": [
+							{
+								"value": "Ok",
+								"next": "step1"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4a": "inc"
+				}
+			},
+			{
+				"id": "step1",
+				"transitionSets": [
+					{
+						"channel": "batteryStatus.out",
+						"transitions": [
+							{
+								"value": "Ok",
+								"next": "step2"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4a": "pass"
+				}
+			},
+			{
+				"id": "step2",
+				"verdicts": {
+					"b4a": "fail"
+				}
+			}
+		],
+		"types": {
+			"batteryInfo": "nat",
+			"batteryStatus": "enum"
+		},
+		"tests": [
+			"b4a"
+		]
+	},
+	"b4b": {
+		"states": [
+			{
+				"id": "initial",
+				"transitionSets": [
+					{
+						"channel": "batteryInfo.in",
+						"transitions": [
+							{
+								"value": "100",
+								"next": "step0"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4b": "inc"
+				}
+			},
+			{
+				"id": "step0",
+				"transitionSets": [
+					{
+						"channel": "batteryStatus.out",
+						"transitions": [
+							{
+								"value": "Ok",
+								"next": "step1"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4b": "inc"
+				}
+			},
+			{
+				"id": "step1",
+				"transitionSets": [
+					{
+						"channel": "batteryStatus.out",
+						"transitions": [
+							{
+								"value": "MissionCritical",
+								"next": "step2"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4b": "pass"
+				}
+			},
+			{
+				"id": "step2",
+				"verdicts": {
+					"b4b": "fail"
+				}
+			}
+		],
+		"types": {
+			"batteryInfo": "nat",
+			"batteryStatus": "enum"
+		},
+		"tests": [
+			"b4b"
+		]
+	},
+	"b4c": {
+		"states": [
+			{
+				"id": "initial",
+				"transitionSets": [
+					{
+						"channel": "batteryInfo.in",
+						"transitions": [
+							{
+								"value": "100",
+								"next": "step0"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4c": "inc"
+				}
+			},
+			{
+				"id": "step0",
+				"transitionSets": [
+					{
+						"channel": "batteryStatus.out",
+						"transitions": [
+							{
+								"value": "Ok",
+								"next": "step1"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4c": "inc"
+				}
+			},
+			{
+				"id": "step1",
+				"transitionSets": [
+					{
+						"channel": "batteryStatus.out",
+						"transitions": [
+							{
+								"value": "SafetyCritical",
+								"next": "step2"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4c": "pass"
+				}
+			},
+			{
+				"id": "step2",
+				"verdicts": {
+					"b4c": "fail"
+				}
+			}
+		],
+		"types": {
+			"batteryInfo": "nat",
+			"batteryStatus": "enum"
+		},
+		"tests": [
+			"b4c"
+		]
+	},
+	"b4d": {
+		"states": [
+			{
+				"id": "initial",
+				"transitionSets": [
+					{
+						"channel": "batteryInfo.in",
+						"transitions": [
+							{
+								"value": "30",
+								"next": "step0"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4d": "inc"
+				}
+			},
+			{
+				"id": "step0",
+				"transitionSets": [
+					{
+						"channel": "batteryStatus.out",
+						"transitions": [
+							{
+								"value": "MissionCritical",
+								"next": "step1"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4d": "inc"
+				}
+			},
+			{
+				"id": "step1",
+				"transitionSets": [
+					{
+						"channel": "batteryStatus.out",
+						"transitions": [
+							{
+								"value": "Ok",
+								"next": "step2"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4d": "pass"
+				}
+			},
+			{
+				"id": "step2",
+				"verdicts": {
+					"b4d": "fail"
+				}
+			}
+		],
+		"types": {
+			"batteryInfo": "nat",
+			"batteryStatus": "enum"
+		},
+		"tests": [
+			"b4d"
+		]
+	},
+	"b4e": {
+		"states": [
+			{
+				"id": "initial",
+				"transitionSets": [
+					{
+						"channel": "batteryInfo.in",
+						"transitions": [
+							{
+								"value": "30",
+								"next": "step0"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4e": "inc"
+				}
+			},
+			{
+				"id": "step0",
+				"transitionSets": [
+					{
+						"channel": "batteryStatus.out",
+						"transitions": [
+							{
+								"value": "MissionCritical",
+								"next": "step1"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4e": "inc"
+				}
+			},
+			{
+				"id": "step1",
+				"transitionSets": [
+					{
+						"channel": "batteryStatus.out",
+						"transitions": [
+							{
+								"value": "MissionCritical",
+								"next": "step2"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4e": "pass"
+				}
+			},
+			{
+				"id": "step2",
+				"verdicts": {
+					"b4e": "fail"
+				}
+			}
+		],
+		"types": {
+			"batteryInfo": "nat",
+			"batteryStatus": "enum"
+		},
+		"tests": [
+			"b4e"
+		]
+	},
+	"b4f": {
+		"states": [
+			{
+				"id": "initial",
+				"transitionSets": [
+					{
+						"channel": "batteryInfo.in",
+						"transitions": [
+							{
+								"value": "30",
+								"next": "step0"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4f": "inc"
+				}
+			},
+			{
+				"id": "step0",
+				"transitionSets": [
+					{
+						"channel": "batteryStatus.out",
+						"transitions": [
+							{
+								"value": "MissionCritical",
+								"next": "step1"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4f": "inc"
+				}
+			},
+			{
+				"id": "step1",
+				"transitionSets": [
+					{
+						"channel": "batteryStatus.out",
+						"transitions": [
+							{
+								"value": "SafetyCritical",
+								"next": "step2"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4f": "pass"
+				}
+			},
+			{
+				"id": "step2",
+				"verdicts": {
+					"b4f": "fail"
+				}
+			}
+		],
+		"types": {
+			"batteryInfo": "nat",
+			"batteryStatus": "enum"
+		},
+		"tests": [
+			"b4f"
+		]
+	},
+	"b4g": {
+		"states": [
+			{
+				"id": "initial",
+				"transitionSets": [
+					{
+						"channel": "batteryInfo.in",
+						"transitions": [
+							{
+								"value": "20",
+								"next": "step0"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4g": "inc"
+				}
+			},
+			{
+				"id": "step0",
+				"transitionSets": [
+					{
+						"channel": "batteryStatus.out",
+						"transitions": [
+							{
+								"value": "SafetyCritical",
+								"next": "step1"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4g": "inc"
+				}
+			},
+			{
+				"id": "step1",
+				"transitionSets": [
+					{
+						"channel": "batteryStatus.out",
+						"transitions": [
+							{
+								"value": "Ok",
+								"next": "step2"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4g": "pass"
+				}
+			},
+			{
+				"id": "step2",
+				"verdicts": {
+					"b4g": "fail"
+				}
+			}
+		],
+		"types": {
+			"batteryInfo": "nat",
+			"batteryStatus": "enum"
+		},
+		"tests": [
+			"b4g"
+		]
+	},
+	"b4h": {
+		"states": [
+			{
+				"id": "initial",
+				"transitionSets": [
+					{
+						"channel": "batteryInfo.in",
+						"transitions": [
+							{
+								"value": "20",
+								"next": "step0"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4h": "inc"
+				}
+			},
+			{
+				"id": "step0",
+				"transitionSets": [
+					{
+						"channel": "batteryStatus.out",
+						"transitions": [
+							{
+								"value": "SafetyCritical",
+								"next": "step1"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4h": "inc"
+				}
+			},
+			{
+				"id": "step1",
+				"transitionSets": [
+					{
+						"channel": "batteryStatus.out",
+						"transitions": [
+							{
+								"value": "MissionCritical",
+								"next": "step2"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4h": "pass"
+				}
+			},
+			{
+				"id": "step2",
+				"verdicts": {
+					"b4h": "fail"
+				}
+			}
+		],
+		"types": {
+			"batteryInfo": "nat",
+			"batteryStatus": "enum"
+		},
+		"tests": [
+			"b4h"
+		]
+	},
+	"b4i": {
+		"states": [
+			{
+				"id": "initial",
+				"transitionSets": [
+					{
+						"channel": "batteryInfo.in",
+						"transitions": [
+							{
+								"value": "20",
+								"next": "step0"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4i": "inc"
+				}
+			},
+			{
+				"id": "step0",
+				"transitionSets": [
+					{
+						"channel": "batteryStatus.out",
+						"transitions": [
+							{
+								"value": "SafetyCritical",
+								"next": "step1"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4i": "inc"
+				}
+			},
+			{
+				"id": "step1",
+				"transitionSets": [
+					{
+						"channel": "batteryStatus.out",
+						"transitions": [
+							{
+								"value": "SafetyCritical",
+								"next": "step2"
+							}
+						]
+					}
+				],
+				"verdicts": {
+					"b4i": "pass"
+				}
+			},
+			{
+				"id": "step2",
+				"verdicts": {
+					"b4i": "fail"
+				}
+			}
+		],
+		"types": {
+			"batteryInfo": "nat",
+			"batteryStatus": "enum"
+		},
+		"tests": [
+			"b4i"
 		]
 	}
 }
