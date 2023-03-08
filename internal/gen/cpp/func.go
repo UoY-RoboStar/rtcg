@@ -5,12 +5,11 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
-
 	"github.com/UoY-RoboStar/rtcg/internal/strmanip"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang/channel"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang/rstype"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 )
 
 // Funcs adds the C++ function map to base.
@@ -106,7 +105,6 @@ func StdType(rsType rstype.RsType) string {
 // Value gets a C++ encoding of a value.
 func Value(val value.Value) string {
 	// TODO: do this without type introspection.
-
 	typ := val.Type()
 
 	if typ.IsEnum() {

@@ -110,11 +110,12 @@ func insertName(result map[string]Forbidden, base string, trace Forbidden) {
 
 func synthesiseName(base string, attempt int) string {
 	// Make it so that we get 'test0', 'test1', etc., but 'foo', 'foo0', etc.
-	if base == "test" {
+	switch {
+	case base == "test":
 		return fmt.Sprintf("%s%d", base, attempt)
-	} else if 0 < attempt {
+	case 0 < attempt:
 		return fmt.Sprintf("%s%d", base, attempt-1)
-	} else {
+	default:
 		return base
 	}
 }
