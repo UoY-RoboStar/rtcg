@@ -18,7 +18,7 @@ func TestBuilder_Build_EmptyPrefixTrace(t *testing.T) {
 
 	event := testlang.Output("foo", value.Int(42))
 
-	tree := trace.New(event).Expand("test")
+	tree := trace.New().Forbid(event).Expand("test")
 
 	vtree, err := validate.Full(tree)
 	if err != nil {

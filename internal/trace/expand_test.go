@@ -22,11 +22,11 @@ func TestTrace_Expand(t *testing.T) {
 		want  testlang.Node
 	}{
 		"no-prefix": {
-			input: trace.New(event1),
+			input: trace.New().Forbid(event1),
 			want:  testlang.Root(testlang.TestPoint(event1)),
 		},
 		"lone-prefix": {
-			input: trace.New(event1, event2),
+			input: trace.New(event2).Forbid(event1),
 			want: testlang.Root(testlang.Inc(
 				event2,
 				testlang.TestPoint(event1))),
