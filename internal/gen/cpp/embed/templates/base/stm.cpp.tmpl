@@ -68,13 +68,13 @@ void StateMachine::end(rtcg::Status s)
 {
   if (!rtcg::status::isRunning(status_))
   {
-    {{ template "log" "error" }}"Tried to end test twice (first as " << rtcg::status::explain(status_) << ", then as " << rtcg::status::explain(s) << "."{{ template "end_log" }}
+    {{ template "log" "error" }}"Tried to end test twice (first as " << status_ << ", then as " << s << "."{{ template "end_log" }}
     return;
   }
 
   if (rtcg::status::isRunning(s))
   {
-    {{ template "log" "error" }}"Tried to end with a non-ending status " << rtcg::status::explain(s) << "."{{ template "end_log" }}
+    {{ template "log" "error" }}"Tried to end with a non-ending status " << s << "."{{ template "end_log" }}
     s = rtcg::Status::BUG;
   }
 

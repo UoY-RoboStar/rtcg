@@ -26,7 +26,6 @@ namespace rtcg
   // A string representation of an outcome.
   const char* outstr(Outcome o);
 
-
   //
   // Status
   //
@@ -71,5 +70,11 @@ namespace rtcg
     Status status_ = Status::WAIT_START; // Current status of the test.
   };
 }
+
+// Overloads stream output for Status (using rtcg::status::explain).
+std::ostream& operator<<(std::ostream& stm, rtcg::Status o);
+
+// Overloads stream output for Outcome (using rtcg::outstr).
+std::ostream& operator<<(std::ostream& stm, rtcg::Outcome o);
 
 #endif // RTCG_H_DEFINED

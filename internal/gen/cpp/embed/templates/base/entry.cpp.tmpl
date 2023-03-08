@@ -12,7 +12,7 @@ int main({{ block "main_args" . }}int argc, char** argv{{ end }})
 {{ template "main_body.cpp.tmpl" . }}
 
   auto status = stm.getStatus();
-  {{ template "log" "info" }}"Test {{ .Name }} finished: " << rtcg::status::explain(status) << "."{{ template "end_log" }}
+  {{ template "log" "info" }}"Test {{ .Name }} finished: " << status << "."{{ template "end_log" }}
   stm.getVerdict().dump();
 
 {{- block "cleanup" . }}

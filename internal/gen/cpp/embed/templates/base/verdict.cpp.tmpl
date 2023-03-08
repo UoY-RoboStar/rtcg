@@ -22,7 +22,7 @@ void Verdict::dump()
 {{- block "verdict_dump" . }}
   {{ template "log" "info" }}"Final outcomes: "{{ template "end_log" }}
 {{-   range . }}
-  {{ template "log" "info" }}"  {{ . }} = " << rtcg::outstr({{ . }}_){{ template "end_log" }}
+  {{ template "log" "info" }}"  {{ . }} = " << {{ . }}_{{ template "end_log" }}
 {{-   end }}
 {{- end }}
 }
@@ -34,7 +34,7 @@ void Verdict::{{ . }}(rtcg::Outcome new_val)
   if ({{ . }}_ == new_val)
     return;
 
-  {{ template "log" "info" }}"Test {{ . }} is now " << rtcg::outstr(new_val) << "; was " << rtcg::outstr({{ . }}_) << "."{{ template "end_log" }}
+  {{ template "log" "info" }}"Test {{ . }} is now " << new_val << "; was " << {{ . }}_ << "."{{ template "end_log" }}
   {{ . }}_ = new_val;
 }
 {{- end -}}
