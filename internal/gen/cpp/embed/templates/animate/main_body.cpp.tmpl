@@ -12,8 +12,7 @@
     else if
 {{-   else }}
     if
-{{ end -}}
-    (s == rtcg::Status::WAIT_IN)
+{{ end }} (s == rtcg::Status::WAIT_IN)
       std::cout << "  accept (accepts an input)\n";
 {{- end }}
     std::cout << "  timeout (quits the test with a timeout)\n";

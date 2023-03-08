@@ -5,19 +5,17 @@
 
 #include "sensor_msgs/BatteryState.h"
 
-// This is the same typedef that the test driver uses:
-using BatteryInfoMsg = sensor_msgs::BatteryState;
-
-unsigned int fromBatteryInfo(const BatteryInfoMsg::ConstPtr& msg)
+unsigned int fromBatteryInfo(const sensor_msgs::BatteryState::ConstPtr& msg)
 {
-  return static_cast<unsigned int>(msg->data); // multiply by 100?
+  // Model is nat 0-100, ROS is float 0.0-1.0
+  return static_cast<unsigned int>(msg->data * 100);
 }
 
-BatteryInfoMsg toBatteryInfo(unsigned int value)
+sensor_msgs::BatteryState toBatteryInfo(unsigned int value)
 {
-  BatteryInfoMsg msg;
+  sensor_msgs::BatteryState msg;
 
-  msg.percentage = static_cast<float>(value); // divide by 100?
+  msg.percentage = static_cast<float>(value) / 100.0;
 
   return msg;
 }

@@ -5,6 +5,8 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
+
 	"github.com/UoY-RoboStar/rtcg/internal/strmanip"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang/channel"
@@ -25,6 +27,7 @@ func Funcs(base *template.Template) *template.Template {
 		"cppStateEnum":        StateEnum,
 		"cppTestEnum":         TestEnum,
 		"cppType":             StdType,
+		"cppValue":            Value,
 	})
 }
 
@@ -98,6 +101,19 @@ func StdType(rsType rstype.RsType) string {
 	default:
 		return "void *"
 	}
+}
+
+// Value gets a C++ encoding of a value.
+func Value(val value.Value) string {
+	// TODO: do this without type introspection.
+
+	typ := val.Type()
+
+	if typ.IsEnum() {
+		return fmt.Sprintf("\"%s\"", val.StringValue())
+	}
+
+	return val.StringValue()
 }
 
 func rtcgEnumName(name string, variant any) string {

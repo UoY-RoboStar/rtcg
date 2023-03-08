@@ -2,6 +2,9 @@
 <rtcg-gen>
     <cpp variant="animate">
         <makefile />
+
+        <!-- Tell the generator that this channel maps to a float: -->
+        <channel name="batteryInfo" type="float" />
     </cpp>
     <cpp variant="ros">
         <include src="std_msgs/Float32.h" />

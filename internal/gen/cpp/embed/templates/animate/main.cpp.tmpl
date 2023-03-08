@@ -11,22 +11,22 @@
 
 {{- /* Placeholder for when an input is required. */ -}}
 {{- define "input" }}
-  // No input is actually sent to the SUT in animate mode.
+  {{ template "log" "info" }}"(Actual value received by SUT on {{ .Channel.Name }} after conversion: " << {{ cppConvertTo .Channel }}({{ cppValue .Value }}) << ")"{{ template "end_log" }}
 {{- end }}
 
 {{- /* Returns the argument set of a timeout callback. */ -}}
 {{- define "timeout_callback_args" -}}
-  {{- "" -}}{{- /* This template intentionally left blank. */ -}}
+  {{/* See https://stackoverflow.com/questions/46174445 */}}{{ "" }}
 {{- end -}}
 
 {{- /* Returns the argument set of an initial-delay callback. */ -}}
 {{- define "initial_delay_callback_args" -}}
-  {{- "" -}}{{- /* This template intentionally left blank. */ -}}
+  {{/* See https://stackoverflow.com/questions/46174445 */}}{{ "" }}
 {{- end -}}
 
 {{- /* Returns the argument set of an input-accepted callback. */ -}}
 {{- define "in_callback_args" -}}
-  {{- "" -}}{{- /* This template intentionally left blank. */ -}}
+  {{/* See https://stackoverflow.com/questions/46174445 */}}{{ "" }}
 {{- end -}}
 
 {{/*
