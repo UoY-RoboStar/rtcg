@@ -23,9 +23,12 @@ Base indent is set at 0.
 //
 // These are used in the test driver wherever we need a plain value of the type
 // expected by the SUT.
+//
+// We use #define instead of typedef/using to avoid problems if there are
+// hidden type parameters (for instance, the allocators in ROS strings).
 {{ range $i, $ch := .Transitions.Channels -}}
 {{-   with index $.ChannelTypes $ch.Name }}
-using {{ cppChannelValueType $ch }} = {{ if .HasOverride }}{{ .Override }}{{ else }}{{ template "type" .Base }}{{ end }};
+#define {{ cppChannelValueType $ch }} {{ if .HasOverride }}{{ .Override }}{{ else }}{{ template "type" .Base }}{{ end }}
 {{-   end }}
 {{- end }}
 
@@ -36,7 +39,7 @@ using {{ cppChannelValueType $ch }} = {{ if .HasOverride }}{{ .Override }}{{ els
 // sent from the SUT.  These can differ from the value types; for instance, in
 // ROS, they are pointers to values rather than copies.
 {{ range .Transitions.Channels }}
-using {{ cppChannelMsgType . }} = {{ template "msg_type" . }};
+#define {{ cppChannelMsgType . }} {{ template "msg_type" . }}
 {{- end }}
 
 //
@@ -53,7 +56,7 @@ using {{ cppChannelMsgType . }} = {{ template "msg_type" . }};
 {{- range $i, $ch := .Transitions.Channels -}}
 {{-   with index $.ChannelTypes $ch.Name }}
 
-{{ cppType .Base }} {{ cppConvertFrom $ch }}({{ cppChannelMsgType $ch }} msg)
+{{ cppType .Base }} {{ cppConvertFrom $ch }}(const {{ cppChannelMsgType $ch }} msg)
 {{-     if .HasOverride -}}
 ; // User override supplied
 {{-     else }}
@@ -68,7 +71,7 @@ using {{ cppChannelMsgType . }} = {{ template "msg_type" . }};
 {{- range $i, $ch := .Transitions.Channels -}}
 {{-   with index $.ChannelTypes $ch.Name }}
 
-{{ cppChannelMsgType $ch }} {{ cppConvertTo $ch }}({{ cppType .Base }} value)
+{{ cppChannelValueType $ch }} {{ cppConvertTo $ch }}(const {{ cppType .Base }} value)
 {{-     if .HasOverride -}}
 ; // User override supplied
 {{-     else }}
@@ -78,4 +81,5 @@ using {{ cppChannelMsgType . }} = {{ template "msg_type" . }};
 {{-     end -}}
 {{-   end }}
 {{- end }}
+
 #endif // CONVERT_H_DEFINED

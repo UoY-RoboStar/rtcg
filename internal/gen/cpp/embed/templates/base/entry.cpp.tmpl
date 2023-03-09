@@ -2,10 +2,11 @@
 int main({{ block "main_args" . }}int argc, char** argv{{ end }})
 {
   // Initialisation
-{{- block "init" . }}
-{{- end }}
+{{- block "pre_init" . }}{{ end }}
 
   StateMachine stm { {{- block "stm_ctor_args" . -}}{{- end -}} };
+
+{{- block "init" . }}{{ end }}
 
   // Test loop
   {{ template "log" "info" }}"Test {{ .Name }} in main loop."{{ template "end_log" }}
@@ -15,8 +16,7 @@ int main({{ block "main_args" . }}int argc, char** argv{{ end }})
   {{ template "log" "info" }}"Test {{ .Name }} finished: " << status << "."{{ template "end_log" }}
   stm.getVerdict().dump();
 
-{{- block "cleanup" . }}
-{{- end }}
+{{- block "cleanup" . }}{{ end }}
 
   return rtcg::status::exitCode(status);
 }
