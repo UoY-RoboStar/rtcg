@@ -15,5 +15,5 @@ Indent is at 0.
 #include {{ if .IsSystem -}} < {{- else -}} " {{- end -}} {{ .Src }} {{- if .IsSystem -}} > {{- else -}} " {{- end }}
 {{- end }}
 
-#include "../rtcg/rtcg.h" // Helper definitions (compile with ../rtcg/rtcg.cpp)
-#include "convert.h"      // Channel type definitions and conversion functions
+#include "rtcg.h"    // Helper definitions (compile with ../rtcg/rtcg.cpp)
+#include "convert.h" // Channel type definitions and conversion functions

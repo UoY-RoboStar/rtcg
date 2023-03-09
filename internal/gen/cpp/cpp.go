@@ -29,16 +29,24 @@ func (g *Generator) Name() string {
 }
 
 func (g *Generator) Dirs(suite stm.Suite) []string {
-	baseDir := g.srcBaseDir
-
 	dirs := make([]string, 1, len(suite)+1)
-	dirs[0] = filepath.Join(baseDir, preludeDir)
+	dirs[0] = filepath.Join(g.srcBaseDir, preludeDir)
 
 	for name := range suite {
-		dirs = append(dirs, filepath.Join(baseDir, name))
+		dirs = append(dirs, g.testDirs(name)...)
 	}
 
 	return dirs
+}
+
+func (g *Generator) testDirs(name string) []string {
+	baseDir := filepath.Join(g.srcBaseDir, name)
+
+	// This directory structure mirrors that of catkin, even if we're not generating ROS.
+	return []string{
+		filepath.Join(baseDir, "src"),
+		filepath.Join(baseDir, "include"),
+	}
 }
 
 func (g *Generator) Generate(suite stm.Suite) error {
@@ -66,8 +74,8 @@ func New(config Config, inputDir, outputDir string) (*Generator, error) {
 	gen.srcBaseDir = filepath.Join(gen.outputDir, srcDir)
 
 	gen.testFiles = []TestFile{
-		{Name: "main.cpp", Desc: "main C++ file", SrcGlob: "*.cpp.tmpl"},
-		{Name: "convert.h", Desc: "type conversion header file", SrcGlob: "convert/*.h.tmpl"},
+		{Dir: "src", Name: "main.cpp", Desc: "main C++ file", Glob: "*.cpp.tmpl"},
+		{Dir: "include", Name: "convert.h", Desc: "type convert header", Glob: "convert/*.h.tmpl"},
 	}
 
 	if gen.templates, err = NewTemplateSet(config.Variant, gen.testFiles); err != nil {
@@ -79,7 +87,8 @@ func New(config Config, inputDir, outputDir string) (*Generator, error) {
 
 // TestFile holds information about a test file.
 type TestFile struct {
-	Name    string // Name is the filename of this file.
-	Desc    string // Desc is a human-readable description for this file.
-	SrcGlob string // SrcGlob is the slash-delimited glob of source templates for this file.
+	Dir  string // Dir is the destination directory of this file.
+	Name string // Name is the filename of this file.
+	Desc string // Desc is a human-readable description for this file.
+	Glob string // Glob is the slash-delimited glob of source templates for this file.
 }

@@ -46,7 +46,7 @@ func NewTemplateSet(variant Variant, files []TestFile) (TemplateSet, error) {
 func parseTemplate(file TestFile, varFS fs.FS, varStr string) (*template.Template, error) {
 	builder := templateBuilder{
 		tmpl:   template.New(file.Name),
-		glob:   file.SrcGlob,
+		glob:   file.Glob,
 		varFS:  varFS,
 		varStr: varStr,
 	}

@@ -48,7 +48,7 @@ func (g *Generator) generateTestTemplatedFiles(ctx *Context) error {
 }
 
 func (g *Generator) generateTestFile(ctx *Context, file TestFile) error {
-	outPath := g.testSourcePath(ctx.Name, file.Name)
+	outPath := g.testSourcePath(ctx.Name, file)
 
 	err := gencommon.ExecuteTemplateOnFile(outPath, file.Name+".tmpl", g.templates[file.Name], ctx)
 	if err != nil {
@@ -58,6 +58,6 @@ func (g *Generator) generateTestFile(ctx *Context, file TestFile) error {
 	return nil
 }
 
-func (g *Generator) testSourcePath(name, fileName string) string {
-	return filepath.Join(g.outputDir, srcDir, name, fileName)
+func (g *Generator) testSourcePath(name string, file TestFile) string {
+	return filepath.Join(g.outputDir, srcDir, name, file.Dir, file.Name)
 }

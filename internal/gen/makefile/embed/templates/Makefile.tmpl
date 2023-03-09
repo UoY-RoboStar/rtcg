@@ -1,5 +1,5 @@
 {{- define "output" -}}bin/{{ . }}{{- end -}}
-{{- define "reg_inputs" -}}src/{{ . }}/main.cpp src/rtcg/rtcg.cpp{{- end -}}
+{{- define "reg_inputs" -}}src/{{ . }}/src/main.cpp src/rtcg/rtcg.cpp{{- end -}}
 {{- define "convert" -}}{{- if .HasConversion }} src/convert.cpp{{- end -}}{{- end -}}
 
 .POSIX:
@@ -14,5 +14,5 @@ mkdir:
 	mkdir -p bin
 {{ range $k, $v := .Tests }}
 {{ template "output" $k }}: {{ template "reg_inputs" $k }} {{- template "convert" $ }}
-	$(CXX) $(CXXFLAGS) -o $@ {{ template "reg_inputs" $k }} {{- template "convert" $ -}}
+	$(CXX) $(CXXFLAGS) -o $@ -Isrc/{{ $k }}/include -Isrc/rtcg {{ template "reg_inputs" $k }} {{- template "convert" $ -}}
 {{- end }}
