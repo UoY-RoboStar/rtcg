@@ -19,6 +19,7 @@ func New(events ...testlang.Event) Trace {
 	return events
 }
 
+// String gets a string representation of t.
 func (t Trace) String() string {
 	eventStrs := make([]string, len(t))
 
@@ -34,6 +35,7 @@ func (t Trace) Equals(other Trace) bool {
 	return len(t) == len(other) && t.IsPrefixOf(other)
 }
 
+// IsPrefixOf checks whether t is a prefix of other.
 func (t Trace) IsPrefixOf(other Trace) bool {
 	// Can't be a prefix if we're bigger than the other trace
 	if len(other) < len(t) {
