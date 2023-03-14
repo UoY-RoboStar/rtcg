@@ -44,12 +44,14 @@ func parseArgs() (*genAction, error) {
 	flag.Parse()
 
 	argv := flag.Args()
-	action.configFile = argv[0]
 
 	action.inputFile, err = cli.ParseFileArgument(argv, numAnonymousArgs)
 	if err != nil {
 		return nil, fmt.Errorf("couldn't parse args: %w", err)
 	}
+
+	// Parse this after action.inputFile so that we get an error if argv is empty
+	action.configFile = argv[0]
 
 	return &action, nil
 }
