@@ -26,7 +26,11 @@ ALL_INPUTS = $(INPUT_DIR)/rtcg-gen $(INPUT_DIR)/rtcg-make-stms $(INPUT_DIR)/rtcg
   examples-cpp \
   bmon \
   bmon-cpp \
-  release
+  release \
+  release-linux-amd64 \
+  release-windows-amd64 \
+  release-macos-arm64 \
+  release-examples
 
 
 # Makes all commands.
@@ -78,21 +82,29 @@ bmon-cpp: examples/bmon/gen.xml examples/bmon/stms.json
 #
 
 release: \
-	release-linux-amd64 \
-	release-windows-amd64 \
-	release-macos-arm64
+  release-linux-amd64 \
+  release-windows-amd64 \
+  release-macos-arm64 \
+  release-examples
 
-release-linux-amd64: $(ALL_INPUTS)
+release-linux-amd64:
 	env GOOS=linux GOARCH=amd64 $(GO) build -o $(REL_DIR_LINUX_AMD64)/rtcg-$(VERSION)/ $(ALL_INPUTS)
 	rm -f $(REL_DIR_LINUX_AMD64)/rtcg-$(VERSION)-linux-amd64.tar.gz
 	cd $(REL_DIR_LINUX_AMD64) && tar -czvf rtcg-$(VERSION)-linux-amd64.tar.gz rtcg-$(VERSION)/
 
-release-windows-amd64: $(ALL_INPUTS)
+release-windows-amd64:
 	env GOOS=windows GOARCH=amd64 $(GO) build -o $(REL_DIR_WIN_AMD64)/rtcg-$(VERSION)/ $(ALL_INPUTS)
 	rm -f $(REL_DIR_WIN_AMD64)/rtcg-$(VERSION)-windows-amd64.zip
-	cd $(REL_DIR_WIN_AMD64) && zip rtcg-$(VERSION)-windows-amd64.zip rtcg-$(VERSION)/*.exe
+	cd $(REL_DIR_WIN_AMD64) && zip -r rtcg-$(VERSION)-windows-amd64.zip rtcg-$(VERSION)/
 
-release-macos-arm64: $(ALL_INPUTS)
+release-macos-arm64:
 	env GOOS=darwin GOARCH=arm64 $(GO) build -o $(REL_DIR_MAC_ARM64)/rtcg-$(VERSION)/ $(ALL_INPUTS)
 	rm -f $(REL_DIR_MAC_ARM64)/rtcg-$(VERSION)-macos-arm64.tar.gz
 	cd $(REL_DIR_MAC_ARM64) && tar -czvf rtcg-$(VERSION)-macos-arm64.tar.gz rtcg-$(VERSION)/
+
+release-examples: examples-cpp
+	mkdir -p $(REL_DIR)/rtcg-$(VERSION)-examples
+	cp -r out $(REL_DIR)/rtcg-$(VERSION)-examples/out
+	cp -r examples $(REL_DIR)/rtcg-$(VERSION)-examples/in
+	cd $(REL_DIR) && zip -r rtcg-$(VERSION)-examples.zip rtcg-$(VERSION)-examples/
+	cd $(REL_DIR) && tar -czvf rtcg-$(VERSION)-examples.tar.gz rtcg-$(VERSION)-examples/
