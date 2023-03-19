@@ -20,26 +20,36 @@ func (g *Generator) generateTests(suite stm.Suite) error {
 
 func (g *Generator) generateTest(name string, test *stm.Stm) error {
 	ctx := NewContext(name, test, g.config)
+	gen := TestGenerator{ctx: ctx, parent: g}
 
-	if err := g.copyConvertFile(ctx); err != nil {
+	return gen.generate()
+}
+
+type TestGenerator struct {
+	ctx    *Context
+	parent *Generator
+}
+
+func (t *TestGenerator) generate() error {
+	if err := t.copyConvertFile(); err != nil {
 		return err
 	}
 
-	return g.generateTestTemplatedFiles(ctx)
+	return t.generateTestTemplatedFiles()
 }
 
 // copyConvertFile copies convert.cpp from the input directory, if there is one.
-func (g *Generator) copyConvertFile(ctx *Context) error {
-	if !ctx.HasConversion {
+func (t *TestGenerator) copyConvertFile() error {
+	if !t.ctx.HasConversion {
 		return nil
 	}
 
-	return g.copyLocalFile("convert.cpp")
+	return t.parent.copyLocalFile("convert.cpp")
 }
 
-func (g *Generator) generateTestTemplatedFiles(ctx *Context) error {
-	for _, file := range g.testFiles {
-		if err := g.generateTestFile(ctx, file); err != nil {
+func (t *TestGenerator) generateTestTemplatedFiles() error {
+	for _, file := range t.parent.testFiles {
+		if err := t.generateTestFile(file); err != nil {
 			return err
 		}
 	}
@@ -47,17 +57,17 @@ func (g *Generator) generateTestTemplatedFiles(ctx *Context) error {
 	return nil
 }
 
-func (g *Generator) generateTestFile(ctx *Context, file TestFile) error {
-	outPath := g.testSourcePath(ctx.Name, file)
+func (t *TestGenerator) generateTestFile(file TestFile) error {
+	outPath := t.testSourcePath(file)
 
-	err := gencommon.ExecuteTemplateOnFile(outPath, file.Name+".tmpl", g.templates[file.Name], ctx)
+	err := gencommon.ExecuteTemplateOnFile(outPath, file.Name+".tmpl", t.parent.templates[file.Name], t.ctx)
 	if err != nil {
-		return fmt.Errorf("couldn't generate %s for %s: %w", file.Desc, ctx.Name, err)
+		return fmt.Errorf("couldn't generate %s for %s: %w", file.Desc, t.ctx.Name, err)
 	}
 
 	return nil
 }
 
-func (g *Generator) testSourcePath(name string, file TestFile) string {
-	return filepath.Join(g.outputDir, srcDir, name, file.Dir, file.Name)
+func (t *TestGenerator) testSourcePath(file TestFile) string {
+	return filepath.Join(t.parent.outputDir, srcDir, t.ctx.Name, file.Dir, file.Name)
 }
