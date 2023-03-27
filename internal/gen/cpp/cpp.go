@@ -5,24 +5,20 @@ import (
 	"fmt"
 	"path/filepath"
 
+	"github.com/UoY-RoboStar/rtcg/internal/gen/templating"
+
 	cfg "github.com/UoY-RoboStar/rtcg/internal/gen/config/cpp"
 	"github.com/UoY-RoboStar/rtcg/internal/gen/gencommon"
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
 )
 
-const (
-	srcDir = "src" // srcDir is the subdirectory of the output directory for source code.
-)
-
 // Generator is a C++ code generator.
 type Generator struct {
-	config cfg.Config // config is the configuration for this Generator.
+	config     cfg.Config       // config is the configuration for this Generator.
+	dirSet     gencommon.DirSet // dirSet is the input and output directory set for this Generator.
+	srcBaseDir string           // srcBaseDir is the output source directory for this Generator.
 
-	inputDir   string // inputDir is the output directory for this Generator.
-	srcBaseDir string // srcBaseDir is the output source directory for this Generator.
-	outputDir  string // outputDir is the output directory for this Generator.
-
-	gencommon.TemplatedGenerator
+	templating.Generator
 }
 
 func (g *Generator) Name() string {
@@ -55,8 +51,8 @@ func (g *Generator) Generate(suite stm.Suite) error {
 		return err
 	}
 
-	if err := g.generateTests(suite); err != nil {
-		return err
+	if err := gencommon.GenerateTests(suite, g); err != nil {
+		return fmt.Errorf("couldn't generate for tests: %w", err)
 	}
 
 	return nil
@@ -70,11 +66,10 @@ func New(config *cfg.Config, dirs gencommon.DirSet) (*Generator, error) {
 	)
 
 	gen.config = *config
-	gen.inputDir = config.Variant.Dir(dirs.Input)
-	gen.outputDir = config.Variant.Dir(dirs.Output)
-	gen.srcBaseDir = filepath.Join(gen.outputDir, srcDir)
+	gen.dirSet = dirs
+	gen.srcBaseDir = dirs.SrcDir()
 
-	if gen.TemplatedGenerator, err = NewTemplatedGenerator(config); err != nil {
+	if gen.Generator, err = NewTemplatedGenerator(config); err != nil {
 		return nil, err
 	}
 

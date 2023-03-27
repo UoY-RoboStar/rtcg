@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"text/template"
 
+	"github.com/UoY-RoboStar/rtcg/internal/gen/templating"
+
 	"github.com/UoY-RoboStar/rtcg/internal/gen/config/cpp"
 	"github.com/UoY-RoboStar/rtcg/internal/gen/gencommon"
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
@@ -36,7 +38,7 @@ func (g *Generator) Generate(tests stm.Suite) error {
 		return fmt.Errorf("couldn't create Makefile context: %w", err)
 	}
 
-	err = gencommon.ExecuteTemplateOnFile(outPath, "Makefile.tmpl", g.template, ctx)
+	err = templating.CreateFile(outPath, "Makefile.tmpl", g.template, ctx)
 	if err != nil {
 		return fmt.Errorf("couldn't generate Makefile: %w", err)
 	}
@@ -52,5 +54,5 @@ func New(cfg *cpp.Config, dirs gencommon.DirSet) (*Generator, error) {
 		return nil, err
 	}
 
-	return &Generator{config: *cfg, outputDir: cfg.Variant.Dir(dirs.Output), template: tmpl}, nil
+	return &Generator{config: *cfg, outputDir: dirs.Output, template: tmpl}, nil
 }

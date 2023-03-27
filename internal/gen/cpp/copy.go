@@ -40,11 +40,11 @@ func (g *Generator) copyPreludeFile(name string) error {
 		return fmt.Errorf("couldn't open prelude file %q: %w", name, err)
 	}
 
-	return writeFile(src, filepath.Join(g.outputDir, srcDir, preludeDir, name))
+	return writeFile(src, filepath.Join(g.srcBaseDir, preludeDir, name))
 }
 
 func (g *Generator) copyLocalFile(name string) error {
-	srcPath := filepath.Join(g.inputDir, name)
+	srcPath := filepath.Join(g.dirSet.Input, name)
 	dstPath := filepath.Join(g.srcBaseDir, name)
 
 	src, err := os.Open(srcPath)

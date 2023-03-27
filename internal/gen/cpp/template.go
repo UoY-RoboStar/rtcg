@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"io/fs"
 
+	"github.com/UoY-RoboStar/rtcg/internal/gen/templating"
+
 	cfg "github.com/UoY-RoboStar/rtcg/internal/gen/config/cpp"
-	"github.com/UoY-RoboStar/rtcg/internal/gen/gencommon"
 )
 
 var (
@@ -19,21 +20,21 @@ var (
 )
 
 // NewTemplatedGenerator sets up a templated generator for C++.
-func NewTemplatedGenerator(config *cfg.Config) (gencommon.TemplatedGenerator, error) {
-	testFiles := []gencommon.TestFile{
+func NewTemplatedGenerator(config *cfg.Config) (templating.Generator, error) {
+	testFiles := []templating.File{
 		{Dir: "src", Name: "main.cpp", Desc: "main C++ file", Glob: "*.cpp.tmpl"},
 		{Dir: "include", Name: "convert.h", Desc: "type convert header", Glob: "convert/*.h.tmpl"},
 	}
 
-	builder := gencommon.TemplateBuilder{
-		Srcs: []gencommon.TemplateSource{
+	builder := templating.SetBuilder{
+		Srcs: []templating.Source{
 			{Name: "base", Src: baseTemplates},
 			variantSource(config.Variant),
 		},
 		Funcs: Funcs(),
 	}
 
-	gen, err := gencommon.NewTemplatedGenerator(testFiles, builder)
+	gen, err := templating.NewGenerator(testFiles, builder)
 	if err != nil {
 		return gen, fmt.Errorf("couldn't create C++ template-based generator: %w", err)
 	}
@@ -41,8 +42,8 @@ func NewTemplatedGenerator(config *cfg.Config) (gencommon.TemplatedGenerator, er
 	return gen, nil
 }
 
-func variantSource(variant cfg.Variant) gencommon.TemplateSource {
-	return gencommon.TemplateSource{
+func variantSource(variant cfg.Variant) templating.Source {
+	return templating.Source{
 		Name: variant.String(),
 		Src:  variantFS(variant),
 	}

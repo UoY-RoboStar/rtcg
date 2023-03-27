@@ -31,7 +31,7 @@ func initCpp(cfgs []cfg.Config, dirs gencommon.DirSet) ([]Subgenerator, error) {
 	)
 
 	for i := range cfgs {
-		if varSubs, err = initCppVariant(&cfgs[i], dirs); err != nil {
+		if varSubs, err = initCppVariant(&cfgs[i], dirs.Subdir(cfgs[i].Variant.String())); err != nil {
 			return nil, err
 		}
 
