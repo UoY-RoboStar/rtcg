@@ -90,6 +90,10 @@ void StateMachine::end(rtcg::Status s)
 
 void StateMachine::timeoutCallback({{ template "timeout_callback_args" }})
 {
+  // Don't acknowledge this callback if we've already timed out.
+  if (!rtcg::status::isRunning(status_))
+    return;
+
   {{ template "log" "info" }}"Timeout!"{{ template "end_log" }}
   end(rtcg::Status::TIMEOUT);
 }
@@ -98,6 +102,10 @@ void StateMachine::timeoutCallback({{ template "timeout_callback_args" }})
 
 void StateMachine::initialDelayCallback({{ template "initial_delay_callback_args" }})
 {
+  // Only acknowledge this callback if we're actually waiting to start.
+  if (status_ != rtcg::Status::WAIT_START)
+    return;
+
   {{ template "log" "info" }}"Initial delay finished, now entering first state."{{ template "end_log" }}
   {{ cppStateEntry .Stm.InitialState }}();
 }
