@@ -6,10 +6,11 @@ import (
 	"path/filepath"
 	"text/template"
 
-	"github.com/UoY-RoboStar/rtcg/internal/gen/templating"
+	"github.com/UoY-RoboStar/rtcg/internal/gen/subgen"
 
 	"github.com/UoY-RoboStar/rtcg/internal/gen/config/cpp"
 	"github.com/UoY-RoboStar/rtcg/internal/gen/gencommon"
+	"github.com/UoY-RoboStar/rtcg/internal/gen/templating"
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
 )
 
@@ -24,21 +25,36 @@ func (g *Generator) Name() string {
 	return "Makefile"
 }
 
-func (g *Generator) Dirs(stm.Suite) []string {
+func (g *Generator) OnSuite(suite *stm.Suite) subgen.OnSuite {
+	return &OnSuite{
+		parent: g,
+		suite:  suite,
+		cctx:   g.config.Process(suite.Types),
+	}
+}
+
+type OnSuite struct {
+	parent *Generator
+	cctx   cpp.Context
+	suite  *stm.Suite
+}
+
+func (o *OnSuite) Parent() subgen.Subgenerator {
+	return o.parent
+}
+
+func (o *OnSuite) Dirs() []string {
 	// Assume the C++ generator makes the appropriate directories.
 	return nil
 }
 
 // Generate generates a Makefile for tests.
-func (g *Generator) Generate(tests stm.Suite) error {
-	outPath := filepath.Join(g.outputDir, "Makefile")
+func (o *OnSuite) Generate() error {
+	outPath := filepath.Join(o.parent.outputDir, "Makefile")
 
-	ctx, err := NewContext(tests, g.config)
-	if err != nil {
-		return fmt.Errorf("couldn't create Makefile context: %w", err)
-	}
+	ctx := NewContext(o.suite, o.cctx)
 
-	err = templating.CreateFile(outPath, "Makefile.tmpl", g.template, ctx)
+	err := templating.CreateFile(outPath, "Makefile.tmpl", o.parent.template, ctx)
 	if err != nil {
 		return fmt.Errorf("couldn't generate Makefile: %w", err)
 	}

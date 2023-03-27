@@ -9,56 +9,11 @@
 package stm
 
 import (
-	"fmt"
-	"io"
-
-	"github.com/UoY-RoboStar/rtcg/internal/serial"
 	"github.com/UoY-RoboStar/rtcg/internal/stm/transition"
 	"github.com/UoY-RoboStar/rtcg/internal/structure"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang/rstype"
 )
-
-// Suite is a test suite, in state machine format.
-type Suite map[string]*Stm
-
-// ReadSuite reads a state machine suite from JSON in reader r.
-func ReadSuite(r io.Reader) (Suite, error) {
-	var suite Suite
-
-	if err := serial.ReadJSON(r, &suite); err != nil {
-		return nil, fmt.Errorf("couldn't read state machine suite: %w", err)
-	}
-
-	return suite, nil
-}
-
-// Write pretty-prints a state machine suite, as JSON, into writer w.
-func (s *Suite) Write(w io.Writer) error {
-	if err := serial.WriteJSON(w, s); err != nil {
-		return fmt.Errorf("couldn't write state machine suite: %w", err)
-	}
-
-	return nil
-}
-
-// UnifiedTypes returns a map of unified inferred types for each channel across each test in s.
-func (s *Suite) UnifiedTypes() (TypeMap, error) {
-	tmap := make(TypeMap)
-
-	for _, test := range *s {
-		for cName, cType := range test.Types {
-			uType, err := rstype.Unify(cType, tmap[cName])
-			if err != nil {
-				return nil, fmt.Errorf("couldn't reconcile types for channel %s: %w", cName, err)
-			}
-
-			tmap[cName] = uType
-		}
-	}
-
-	return tmap, nil
-}
 
 // Stm is a testing state machine.
 //

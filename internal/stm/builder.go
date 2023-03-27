@@ -16,9 +16,45 @@ type Builder struct {
 	stm     Stm                             // stm is the state machine currently being built.
 }
 
-// BuildSuite builds a test suite s into a map of state machines.
-func (b *Builder) BuildSuite(s validate.Suite) (Suite, error) {
-	suite := make(Suite, len(s))
+// BuildSuite builds a test suite tests into a map of state machines.
+func (b *Builder) BuildSuite(tests validate.Suite) (*Suite, error) {
+	var (
+		suite Suite
+		err   error
+	)
+
+	if suite.Tests, err = b.BuildMany(tests); err != nil {
+		return nil, err
+	}
+
+	if suite.Types, err = unifyTypes(suite.Tests); err != nil {
+		return nil, err
+	}
+
+	return &suite, nil
+}
+
+// unifyTypes returns a map of unified inferred types for each channel across each test in s.
+func unifyTypes(tests map[string]*Stm) (TypeMap, error) {
+	tmap := make(TypeMap)
+
+	for _, test := range tests {
+		for cName, cType := range test.Types {
+			uType, err := rstype.Unify(cType, tmap[cName])
+			if err != nil {
+				return nil, fmt.Errorf("couldn't reconcile types for channel %s: %w", cName, err)
+			}
+
+			tmap[cName] = uType
+		}
+	}
+
+	return tmap, nil
+}
+
+// BuildMany builds a STM for each test in the validated suite s.
+func (b *Builder) BuildMany(s validate.Suite) (map[string]*Stm, error) {
+	suite := make(map[string]*Stm, len(s))
 
 	for name, test := range s {
 		m, err := b.Build(test)

@@ -7,6 +7,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/UoY-RoboStar/rtcg/internal/gen/subgen"
+
 	"github.com/UoY-RoboStar/rtcg/internal/gen/templating"
 
 	cfg "github.com/UoY-RoboStar/rtcg/internal/gen/config/catkin"
@@ -17,7 +19,6 @@ import (
 // Generator is a Catkin auxiliary file generator.
 type Generator struct {
 	config    cfg.Config       // config is the user-supplied configuration.
-	dirSet    gencommon.DirSet // dirSet is the directory set for this Catkin workspace.
 	srcDirSet gencommon.DirSet // srcBaseDir is the source directory set for this Catkin workspace.
 
 	cmakeGen *templating.Generator // cmakeGen is the generator for CMakeLists.txt.
@@ -30,7 +31,7 @@ func New(config *cfg.Config, dirs gencommon.DirSet) (*Generator, error) {
 		return nil, err
 	}
 
-	gen := Generator{config: *config, dirSet: dirs, srcDirSet: dirs.Subdir("src"), cmakeGen: tg}
+	gen := Generator{config: *config, srcDirSet: dirs.Subdir("src"), cmakeGen: tg}
 
 	if gen.config.Package == nil {
 		var pkg cfg.Package
@@ -46,29 +47,50 @@ func (g *Generator) Name() string {
 	return "Catkin"
 }
 
-func (g *Generator) Dirs(_ stm.Suite) []string {
+func (g *Generator) OnSuite(suite *stm.Suite) subgen.OnSuite {
+	return &OnSuite{
+		parent: g,
+		suite:  suite,
+	}
+}
+
+// OnSuite is a generator specialised to generating one particular test suite.
+type OnSuite struct {
+	parent *Generator
+	suite  *stm.Suite
+}
+
+func (o *OnSuite) Parent() subgen.Subgenerator {
+	return o.parent
+}
+
+func (o *OnSuite) Dirs() []string {
 	// Assume the C++ generator makes the appropriate directories.
 	return nil
 }
 
-func (g *Generator) Generate(suite stm.Suite) error {
-	if err := gencommon.GenerateTests(g.srcDirSet, suite, g); err != nil {
-		return fmt.Errorf("couldn't generate for tests: %w", err)
+func (o *OnSuite) Generate() error {
+	for name := range o.suite.Tests {
+		dirs := o.parent.srcDirSet.Subdir(name)
+
+		if err := o.generateTest(dirs, name); err != nil {
+			return fmt.Errorf("%s: %w", name, err)
+		}
 	}
 
 	return nil
 }
 
-func (g *Generator) GenerateTest(dirs gencommon.DirSet, name string, _ *stm.Stm) error {
+func (o *OnSuite) generateTest(dirs gencommon.DirSet, name string) error {
 	// Take a copy here to avoid accidentally expanding the name in every test.
-	pkg := *g.config.Package
+	pkg := *o.parent.config.Package
 	pkg.Expand(name)
 
 	if err := generatePackageXML(dirs.Output, pkg); err != nil {
 		return err
 	}
 
-	return g.cmakeGen.Generate(dirs.Output, pkg)
+	return o.parent.cmakeGen.Generate(dirs.Output, pkg)
 }
 
 func generatePackageXML(dir string, pkg cfg.Package) error {

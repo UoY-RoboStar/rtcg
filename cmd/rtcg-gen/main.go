@@ -102,7 +102,7 @@ func (a *genAction) maybeClean() error {
 // We don't support this because it would then change or confuse the current working directory.
 var ErrCleanDot = errors.New("can't clean current directory")
 
-func (a *genAction) readSuite() (stm.Suite, error) {
+func (a *genAction) readSuite() (*stm.Suite, error) {
 	file, err := cli.OpenFileOrStdin(a.inputFile)
 	if err != nil {
 		return nil, fmt.Errorf("couldn't open input: %w", err)
@@ -113,7 +113,7 @@ func (a *genAction) readSuite() (stm.Suite, error) {
 	return suite, errors.Join(err, file.Close())
 }
 
-func (a *genAction) generate(stms stm.Suite) error {
+func (a *genAction) generate(suite *stm.Suite) error {
 	cfg, err := config.Load(a.configFile)
 	if err != nil {
 		return fmt.Errorf("couldn't get config for generator: %w", err)
@@ -124,7 +124,7 @@ func (a *genAction) generate(stms stm.Suite) error {
 		return fmt.Errorf("couldn't create generator: %w", err)
 	}
 
-	if err := g.Generate(stms); err != nil {
+	if err := g.OnSuite(suite).Generate(); err != nil {
 		return fmt.Errorf("couldn't generate: %w", err)
 	}
 

@@ -15,7 +15,7 @@ type Context struct {
 }
 
 // Process processes a config into a Context.
-// It expects a type environment for all channels involved in the context.
+// It expects the unified type-map from the testing suite.
 func (c *Config) Process(types stm.TypeMap) Context {
 	ctx := Context{
 		Includes:      c.Includes,

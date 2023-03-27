@@ -79,7 +79,7 @@ func (a *makeStmAction) readSuite() (testlang.Suite, error) {
 	return suite, errors.Join(err, file.Close())
 }
 
-func (a *makeStmAction) buildStms(tests validate.Suite) (stm.Suite, error) {
+func (a *makeStmAction) buildStms(tests validate.Suite) (*stm.Suite, error) {
 	var bs stm.Builder
 
 	suite, err := bs.BuildSuite(tests)
