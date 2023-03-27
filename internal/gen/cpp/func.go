@@ -12,9 +12,9 @@ import (
 	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 )
 
-// Funcs adds the C++ function map to base.
-func Funcs(base *template.Template) *template.Template {
-	return base.Funcs(template.FuncMap{
+// Funcs gets the C++ function map.
+func Funcs() template.FuncMap {
+	return template.FuncMap{
 		"cppCallbackName":     CallbackName,
 		"cppChannelMsgType":   ChannelMsgType,
 		"cppChannelValueType": ChannelValueType,
@@ -27,7 +27,7 @@ func Funcs(base *template.Template) *template.Template {
 		"cppTestEnum":         TestEnum,
 		"cppType":             StdType,
 		"cppValue":            Value,
-	})
+	}
 }
 
 // CallbackName gets the name of the callback for the channel cha.

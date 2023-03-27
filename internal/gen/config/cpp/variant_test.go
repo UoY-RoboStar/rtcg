@@ -4,10 +4,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/UoY-RoboStar/rtcg/internal/gen/cpp"
+	"github.com/UoY-RoboStar/rtcg/internal/gen/config/cpp"
 )
 
-// TestVariant_Dir tests the Dir method on Variant.
+// TestVariant_Dir tests the Dir method on CppVariant.
 func TestVariant_Dir(t *testing.T) {
 	t.Parallel()
 

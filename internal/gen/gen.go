@@ -5,6 +5,10 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/UoY-RoboStar/rtcg/internal/gen/config"
+
+	cpp2 "github.com/UoY-RoboStar/rtcg/internal/gen/config/cpp"
+
 	"github.com/UoY-RoboStar/rtcg/internal/gen/cpp"
 	"github.com/UoY-RoboStar/rtcg/internal/gen/makefile"
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
@@ -21,7 +25,7 @@ type Generator struct {
 	outputDir     string         // outputDir is the output directory of the generator.
 }
 
-func (g *Generator) initCpp(cfgs []cpp.Config) error {
+func (g *Generator) initCpp(cfgs []cpp2.Config) error {
 	for _, cfg := range cfgs {
 		if err := g.initCppMain(cfg); err != nil {
 			return err
@@ -35,7 +39,7 @@ func (g *Generator) initCpp(cfgs []cpp.Config) error {
 	return nil
 }
 
-func (g *Generator) initCppMain(cfg cpp.Config) error {
+func (g *Generator) initCppMain(cfg cpp2.Config) error {
 	gen, err := cpp.New(cfg, g.inputDir, g.outputDir)
 	if err != nil {
 		return fmt.Errorf("couldn't init c++ generator: %w", err)
@@ -46,7 +50,7 @@ func (g *Generator) initCppMain(cfg cpp.Config) error {
 	return nil
 }
 
-func (g *Generator) initCppMakefile(cfg cpp.Config) error {
+func (g *Generator) initCppMakefile(cfg cpp2.Config) error {
 	if cfg.Makefile == nil {
 		return nil
 	}
@@ -74,7 +78,7 @@ type Subgenerator interface {
 }
 
 // New creates a new Generator from config, targeting outputDir.
-func New(cfg Config, outputDir string) (*Generator, error) {
+func New(cfg config.Config, outputDir string) (*Generator, error) {
 	gen := Generator{
 		subgenerators: make([]Subgenerator, 0, len(cfg.Cpps)),
 		inputDir:      cfg.Directory,

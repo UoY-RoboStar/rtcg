@@ -3,7 +3,8 @@ package makefile
 import (
 	"fmt"
 
-	"github.com/UoY-RoboStar/rtcg/internal/gen/cpp"
+	"github.com/UoY-RoboStar/rtcg/internal/gen/config/cpp"
+
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
 )
 
@@ -11,7 +12,7 @@ import (
 type Context struct {
 	Tests stm.Suite // Tests is the set of tests for which we are generating Makefile rules.
 
-	cpp.ConfigContext
+	cpp.Context
 }
 
 // NewContext creates a new template context from a test suite.
@@ -22,8 +23,8 @@ func NewContext(tests stm.Suite, cfg cpp.Config) (*Context, error) {
 	}
 
 	ctx := Context{
-		Tests:         tests,
-		ConfigContext: cfg.Process(types),
+		Tests:   tests,
+		Context: cfg.Process(types),
 	}
 
 	return &ctx, nil

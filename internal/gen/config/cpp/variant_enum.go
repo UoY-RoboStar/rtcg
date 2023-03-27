@@ -14,10 +14,10 @@ import (
 
 const (
 	// VariantAnimate is a Variant of type Animate.
-	// Variant with a manually fed event loop.
+	// CppVariant with a manually fed event loop.
 	VariantAnimate Variant = iota
 	// VariantRos is a Variant of type Ros.
-	// Variant targeting ROS1 Noetic.
+	// CppVariant targeting ROS1 Noetic.
 	VariantRos
 )
 

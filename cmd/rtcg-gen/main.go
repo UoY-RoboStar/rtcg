@@ -8,6 +8,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/UoY-RoboStar/rtcg/internal/gen/config"
+
 	"github.com/UoY-RoboStar/rtcg/internal/cli"
 	"github.com/UoY-RoboStar/rtcg/internal/gen"
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
@@ -113,12 +115,12 @@ func (a *genAction) readSuite() (stm.Suite, error) {
 }
 
 func (a *genAction) generate(stms stm.Suite) error {
-	config, err := gen.LoadConfig(a.configFile)
+	cfg, err := config.Load(a.configFile)
 	if err != nil {
 		return fmt.Errorf("couldn't get config for generator: %w", err)
 	}
 
-	g, err := gen.New(*config, a.outputDir) // for now
+	g, err := gen.New(*cfg, a.outputDir) // for now
 	if err != nil {
 		return fmt.Errorf("couldn't create generator: %w", err)
 	}

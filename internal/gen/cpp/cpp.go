@@ -5,6 +5,10 @@ import (
 	"fmt"
 	"path/filepath"
 
+	"github.com/UoY-RoboStar/rtcg/internal/gen/gencommon"
+
+	cfg "github.com/UoY-RoboStar/rtcg/internal/gen/config/cpp"
+
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
 )
 
@@ -14,14 +18,13 @@ const (
 
 // Generator is a C++ code generator.
 type Generator struct {
-	config Config // config is the configuration for this Generator.
-
-	testFiles []TestFile  // testFiles is the list of files this generator will make.
-	templates TemplateSet // templates is the map of templates to use for files in testFiles.
+	config cfg.Config // config is the configuration for this Generator.
 
 	inputDir   string // inputDir is the output directory for this Generator.
 	srcBaseDir string // srcBaseDir is the output source directory for this Generator.
 	outputDir  string // outputDir is the output directory for this Generator.
+
+	gencommon.TemplatedGenerator
 }
 
 func (g *Generator) Name() string {
@@ -62,7 +65,7 @@ func (g *Generator) Generate(suite stm.Suite) error {
 }
 
 // New constructs a new C++ code generator from config, rooted at outputDir.
-func New(config Config, inputDir, outputDir string) (*Generator, error) {
+func New(config cfg.Config, inputDir, outputDir string) (*Generator, error) {
 	var (
 		gen Generator
 		err error
@@ -73,22 +76,9 @@ func New(config Config, inputDir, outputDir string) (*Generator, error) {
 	gen.outputDir = config.Variant.Dir(outputDir)
 	gen.srcBaseDir = filepath.Join(gen.outputDir, srcDir)
 
-	gen.testFiles = []TestFile{
-		{Dir: "src", Name: "main.cpp", Desc: "main C++ file", Glob: "*.cpp.tmpl"},
-		{Dir: "include", Name: "convert.h", Desc: "type convert header", Glob: "convert/*.h.tmpl"},
-	}
-
-	if gen.templates, err = NewTemplateSet(config.Variant, gen.testFiles); err != nil {
+	if gen.TemplatedGenerator, err = NewTemplatedGenerator(&config); err != nil {
 		return nil, err
 	}
 
 	return &gen, nil
-}
-
-// TestFile holds information about a test file.
-type TestFile struct {
-	Dir  string // Dir is the destination directory of this file.
-	Name string // Name is the filename of this file.
-	Desc string // Desc is a human-readable description for this file.
-	Glob string // Glob is the slash-delimited glob of source templates for this file.
 }

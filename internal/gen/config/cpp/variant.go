@@ -8,8 +8,8 @@ import "path/filepath"
 // It is defined using the following go-enum:
 /*
 ENUM(
-animate, // Variant with a manually fed event loop.
-ros,     // Variant targeting ROS1 Noetic.
+animate, // CppVariant with a manually fed event loop.
+ros,     // CppVariant targeting ROS1 Noetic.
 )
 */
 //

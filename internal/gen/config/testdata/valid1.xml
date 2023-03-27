@@ -6,5 +6,10 @@
     <cpp variant="ros">
         <include src="std_msgs/Float32.h" />
         <include src="sensor_msgs/BatteryState.h" />
+        <catkin>
+            <package format="2">
+                <name>bmon-${NAME}</name>
+            </package>
+        </catkin>
     </cpp>
 </rtcg-gen>

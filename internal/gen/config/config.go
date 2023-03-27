@@ -1,4 +1,4 @@
-package gen
+package config
 
 import (
 	"encoding/xml"
@@ -7,18 +7,18 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/UoY-RoboStar/rtcg/internal/gen/cpp"
+	"github.com/UoY-RoboStar/rtcg/internal/gen/config/cpp"
 )
 
 // Config contains configuration for the generator.
 type Config struct {
 	XMLName   xml.Name     `xml:"rtcg-gen"`            // XMLName sets the name of the Config struct in XML.
-	Cpps      []cpp.Config `xml:"cpp"`                 // Cpps contains CppTarget elements.
+	Cpps      []cpp.Config `xml:"cpp"`                 // Cpps contains C++ generator configurations.
 	Directory string       `xml:"directory,omitempty"` // Directory contains the root directory for generator files.
 }
 
-// LoadConfig loads a generator config at path.
-func LoadConfig(path string) (*Config, error) {
+// Load loads a generator config at path.
+func Load(path string) (*Config, error) {
 	var config Config
 
 	file, err := os.Open(path)

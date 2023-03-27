@@ -20,12 +20,14 @@ func (g *Generator) generateTests(suite stm.Suite) error {
 
 func (g *Generator) generateTest(name string, test *stm.Stm) error {
 	ctx := NewContext(name, test, g.config)
-	gen := TestGenerator{ctx: ctx, parent: g}
+	path := filepath.Join(g.outputDir, srcDir)
+	gen := TestGenerator{path: path, ctx: ctx, parent: g}
 
 	return gen.generate()
 }
 
 type TestGenerator struct {
+	path   string
 	ctx    *Context
 	parent *Generator
 }
@@ -48,7 +50,7 @@ func (t *TestGenerator) copyConvertFile() error {
 }
 
 func (t *TestGenerator) generateTestTemplatedFiles() error {
-	for _, file := range t.parent.testFiles {
+	for _, file := range t.parent.TestFiles {
 		if err := t.generateTestFile(file); err != nil {
 			return err
 		}
@@ -57,10 +59,10 @@ func (t *TestGenerator) generateTestTemplatedFiles() error {
 	return nil
 }
 
-func (t *TestGenerator) generateTestFile(file TestFile) error {
+func (t *TestGenerator) generateTestFile(file gencommon.TestFile) error {
 	outPath := t.testSourcePath(file)
 
-	err := gencommon.ExecuteTemplateOnFile(outPath, file.Name+".tmpl", t.parent.templates[file.Name], t.ctx)
+	err := gencommon.ExecuteTemplateOnFile(outPath, file.Name+".tmpl", t.parent.Templates[file.Name], t.ctx)
 	if err != nil {
 		return fmt.Errorf("couldn't generate %s for %s: %w", file.Desc, t.ctx.Name, err)
 	}
@@ -68,6 +70,6 @@ func (t *TestGenerator) generateTestFile(file TestFile) error {
 	return nil
 }
 
-func (t *TestGenerator) testSourcePath(file TestFile) string {
-	return filepath.Join(t.parent.outputDir, srcDir, t.ctx.Name, file.Dir, file.Name)
+func (t *TestGenerator) testSourcePath(file gencommon.TestFile) string {
+	return filepath.Join(t.path, t.ctx.Name, file.Dir, file.Name)
 }
