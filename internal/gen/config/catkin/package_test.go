@@ -16,17 +16,7 @@ func TestPackage_Autofill(t *testing.T) {
 		want  catkin.Package
 	}{
 		"empty": {
-			input: catkin.Package{
-				XMLName:          xml.Name{Space: "", Local: ""},
-				Format:           0,
-				Name:             "",
-				Version:          "",
-				Description:      "",
-				Maintainer:       catkin.Maintainer{Email: "", Name: ""},
-				License:          "",
-				BuildtoolDepends: nil,
-				Depends:          nil,
-			},
+			input: emptyCatkin(),
 			want: catkin.Package{
 				XMLName:          xml.Name{Space: "", Local: ""},
 				Format:           2,
@@ -41,17 +31,17 @@ func TestPackage_Autofill(t *testing.T) {
 		},
 	}
 
-	for name, tt := range tests {
+	for name, test := range tests {
 		name := name
-		tt := tt
+		test := test
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got := tt.input
+			got := test.input
 			got.Autofill()
 
-			cmp(t, got, tt.want)
+			cmp(t, got, test.want)
 		})
 	}
 }
@@ -60,32 +50,11 @@ func TestPackage_Expand(t *testing.T) {
 	t.Parallel()
 
 	tests := map[string]struct {
-		input catkin.Package
-		want  catkin.Package
+		input, want catkin.Package
 	}{
 		"empty": {
-			input: catkin.Package{
-				XMLName:          xml.Name{Space: "", Local: ""},
-				Format:           0,
-				Name:             "",
-				Version:          "",
-				Description:      "",
-				Maintainer:       catkin.Maintainer{Email: "", Name: ""},
-				License:          "",
-				BuildtoolDepends: nil,
-				Depends:          nil,
-			},
-			want: catkin.Package{
-				XMLName:          xml.Name{Space: "", Local: ""},
-				Format:           0,
-				Name:             "",
-				Version:          "",
-				Description:      "",
-				Maintainer:       catkin.Maintainer{Email: "", Name: ""},
-				License:          "",
-				BuildtoolDepends: nil,
-				Depends:          nil,
-			},
+			input: emptyCatkin(),
+			want:  emptyCatkin(),
 		},
 		"minimal": {
 			input: catkin.Package{
@@ -113,18 +82,32 @@ func TestPackage_Expand(t *testing.T) {
 		},
 	}
 
-	for name, tt := range tests {
+	for name, test := range tests {
 		name := name
-		tt := tt
+		test := test
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got := tt.input
+			got := test.input
 			got.Expand("foobar")
 
-			cmp(t, got, tt.want)
+			cmp(t, got, test.want)
 		})
+	}
+}
+
+func emptyCatkin() catkin.Package {
+	return catkin.Package{
+		XMLName:          xml.Name{Space: "", Local: ""},
+		Format:           0,
+		Name:             "",
+		Version:          "",
+		Description:      "",
+		Maintainer:       catkin.Maintainer{Email: "", Name: ""},
+		License:          "",
+		BuildtoolDepends: nil,
+		Depends:          nil,
 	}
 }
 

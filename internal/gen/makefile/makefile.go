@@ -6,10 +6,9 @@ import (
 	"path/filepath"
 	"text/template"
 
-	"github.com/UoY-RoboStar/rtcg/internal/gen/subgen"
-
 	"github.com/UoY-RoboStar/rtcg/internal/gen/config/cpp"
 	"github.com/UoY-RoboStar/rtcg/internal/gen/gencommon"
+	"github.com/UoY-RoboStar/rtcg/internal/gen/subgen"
 	"github.com/UoY-RoboStar/rtcg/internal/gen/templating"
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
 )

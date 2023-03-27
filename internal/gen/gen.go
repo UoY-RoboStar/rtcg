@@ -5,14 +5,13 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/UoY-RoboStar/rtcg/internal/gen/subgen"
-
 	"github.com/UoY-RoboStar/rtcg/internal/gen/catkin"
 	"github.com/UoY-RoboStar/rtcg/internal/gen/config"
 	cfg "github.com/UoY-RoboStar/rtcg/internal/gen/config/cpp"
 	"github.com/UoY-RoboStar/rtcg/internal/gen/cpp"
 	"github.com/UoY-RoboStar/rtcg/internal/gen/gencommon"
 	"github.com/UoY-RoboStar/rtcg/internal/gen/makefile"
+	"github.com/UoY-RoboStar/rtcg/internal/gen/subgen"
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
 )
 
@@ -118,7 +117,6 @@ func New(cfg config.Config, outputDir string) (*Generator, error) {
 
 func (g *Generator) OnSuite(suite *stm.Suite) *OnSuite {
 	// TODO(@MattWindsor91): possibly make this return a subgen.OnSuite
-
 	subgens := make([]subgen.OnSuite, len(g.subgens))
 
 	for i, subg := range g.subgens {

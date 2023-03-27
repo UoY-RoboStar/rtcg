@@ -4,10 +4,9 @@ package cpp
 import (
 	"fmt"
 
-	"github.com/UoY-RoboStar/rtcg/internal/gen/subgen"
-
 	cfg "github.com/UoY-RoboStar/rtcg/internal/gen/config/cpp"
 	"github.com/UoY-RoboStar/rtcg/internal/gen/gencommon"
+	"github.com/UoY-RoboStar/rtcg/internal/gen/subgen"
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
 )
 
@@ -59,7 +58,7 @@ func (o *OnSuite) Parent() subgen.Subgenerator {
 }
 
 func (o *OnSuite) Dirs() []string {
-	dirs := make([]string, 1, len(o.suite.Tests)+2)
+	dirs := make([]string, 1, len(o.suite.Tests)+1)
 	dirs[0] = o.parent.srcDirSet.OutputPath(preludeDir)
 
 	if o.cctx.HasConversion {
@@ -100,7 +99,11 @@ func (o *OnSuite) generateCommon() error {
 		return err
 	}
 
-	return o.parent.templated.common.Generate(o.parent.srcDirSet.Output, o.cctx)
+	if err := o.parent.templated.common.Generate(o.parent.srcDirSet.Output, o.cctx); err != nil {
+		return fmt.Errorf("generating common files: %w", err)
+	}
+
+	return nil
 }
 
 // copyConvertFile copies convert.cpp from the input directory, if there is one.
@@ -127,5 +130,9 @@ func (o *OnSuite) generateTestSpecific() error {
 func (o *OnSuite) generateTest(dirs gencommon.DirSet, name string, test *stm.Stm) error {
 	ctx := NewContext(name, test, o.cctx)
 
-	return o.parent.templated.testSpecific.Generate(dirs.Output, ctx)
+	if err := o.parent.templated.testSpecific.Generate(dirs.Output, ctx); err != nil {
+		return fmt.Errorf("generating test-specific files: %w", err)
+	}
+
+	return nil
 }

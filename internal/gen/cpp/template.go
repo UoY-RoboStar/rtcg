@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"io/fs"
 
-	"github.com/UoY-RoboStar/rtcg/internal/gen/templating"
-
 	cfg "github.com/UoY-RoboStar/rtcg/internal/gen/config/cpp"
+	"github.com/UoY-RoboStar/rtcg/internal/gen/templating"
 )
 
 var (
@@ -43,19 +42,19 @@ func makeTemplatedGenerators(config *cfg.Config) (templatedGenerators, error) {
 	}
 
 	var (
-		tg  templatedGenerators
-		err error
+		gens templatedGenerators
+		err  error
 	)
 
-	if tg.common, err = templating.NewGenerator(commonFiles, builder); err != nil {
-		return tg, fmt.Errorf("couldn't create C++ template-based common files generator: %w", err)
+	if gens.common, err = templating.NewGenerator(commonFiles, builder); err != nil {
+		return gens, fmt.Errorf("couldn't create C++ template-based common files generator: %w", err)
 	}
 
-	if tg.testSpecific, err = templating.NewGenerator(testSpecificFiles, builder); err != nil {
-		return tg, fmt.Errorf("couldn't create C++ template-based test files generator: %w", err)
+	if gens.testSpecific, err = templating.NewGenerator(testSpecificFiles, builder); err != nil {
+		return gens, fmt.Errorf("couldn't create C++ template-based test files generator: %w", err)
 	}
 
-	return tg, nil
+	return gens, nil
 }
 
 func variantSource(variant cfg.Variant) templating.Source {

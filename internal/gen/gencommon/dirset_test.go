@@ -28,15 +28,15 @@ func TestDirSet_OutputPath(t *testing.T) {
 			want:  filepath.Join("bar", "src"),
 		},
 	}
-	for name, tt := range tests {
+	for name, test := range tests {
 		name := name
-		tt := tt
+		test := test
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			if got := tt.input.OutputPath("src"); got != tt.want {
-				t.Errorf("OutputPath(\"src\") of %s: got %v, want %v", name, got, tt.want)
+			if got := test.input.OutputPath("src"); got != test.want {
+				t.Errorf("OutputPath(\"src\") of %s: got %v, want %v", name, got, test.want)
 			}
 		})
 	}
@@ -72,15 +72,15 @@ func TestDirSet_Subdir(t *testing.T) {
 		},
 	}
 
-	for name, tt := range tests {
+	for name, test := range tests {
 		name := name
-		tt := tt
+		test := test
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			if got := tt.input.Subdir(tt.dir); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("%s: got %v, want %v", name, got, tt.want)
+			if got := test.input.Subdir(test.dir); !reflect.DeepEqual(got, test.want) {
+				t.Errorf("%s: got %v, want %v", name, got, test.want)
 			}
 		})
 	}

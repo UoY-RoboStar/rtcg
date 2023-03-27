@@ -7,12 +7,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/UoY-RoboStar/rtcg/internal/gen/subgen"
-
-	"github.com/UoY-RoboStar/rtcg/internal/gen/templating"
-
 	cfg "github.com/UoY-RoboStar/rtcg/internal/gen/config/catkin"
 	"github.com/UoY-RoboStar/rtcg/internal/gen/gencommon"
+	"github.com/UoY-RoboStar/rtcg/internal/gen/subgen"
+	"github.com/UoY-RoboStar/rtcg/internal/gen/templating"
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
 )
 
@@ -90,16 +88,20 @@ func (o *OnSuite) generateTest(dirs gencommon.DirSet, name string) error {
 		return err
 	}
 
-	return o.parent.cmakeGen.Generate(dirs.Output, pkg)
+	if err := o.parent.cmakeGen.Generate(dirs.Output, pkg); err != nil {
+		return fmt.Errorf("generating cmake: %w", err)
+	}
+
+	return nil
 }
 
 func generatePackageXML(dir string, pkg cfg.Package) error {
-	w, err := os.Create(filepath.Join(dir, "package.xml"))
+	file, err := os.Create(filepath.Join(dir, "package.xml"))
 	if err != nil {
 		return fmt.Errorf("couldn't create package.xml: %w", err)
 	}
 
-	err = pkg.Write(w)
+	err = pkg.Write(file)
 
-	return errors.Join(err, w.Close())
+	return errors.Join(err, file.Close())
 }
