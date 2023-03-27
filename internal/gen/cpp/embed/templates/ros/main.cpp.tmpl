@@ -26,7 +26,7 @@ const int INPUT_DELAY_SEC = 3;
 
 {{- /* Placeholder for when an input is required. */ -}}
 {{- define "input" }}
-  {{ template "publisher_name" . }}_.publish({{ cppConvertTo .Channel }}({{ cppValue .Value }}));
+  {{ template "publisher_name" . }}_.publish({{ cppConvertTo .Channel.Name }}({{ cppValue .Value }}));
 {{- end }}
 
 {{- /* Returns the argument set of the timeout callback. */ -}}
@@ -51,7 +51,7 @@ const int INPUT_DELAY_SEC = 3;
 
   // Publishers
 {{-   range .Transitions.In }}
-  auto {{ template "publisher_name" . }} = nh.advertise<{{ cppChannelValueType .Channel }}>("{{ template "topic_name" . }}", 1000);
+  auto {{ template "publisher_name" . }} = nh.advertise<{{ cppChannelValueType .Channel.Name }}>("{{ template "topic_name" . }}", 1000);
 {{-   end }}
 {{- end }}
 
@@ -61,7 +61,7 @@ const int INPUT_DELAY_SEC = 3;
   auto input_accepted_sub = nh.subscribe("input_accepted", 10, &StateMachine::inputAcceptedCallback, &stm);
 {{-   end }}
 {{   range .Transitions.Out }}
-  auto {{ template "subscriber_name" . }} = nh.subscribe("{{ template "topic_name" . }}", 10, &StateMachine::{{ cppCallbackName .Channel }}, &stm);
+  auto {{ template "subscriber_name" . }} = nh.subscribe("{{ template "topic_name" . }}", 10, &StateMachine::{{ cppCallbackName .Channel.Name }}, &stm);
 {{-   end }}
 
   // Timers

@@ -11,7 +11,7 @@
 
 {{- /* Placeholder for when an input is required. */ -}}
 {{- define "input" }}
-  {{ template "log" "info" }}"(Actual value received by SUT on {{ .Channel.Name }} after conversion: " << {{ cppConvertTo .Channel }}({{ cppValue .Value }}) << ")"{{ template "end_log" }}
+  {{ template "log" "info" }}"(Actual value received by SUT on {{ .Channel.Name }} after conversion: " << {{ cppConvertTo .Channel.Name }}({{ cppValue .Value }}) << ")"{{ template "end_log" }}
 {{- end }}
 
 {{- /* Returns the argument set of a timeout callback. */ -}}

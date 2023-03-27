@@ -46,7 +46,7 @@
       {{ cppType $ctype.Base }} in;
       std::cin >> in;
 
-      stm.{{ cppCallbackName .Channel }}({{ cppConvertTo .Channel }}(in));
+      stm.{{ cppCallbackName .Channel.Name }}({{ cppConvertTo .Channel.Name }}(in));
     }
 {{- end }}
     else

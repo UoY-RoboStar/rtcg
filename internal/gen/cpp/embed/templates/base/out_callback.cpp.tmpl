@@ -5,7 +5,7 @@ It expects the output aggregate transition set as its dot.
 
 Base indent is set at 2, as we are inside a top-level function.
 */}}
-  auto value = {{ cppConvertFrom $.Channel }}(msg);
+  auto value = {{ cppConvertFrom $.Channel.Name }}(msg);
 
   switch (state_)
   {

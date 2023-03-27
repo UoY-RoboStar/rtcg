@@ -6,8 +6,6 @@ import (
 
 	"github.com/UoY-RoboStar/rtcg/internal/gen/subgen"
 
-	"github.com/UoY-RoboStar/rtcg/internal/gen/templating"
-
 	cfg "github.com/UoY-RoboStar/rtcg/internal/gen/config/cpp"
 	"github.com/UoY-RoboStar/rtcg/internal/gen/gencommon"
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
@@ -18,7 +16,7 @@ type Generator struct {
 	config    cfg.Config       // config is the configuration for this Generator.
 	srcDirSet gencommon.DirSet // srcDirSet is the source directory set for this Generator.
 
-	testGen *templating.Generator // testGen is the template-based generator for test-based files.
+	templated templatedGenerators // templated holds the template-based generators for C++ code.
 }
 
 // New constructs a new C++ code generator from config, rooted at the given directories.
@@ -31,7 +29,7 @@ func New(config *cfg.Config, dirs gencommon.DirSet) (*Generator, error) {
 	gen.config = *config
 	gen.srcDirSet = dirs.Subdir("src")
 
-	if gen.testGen, err = NewTemplatedGenerator(config); err != nil {
+	if gen.templated, err = makeTemplatedGenerators(config); err != nil {
 		return nil, err
 	}
 
@@ -90,10 +88,31 @@ func (o *OnSuite) Generate() error {
 		return err
 	}
 
-	return o.generateTests()
+	if err := o.generateCommon(); err != nil {
+		return err
+	}
+
+	return o.generateTestSpecific()
 }
 
-func (o *OnSuite) generateTests() error {
+func (o *OnSuite) generateCommon() error {
+	if err := o.copyConvertFile(); err != nil {
+		return err
+	}
+
+	return o.parent.templated.common.Generate(o.parent.srcDirSet.Output, o.cctx)
+}
+
+// copyConvertFile copies convert.cpp from the input directory, if there is one.
+func (o *OnSuite) copyConvertFile() error {
+	if !o.cctx.HasConversion {
+		return nil
+	}
+
+	return copyLocalFile(o.parent.srcDirSet.Subdir(convertDir), "convert.cpp")
+}
+
+func (o *OnSuite) generateTestSpecific() error {
 	for name, test := range o.suite.Tests {
 		dirs := o.parent.srcDirSet.Subdir(name)
 
@@ -108,19 +127,5 @@ func (o *OnSuite) generateTests() error {
 func (o *OnSuite) generateTest(dirs gencommon.DirSet, name string, test *stm.Stm) error {
 	ctx := NewContext(name, test, o.cctx)
 
-	// TODO(@MattWindsor91): only do this once
-	if err := o.parent.copyConvertFile(ctx); err != nil {
-		return err
-	}
-
-	return o.parent.testGen.Generate(dirs.Output, ctx)
-}
-
-// copyConvertFile copies convert.cpp from the input directory, if there is one.
-func (g *Generator) copyConvertFile(ctx *Context) error {
-	if !ctx.HasConversion {
-		return nil
-	}
-
-	return copyLocalFile(g.srcDirSet.Subdir(convertDir), "convert.cpp")
+	return o.parent.templated.testSpecific.Generate(dirs.Output, ctx)
 }

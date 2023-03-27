@@ -7,7 +7,6 @@ import (
 
 	"github.com/UoY-RoboStar/rtcg/internal/strmanip"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
-	"github.com/UoY-RoboStar/rtcg/internal/testlang/channel"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang/rstype"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
 )
@@ -30,35 +29,35 @@ func Funcs() template.FuncMap {
 	}
 }
 
-// CallbackName gets the name of the callback for the channel cha.
-func CallbackName(cha channel.Channel) string {
-	return cha.Name + "Callback"
+// CallbackName gets the name of the callback for the channel with name cha.
+func CallbackName(cha string) string {
+	return cha + "Callback"
 }
 
-// ChannelMsgType gets the name of the defined message type for the channel cha.
+// ChannelMsgType gets the name of the defined message type for the channel with name cha.
 // This is usually a pointer to the value type.
-func ChannelMsgType(cha channel.Channel) string {
-	return strmanip.UpcaseFirst(cha.Name) + "Msg"
+func ChannelMsgType(cha string) string {
+	return strmanip.UpcaseFirst(cha) + "Msg"
 }
 
-// ChannelValueType gets the name of the defined message type for the channel cha.
+// ChannelValueType gets the name of the defined message type for the channel with name cha.
 // This is usually a pointer to the value type.
-func ChannelValueType(cha channel.Channel) string {
-	return strmanip.UpcaseFirst(cha.Name) + "Val"
+func ChannelValueType(cha string) string {
+	return strmanip.UpcaseFirst(cha) + "Val"
 }
 
-// ConvertTo gets the to-conversion function name for the channel cha.
-func ConvertTo(cha channel.Channel) string {
+// ConvertTo gets the to-conversion function name for the channel with name cha.
+func ConvertTo(cha string) string {
 	return convert("to", cha)
 }
 
-// ConvertFrom gets the from-conversion function name for channel cha.
-func ConvertFrom(cha channel.Channel) string {
+// ConvertFrom gets the from-conversion function name for channel with name cha.
+func ConvertFrom(cha string) string {
 	return convert("from", cha)
 }
 
-func convert(dir string, cha channel.Channel) string {
-	return dir + strmanip.UpcaseFirst(cha.Name)
+func convert(dir, cha string) string {
+	return dir + strmanip.UpcaseFirst(cha)
 }
 
 // StateEntry gets the name of the entry method for the state with the given id.

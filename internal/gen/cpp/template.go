@@ -19,11 +19,19 @@ var (
 	rosTemplates embed.FS
 )
 
-// NewTemplatedGenerator sets up a templated generator for C++.
-func NewTemplatedGenerator(config *cfg.Config) (*templating.Generator, error) {
-	testFiles := []templating.File{
+type templatedGenerators struct {
+	common       *templating.Generator // testSpecific handles test-agnostic code files.
+	testSpecific *templating.Generator // testSpecific handles test-specific code files.
+}
+
+// makeTemplatedGenerators sets up the templated generators for C++.
+func makeTemplatedGenerators(config *cfg.Config) (templatedGenerators, error) {
+	commonFiles := []templating.File{
+		{Dir: "convert", Name: "convert.h", Desc: "type convert header", Glob: "convert/*.h.tmpl"},
+	}
+
+	testSpecificFiles := []templating.File{
 		{Dir: "src", Name: "main.cpp", Desc: "main C++ file", Glob: "*.cpp.tmpl"},
-		{Dir: "include", Name: "convert.h", Desc: "type convert header", Glob: "convert/*.h.tmpl"},
 	}
 
 	builder := templating.SetBuilder{
@@ -34,12 +42,20 @@ func NewTemplatedGenerator(config *cfg.Config) (*templating.Generator, error) {
 		Funcs: Funcs(),
 	}
 
-	gen, err := templating.NewGenerator(testFiles, builder)
-	if err != nil {
-		return gen, fmt.Errorf("couldn't create C++ template-based generator: %w", err)
+	var (
+		tg  templatedGenerators
+		err error
+	)
+
+	if tg.common, err = templating.NewGenerator(commonFiles, builder); err != nil {
+		return tg, fmt.Errorf("couldn't create C++ template-based common files generator: %w", err)
 	}
 
-	return gen, nil
+	if tg.testSpecific, err = templating.NewGenerator(testSpecificFiles, builder); err != nil {
+		return tg, fmt.Errorf("couldn't create C++ template-based test files generator: %w", err)
+	}
+
+	return tg, nil
 }
 
 func variantSource(variant cfg.Variant) templating.Source {
