@@ -19,17 +19,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - STM suites now contain unified inferred channel types as well as the
-  generated tests.  This means there is now an extra level of nesting in the
+  generated tests. This means there is now an extra level of nesting in the
   data structure: tests are under `tests`, types are under `types` (and are
-  a map from channel names to type info).  See `examples/bmon/stms.json`.
+  a map from channel names to type info). See `examples/bmon/stms.json`.
 - There is now only one `convert.h` generated, and it uses the unified types
   stored in the STM.
 - Both `convert.cpp` and the newly unified `convert.h` now appear in the
   `convert` subdirectory of the source root (alongside `rtcg` etc).
 - Input directory structures now more closely match output directory
-  structures.  For example, `convert.cpp` must now be in
+  structures. For example, `convert.cpp` must now be in
   `$INPUT/$VARIANT/src/convert/convert.cpp`, which matches where it will be
   generated in the output.
+- Initial delay and timeout callbacks now only fire when waiting to start or
+  running respectively, which should fix a bug with these timeouts firing
+  repeatedly.
 
 ## [0.1.0] - 2023-03-14
 
