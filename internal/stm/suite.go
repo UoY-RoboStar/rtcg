@@ -9,8 +9,8 @@ import (
 
 // Suite is a test suite, in state machine format.
 type Suite struct {
-	Types TypeMap         // Types is the unified type map for the channels.
-	Tests map[string]*Stm `json:"tests"` // Tests is the set of test STMs.
+	Types TypeMap         `json:"types,omitempty"` // Types is the unified type map for the channels.
+	Tests map[string]*Stm `json:"tests,omitempty"` // Tests is the set of test STMs.
 }
 
 // ReadSuite reads a state machine suite from JSON in reader r.
