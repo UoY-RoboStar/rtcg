@@ -17,7 +17,7 @@ type Generator struct {
 	dirSet     gencommon.DirSet // dirSet is the directory set for this Catkin workspace.
 	srcBaseDir string           // srcBaseDir is the output source directory for this Generator.
 
-	templating.Generator
+	cmakeGen *templating.Generator // cmakeGen is the generator for CMakeLists.txt.
 }
 
 // New creates a new Catkin generator with the given configuration.
@@ -27,7 +27,7 @@ func New(config *cfg.Config, dirs gencommon.DirSet) (*Generator, error) {
 		return nil, err
 	}
 
-	gen := Generator{config: *config, dirSet: dirs, srcBaseDir: dirs.SrcDir(), Generator: tg}
+	gen := Generator{config: *config, dirSet: dirs, srcBaseDir: dirs.SrcDir(), cmakeGen: tg}
 
 	if gen.config.Package == nil {
 		var pkg cfg.Package
@@ -65,5 +65,5 @@ func (g *Generator) generateTest(name string, _ *stm.Stm) error {
 	pkg := *g.config.Package
 	pkg.Expand(name)
 
-	return g.Generator.Generate(dir, pkg)
+	return g.cmakeGen.Generate(dir, pkg)
 }

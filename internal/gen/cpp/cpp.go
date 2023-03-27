@@ -18,7 +18,7 @@ type Generator struct {
 	dirSet     gencommon.DirSet // dirSet is the input and output directory set for this Generator.
 	srcBaseDir string           // srcBaseDir is the output source directory for this Generator.
 
-	templating.Generator
+	testGen *templating.Generator // testGen is the template-based generator for test-based files.
 }
 
 func (g *Generator) Name() string {
@@ -69,7 +69,7 @@ func New(config *cfg.Config, dirs gencommon.DirSet) (*Generator, error) {
 	gen.dirSet = dirs
 	gen.srcBaseDir = dirs.SrcDir()
 
-	if gen.Generator, err = NewTemplatedGenerator(config); err != nil {
+	if gen.testGen, err = NewTemplatedGenerator(config); err != nil {
 		return nil, err
 	}
 

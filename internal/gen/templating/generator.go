@@ -7,18 +7,13 @@ type Generator struct {
 }
 
 // NewGenerator creates a Generator using files and builder.
-func NewGenerator(files []File, builder SetBuilder) (Generator, error) {
-	var gen Generator
-
+func NewGenerator(files []File, builder SetBuilder) (*Generator, error) {
 	tset, err := builder.BuildFiles(files)
 	if err != nil {
-		return gen, err
+		return nil, err
 	}
 
-	gen.Files = files
-	gen.Templates = tset
-
-	return gen, nil
+	return &Generator{Files: files, Templates: tset}, nil
 }
 
 // Generate generates each of the templated files in this generator into dir.

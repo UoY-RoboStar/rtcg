@@ -12,7 +12,7 @@ import (
 var templates embed.FS
 
 // NewTemplatedGenerator sets up a templated generator for Catkin.
-func NewTemplatedGenerator() (templating.Generator, error) {
+func NewTemplatedGenerator() (*templating.Generator, error) {
 	testFiles := []templating.File{
 		{Dir: "", Name: "CMakeLists.txt", Desc: "package cmake file", Glob: "CMakeLists.txt.tmpl"},
 	}
@@ -27,7 +27,7 @@ func NewTemplatedGenerator() (templating.Generator, error) {
 
 	gen, err := templating.NewGenerator(testFiles, builder)
 	if err != nil {
-		return gen, fmt.Errorf("couldn't create template-based generator: %w", err)
+		return nil, fmt.Errorf("couldn't create template-based generator: %w", err)
 	}
 
 	return gen, nil

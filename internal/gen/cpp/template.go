@@ -20,7 +20,7 @@ var (
 )
 
 // NewTemplatedGenerator sets up a templated generator for C++.
-func NewTemplatedGenerator(config *cfg.Config) (templating.Generator, error) {
+func NewTemplatedGenerator(config *cfg.Config) (*templating.Generator, error) {
 	testFiles := []templating.File{
 		{Dir: "src", Name: "main.cpp", Desc: "main C++ file", Glob: "*.cpp.tmpl"},
 		{Dir: "include", Name: "convert.h", Desc: "type convert header", Glob: "convert/*.h.tmpl"},

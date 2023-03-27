@@ -14,7 +14,7 @@ func (g *Generator) GenerateTest(name string, test *stm.Stm) error {
 		return err
 	}
 
-	return g.Generator.Generate(filepath.Join(g.srcBaseDir, name), ctx)
+	return g.testGen.Generate(filepath.Join(g.srcBaseDir, name), ctx)
 }
 
 // copyConvertFile copies convert.cpp from the input directory, if there is one.
