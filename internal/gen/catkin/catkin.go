@@ -19,13 +19,13 @@ type Generator struct {
 }
 
 // New creates a new Catkin generator with the given configuration.
-func New(config cfg.Config, workspaceDir string) (*Generator, error) {
+func New(config *cfg.Config, dirs gencommon.DirSet) (*Generator, error) {
 	tg, err := NewTemplatedGenerator()
 	if err != nil {
 		return nil, err
 	}
 
-	gen := Generator{config: config, workspaceDir: filepath.Clean(workspaceDir), TemplatedGenerator: tg}
+	gen := Generator{config: *config, workspaceDir: filepath.Clean(dirs.Output), TemplatedGenerator: tg}
 	gen.config.Package.Autofill()
 
 	return &gen, nil

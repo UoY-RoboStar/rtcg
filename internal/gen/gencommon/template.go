@@ -20,7 +20,7 @@ type TemplatedGenerator struct {
 func ExecuteTemplateOnFile(path, tmplName string, tmpl *template.Template, ctx any) error {
 	file, err := os.Create(path)
 	if err != nil {
-		return fmt.Errorf("couldn't create output file: %w", err)
+		return fmt.Errorf("couldn't create Output file: %w", err)
 	}
 
 	err = tmpl.ExecuteTemplate(file, tmplName, ctx)

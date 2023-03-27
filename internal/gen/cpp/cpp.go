@@ -64,19 +64,19 @@ func (g *Generator) Generate(suite stm.Suite) error {
 	return nil
 }
 
-// New constructs a new C++ code generator from config, rooted at outputDir.
-func New(config cfg.Config, inputDir, outputDir string) (*Generator, error) {
+// New constructs a new C++ code generator from config, rooted at the given directories.
+func New(config *cfg.Config, dirs gencommon.DirSet) (*Generator, error) {
 	var (
 		gen Generator
 		err error
 	)
 
-	gen.config = config
-	gen.inputDir = config.Variant.Dir(inputDir)
-	gen.outputDir = config.Variant.Dir(outputDir)
+	gen.config = *config
+	gen.inputDir = config.Variant.Dir(dirs.Input)
+	gen.outputDir = config.Variant.Dir(dirs.Output)
 	gen.srcBaseDir = filepath.Join(gen.outputDir, srcDir)
 
-	if gen.TemplatedGenerator, err = NewTemplatedGenerator(&config); err != nil {
+	if gen.TemplatedGenerator, err = NewTemplatedGenerator(config); err != nil {
 		return nil, err
 	}
 

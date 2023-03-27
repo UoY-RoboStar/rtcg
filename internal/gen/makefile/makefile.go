@@ -47,11 +47,11 @@ func (g *Generator) Generate(tests stm.Suite) error {
 
 // New constructs a new C++ Makefile generator rooted at outputDir.
 // The Makefile will be generated in the variant subdirectory inside outputDir.
-func New(cfg cpp.Config, outputDir string) (*Generator, error) {
+func New(cfg *cpp.Config, dirs gencommon.DirSet) (*Generator, error) {
 	tmpl, err := parseTemplate()
 	if err != nil {
 		return nil, err
 	}
 
-	return &Generator{config: cfg, outputDir: cfg.Variant.Dir(outputDir), template: tmpl}, nil
+	return &Generator{config: *cfg, outputDir: cfg.Variant.Dir(dirs.Output), template: tmpl}, nil
 }

@@ -5,9 +5,13 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/UoY-RoboStar/rtcg/internal/gen/catkin"
+
+	"github.com/UoY-RoboStar/rtcg/internal/gen/gencommon"
+
 	"github.com/UoY-RoboStar/rtcg/internal/gen/config"
 
-	cpp2 "github.com/UoY-RoboStar/rtcg/internal/gen/config/cpp"
+	cfg "github.com/UoY-RoboStar/rtcg/internal/gen/config/cpp"
 
 	"github.com/UoY-RoboStar/rtcg/internal/gen/cpp"
 	"github.com/UoY-RoboStar/rtcg/internal/gen/makefile"
@@ -20,49 +24,83 @@ const (
 
 // Generator is a test code generator.
 type Generator struct {
-	subgenerators []Subgenerator // subgenerators is the set of configured sub-generators.
-	inputDir      string         // inputDir is the input directory of the generator.
-	outputDir     string         // outputDir is the output directory of the generator.
+	subgenerators []Subgenerator   // subgenerators is the set of configured sub-generators.
+	dirs          gencommon.DirSet // dirs is the directory set of the generator.
 }
 
-func (g *Generator) initCpp(cfgs []cpp2.Config) error {
-	for _, cfg := range cfgs {
-		if err := g.initCppMain(cfg); err != nil {
-			return err
+func initCpp(cfgs []cfg.Config, dirs gencommon.DirSet) ([]Subgenerator, error) {
+	var (
+		subs, varSubs []Subgenerator
+		err           error
+	)
+
+	for i := range cfgs {
+		if varSubs, err = initCppVariant(&cfgs[i], dirs); err != nil {
+			return nil, err
 		}
 
-		if err := g.initCppMakefile(cfg); err != nil {
-			return err
+		subs = append(subs, varSubs...)
+	}
+
+	return subs, nil
+}
+
+type genFunc func(*cfg.Config, gencommon.DirSet) ([]Subgenerator, error)
+
+func initCppVariant(config *cfg.Config, dirs gencommon.DirSet) ([]Subgenerator, error) {
+	var (
+		varSubs, stepSubs []Subgenerator
+		err               error
+	)
+
+	for _, fun := range []genFunc{
+		initCppMain,
+		initCppCatkin,
+		initCppMakefile,
+	} {
+		if stepSubs, err = fun(config, dirs); err != nil {
+			return nil, err
 		}
+
+		varSubs = append(varSubs, stepSubs...)
 	}
 
-	return nil
+	return varSubs, nil
 }
 
-func (g *Generator) initCppMain(cfg cpp2.Config) error {
-	gen, err := cpp.New(cfg, g.inputDir, g.outputDir)
+func initCppMain(config *cfg.Config, dirs gencommon.DirSet) ([]Subgenerator, error) {
+	gen, err := cpp.New(config, dirs)
 	if err != nil {
-		return fmt.Errorf("couldn't init c++ generator: %w", err)
+		return nil, fmt.Errorf("couldn't init c++ generator: %w", err)
 	}
 
-	g.subgenerators = append(g.subgenerators, gen)
-
-	return nil
+	return []Subgenerator{gen}, nil
 }
 
-func (g *Generator) initCppMakefile(cfg cpp2.Config) error {
-	if cfg.Makefile == nil {
-		return nil
+func initCppCatkin(config *cfg.Config, dirs gencommon.DirSet) ([]Subgenerator, error) {
+	if config.Catkin == nil {
+		return nil, nil
 	}
 
-	gen, err := makefile.New(cfg, g.outputDir)
+	gen, err := catkin.New(config.Catkin, dirs)
 	if err != nil {
-		return fmt.Errorf("couldn't init Makefile generator: %w", err)
+		return nil, fmt.Errorf("couldn't init Catkin generator: %w", err)
 	}
 
-	g.subgenerators = append(g.subgenerators, gen)
+	return []Subgenerator{gen}, nil
+}
 
-	return nil
+func initCppMakefile(config *cfg.Config, dirs gencommon.DirSet) ([]Subgenerator, error) {
+	if config.Makefile == nil {
+		return nil, nil
+	}
+
+	gen, err := makefile.New(config, dirs)
+	if err != nil {
+		return nil, fmt.Errorf("couldn't init Makefile generator: %w", err)
+	}
+
+	return []Subgenerator{gen}, nil
 }
 
 // Subgenerator captures the idea of a test code sub-generator.
@@ -79,17 +117,17 @@ type Subgenerator interface {
 
 // New creates a new Generator from config, targeting outputDir.
 func New(cfg config.Config, outputDir string) (*Generator, error) {
-	gen := Generator{
-		subgenerators: make([]Subgenerator, 0, len(cfg.Cpps)),
-		inputDir:      cfg.Directory,
-		outputDir:     outputDir,
+	dirs := gencommon.DirSet{
+		Input:  cfg.Directory,
+		Output: outputDir,
 	}
 
-	if err := gen.initCpp(cfg.Cpps); err != nil {
+	subs, err := initCpp(cfg.Cpps, dirs)
+	if err != nil {
 		return nil, err
 	}
 
-	return &gen, nil
+	return &Generator{subgenerators: subs, dirs: dirs}, nil
 }
 
 func (g *Generator) Generate(suite stm.Suite) error {
