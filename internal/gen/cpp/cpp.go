@@ -5,10 +5,8 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/UoY-RoboStar/rtcg/internal/gen/gencommon"
-
 	cfg "github.com/UoY-RoboStar/rtcg/internal/gen/config/cpp"
-
+	"github.com/UoY-RoboStar/rtcg/internal/gen/gencommon"
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
 )
 

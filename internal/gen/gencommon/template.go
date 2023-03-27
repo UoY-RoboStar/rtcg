@@ -70,17 +70,17 @@ type TemplateSource struct {
 
 // NewTemplatedGenerator creates a TemplatedGenerator using files and builder.
 func NewTemplatedGenerator(files []TestFile, builder TemplateBuilder) (TemplatedGenerator, error) {
-	var tg TemplatedGenerator
+	var gen TemplatedGenerator
 
 	tset, err := builder.BuildFiles(files)
 	if err != nil {
-		return tg, err
+		return gen, err
 	}
 
-	tg.TestFiles = files
-	tg.Templates = tset
+	gen.TestFiles = files
+	gen.Templates = tset
 
-	return tg, nil
+	return gen, nil
 }
 
 // TemplateBuilder is a builder for template files.

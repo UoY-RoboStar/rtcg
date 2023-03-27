@@ -6,14 +6,10 @@ import (
 	"os"
 
 	"github.com/UoY-RoboStar/rtcg/internal/gen/catkin"
-
-	"github.com/UoY-RoboStar/rtcg/internal/gen/gencommon"
-
 	"github.com/UoY-RoboStar/rtcg/internal/gen/config"
-
 	cfg "github.com/UoY-RoboStar/rtcg/internal/gen/config/cpp"
-
 	"github.com/UoY-RoboStar/rtcg/internal/gen/cpp"
+	"github.com/UoY-RoboStar/rtcg/internal/gen/gencommon"
 	"github.com/UoY-RoboStar/rtcg/internal/gen/makefile"
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
 )

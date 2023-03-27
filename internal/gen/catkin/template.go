@@ -2,6 +2,7 @@ package catkin
 
 import (
 	"embed"
+	"fmt"
 	"text/template"
 
 	"github.com/UoY-RoboStar/rtcg/internal/gen/gencommon"
@@ -24,5 +25,10 @@ func NewTemplatedGenerator() (gencommon.TemplatedGenerator, error) {
 		Funcs: template.FuncMap{},
 	}
 
-	return gencommon.NewTemplatedGenerator(testFiles, builder)
+	gen, err := gencommon.NewTemplatedGenerator(testFiles, builder)
+	if err != nil {
+		return gen, fmt.Errorf("couldn't create Catkin++ template-based generator: %w", err)
+	}
+
+	return gen, nil
 }

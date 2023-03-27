@@ -24,10 +24,7 @@ func TestLoadConfig(t *testing.T) {
 		{
 			name: "valid1",
 			want: config.Config{
-				XMLName: xml.Name{
-					Space: "",
-					Local: "rtcg-gen",
-				},
+				XMLName: xml.Name{Space: "", Local: "rtcg-gen"},
 				Cpps: []cpp.Config{
 					{
 						Variant:  cpp.VariantAnimate,
@@ -47,7 +44,7 @@ func TestLoadConfig(t *testing.T) {
 							Name:             "bmon-${NAME}",
 							Version:          "",
 							Description:      "",
-							Maintainer:       catkin.Maintainer{},
+							Maintainer:       catkin.Maintainer{Email: "", Name: ""},
 							License:          "",
 							BuildtoolDepends: nil,
 							Depends:          nil,

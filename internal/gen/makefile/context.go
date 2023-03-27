@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/UoY-RoboStar/rtcg/internal/gen/config/cpp"
-
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
 )
 

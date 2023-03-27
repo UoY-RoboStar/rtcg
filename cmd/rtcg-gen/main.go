@@ -8,10 +8,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/UoY-RoboStar/rtcg/internal/gen/config"
-
 	"github.com/UoY-RoboStar/rtcg/internal/cli"
 	"github.com/UoY-RoboStar/rtcg/internal/gen"
+	"github.com/UoY-RoboStar/rtcg/internal/gen/config"
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
 )
 
