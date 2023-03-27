@@ -8,7 +8,7 @@ import (
 	"github.com/UoY-RoboStar/rtcg/internal/gen/gencommon"
 )
 
-func TestDirSet_SrcDir(t *testing.T) {
+func TestDirSet_OutputPath(t *testing.T) {
 	t.Parallel()
 
 	tests := map[string]struct {
@@ -35,8 +35,8 @@ func TestDirSet_SrcDir(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			if got := tt.input.SrcDir(); got != tt.want {
-				t.Errorf("SrcDir of %s: got %v, want %v", name, got, tt.want)
+			if got := tt.input.OutputPath("src"); got != tt.want {
+				t.Errorf("OutputPath(\"src\") of %s: got %v, want %v", name, got, tt.want)
 			}
 		})
 	}

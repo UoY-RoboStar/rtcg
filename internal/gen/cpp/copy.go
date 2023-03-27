@@ -9,13 +9,16 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+
+	"github.com/UoY-RoboStar/rtcg/internal/gen/gencommon"
 )
 
 //go:embed embed/prelude/*
 var prelude embed.FS
 
 const (
-	preludeDir   = "rtcg"          // preludeDir is the subdirectory of srcDir where we store the prelude.
+	convertDir   = "convert"       // convertDir is the subdirectory where we store the conversion code.
+	preludeDir   = "rtcg"          // preludeDir is the subdirectory where we store the prelude.
 	preludeMount = "embed/prelude" // preludeMount is the directory in prelude where the prelude is.
 )
 
@@ -40,12 +43,12 @@ func (g *Generator) copyPreludeFile(name string) error {
 		return fmt.Errorf("couldn't open prelude file %q: %w", name, err)
 	}
 
-	return writeFile(src, filepath.Join(g.srcBaseDir, preludeDir, name))
+	return writeFile(src, g.srcDirSet.OutputPath(filepath.Join(preludeDir, name)))
 }
 
-func (g *Generator) copyLocalFile(name string) error {
-	srcPath := filepath.Join(g.dirSet.Input, name)
-	dstPath := filepath.Join(g.srcBaseDir, name)
+func copyLocalFile(dirs gencommon.DirSet, name string) error {
+	srcPath := filepath.Join(dirs.Input, name)
+	dstPath := filepath.Join(dirs.Output, name)
 
 	src, err := os.Open(srcPath)
 	if err != nil {
@@ -58,7 +61,7 @@ func (g *Generator) copyLocalFile(name string) error {
 func writeFile(src io.ReadCloser, outFile string) error {
 	dst, err := os.Create(outFile)
 	if err != nil {
-		err = fmt.Errorf("couldn't create file %q: %w", outFile, err)
+		err = fmt.Errorf("couldn't create dest file: %w", err)
 
 		return errors.Join(err, src.Close())
 	}

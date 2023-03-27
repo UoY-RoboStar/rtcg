@@ -16,7 +16,7 @@ func (d DirSet) Subdir(subdir string) DirSet {
 	}
 }
 
-// SrcDir gets the source output directory.
-func (d DirSet) SrcDir() string {
-	return filepath.Join(d.Output, "src")
+// OutputPath appends file to the output directory of this directory.
+func (d DirSet) OutputPath(file string) string {
+	return filepath.Join(d.Output, file)
 }

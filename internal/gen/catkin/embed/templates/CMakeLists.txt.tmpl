@@ -27,7 +27,12 @@ catkin_package(CATKIN_DEPENDS
 include_directories(
     include
     ${catkin_INCLUDE_DIRS}
+    ../convert/
     ../rtcg/
+)
+
+add_library(convert
+    ../convert/convert.cpp
 )
 
 add_library(rtcg
@@ -36,7 +41,8 @@ add_library(rtcg
 
 add_executable(${PROJECT_NAME}_node
     src/main.cpp
-    ../convert.cpp
+    ../convert/convert.cpp
+    ../rtcg/rtcg.cpp
 )
 
 set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX "")
@@ -44,10 +50,12 @@ set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX ""
 add_dependencies(${PROJECT_NAME}_node
     ${${PROJECT_NAME}_EXPORTED_TARGETS}
     ${catkin_EXPORTED_TARGETS}
+    convert
     rtcg
 )
 
 target_link_libraries(${PROJECT_NAME}_node
     ${catkin_LIBRARIES}
+    convert
     rtcg
 )

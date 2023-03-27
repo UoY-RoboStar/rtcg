@@ -16,9 +16,9 @@ import (
 
 // Generator is a Catkin auxiliary file generator.
 type Generator struct {
-	config     cfg.Config       // config is the user-supplied configuration.
-	dirSet     gencommon.DirSet // dirSet is the directory set for this Catkin workspace.
-	srcBaseDir string           // srcBaseDir is the output source directory for this Generator.
+	config    cfg.Config       // config is the user-supplied configuration.
+	dirSet    gencommon.DirSet // dirSet is the directory set for this Catkin workspace.
+	srcDirSet gencommon.DirSet // srcBaseDir is the source directory set for this Catkin workspace.
 
 	cmakeGen *templating.Generator // cmakeGen is the generator for CMakeLists.txt.
 }
@@ -30,7 +30,7 @@ func New(config *cfg.Config, dirs gencommon.DirSet) (*Generator, error) {
 		return nil, err
 	}
 
-	gen := Generator{config: *config, dirSet: dirs, srcBaseDir: dirs.SrcDir(), cmakeGen: tg}
+	gen := Generator{config: *config, dirSet: dirs, srcDirSet: dirs.Subdir("src"), cmakeGen: tg}
 
 	if gen.config.Package == nil {
 		var pkg cfg.Package
@@ -52,25 +52,23 @@ func (g *Generator) Dirs(_ stm.Suite) []string {
 }
 
 func (g *Generator) Generate(suite stm.Suite) error {
-	if err := gencommon.GenerateTests(suite, g); err != nil {
+	if err := gencommon.GenerateTests(g.srcDirSet, suite, g); err != nil {
 		return fmt.Errorf("couldn't generate for tests: %w", err)
 	}
 
 	return nil
 }
 
-func (g *Generator) GenerateTest(name string, _ *stm.Stm) error {
-	dir := filepath.Join(g.srcBaseDir, name)
-
+func (g *Generator) GenerateTest(dirs gencommon.DirSet, name string, _ *stm.Stm) error {
 	// Take a copy here to avoid accidentally expanding the name in every test.
 	pkg := *g.config.Package
 	pkg.Expand(name)
 
-	if err := generatePackageXML(dir, pkg); err != nil {
+	if err := generatePackageXML(dirs.Output, pkg); err != nil {
 		return err
 	}
 
-	return g.cmakeGen.Generate(dir, pkg)
+	return g.cmakeGen.Generate(dirs.Output, pkg)
 }
 
 func generatePackageXML(dir string, pkg cfg.Package) error {
