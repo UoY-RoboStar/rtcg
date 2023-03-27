@@ -7,7 +7,14 @@
         <channel name="batteryInfo" type="float" />
     </cpp>
     <cpp variant="ros">
-        <catkin />
+        <catkin>
+            <package>
+                <buildtool_depend>catkin</buildtool_depend>
+                <depend>roscpp</depend>
+                <depend>std_msgs</depend>
+                <depend>sensor_msgs</depend>
+            </package>
+        </catkin>
 
         <include src="std_msgs/Float32.h" />
         <include src="sensor_msgs/BatteryState.h" />
