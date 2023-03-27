@@ -56,6 +56,7 @@ func (p *Package) Autofill() {
 	p.Maintainer.Name = autofillOne(p.Maintainer.Name, "${NAME} Maintainers")
 	p.Maintainer.Email = autofillOne(p.Maintainer.Email, "email@example.com")
 	p.License = autofillOne(p.License, "Proprietary")
+	p.Version = autofillOne(p.Version, "0.1.0")
 }
 
 func autofillOne(input, def string) string {
