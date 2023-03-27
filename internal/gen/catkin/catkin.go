@@ -2,6 +2,9 @@
 package catkin
 
 import (
+	"errors"
+	"fmt"
+	"os"
 	"path/filepath"
 
 	"github.com/UoY-RoboStar/rtcg/internal/gen/templating"
@@ -49,21 +52,34 @@ func (g *Generator) Dirs(_ stm.Suite) []string {
 }
 
 func (g *Generator) Generate(suite stm.Suite) error {
-	for name, test := range suite {
-		if err := g.generateTest(name, test); err != nil {
-			return err
-		}
+	if err := gencommon.GenerateTests(suite, g); err != nil {
+		return fmt.Errorf("couldn't generate for tests: %w", err)
 	}
 
 	return nil
 }
 
-func (g *Generator) generateTest(name string, _ *stm.Stm) error {
+func (g *Generator) GenerateTest(name string, _ *stm.Stm) error {
 	dir := filepath.Join(g.srcBaseDir, name)
 
 	// Take a copy here to avoid accidentally expanding the name in every test.
 	pkg := *g.config.Package
 	pkg.Expand(name)
 
+	if err := generatePackageXML(dir, pkg); err != nil {
+		return err
+	}
+
 	return g.cmakeGen.Generate(dir, pkg)
+}
+
+func generatePackageXML(dir string, pkg cfg.Package) error {
+	w, err := os.Create(filepath.Join(dir, "package.xml"))
+	if err != nil {
+		return fmt.Errorf("couldn't create package.xml: %w", err)
+	}
+
+	err = pkg.Write(w)
+
+	return errors.Join(err, w.Close())
 }
