@@ -1,5 +1,12 @@
 # `rtcg`
 
+**NOTE (2023-05-02)**: The main developer of `rtcg` (Matt) is no longer
+employed on the project for which `rtcg` was originally developed.  As such,
+development efforts on `rtcg` may be intermittent.
+See [the corresponding GitHub issue](https://github.com/UoY-RoboStar/rtcg/issues/12)
+for details.
+
+
 `rtcg` (RoboStar test code generation) is a series of tools for manipulating
 forbidden-trace tests, and using them to generate C code.
 
