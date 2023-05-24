@@ -16,6 +16,31 @@ type Config struct {
 	Catkin   *catkin.Config     `xml:"catkin"`   // Catkin contains Catkin generator configurations.
 }
 
+// New constructs a Config programmatically with the given variant and options.
+func New(variant Variant, options ...Option) *Config {
+	var cfg Config
+
+	cfg.Variant = variant
+
+	pcfg := &cfg
+
+	for _, option := range options {
+		option(pcfg)
+	}
+
+	return pcfg
+}
+
+// Option is a functional option for building a Config.
+type Option func(*Config)
+
+// WithChannel binds channel name to type ty in the configuration.
+func WithChannel(name, ty string) Option {
+	return func(config *Config) {
+		config.Channels = append(config.Channels, Channel{Name: name, Type: ty})
+	}
+}
+
 // ChannelMap gets the Channels field of this Config as a map from channel names to type overrides.
 func (c *Config) ChannelMap() map[string]string {
 	cmap := make(map[string]string, len(c.Channels))
