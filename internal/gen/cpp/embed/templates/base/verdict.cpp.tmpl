@@ -20,9 +20,22 @@ private:
 void Verdict::dump()
 {
 {{- block "verdict_dump" . }}
-  {{ template "log" "info" }}"Final outcomes: "{{ template "end_log" }}
+  RTCG_INFO_STREAM("Final outcomes: " << std::endl);
 {{-   range . }}
-  {{ template "log" "info" }}"  {{ . }} = " << {{ . }}_{{ template "end_log" }}
+  switch ({{ . }}_) {
+    case rtcg::Outcome::INC:
+      RTCG_INFO_STREAM("  {{ . }} = " << rtcg::PRINT_COLOR::YELLOW << "inconclusive" << rtcg::PRINT_COLOR::ENDCOLOR << std::endl)
+      break;
+    case rtcg::Outcome::PASS:
+      RTCG_INFO_STREAM("  {{ . }} = " << rtcg::PRINT_COLOR::GREEN << "pass" << rtcg::PRINT_COLOR::ENDCOLOR << std::endl)
+      break;
+    case rtcg::Outcome::FAIL:
+      RTCG_INFO_STREAM("  {{ . }} = " << rtcg::PRINT_COLOR::RED << "fail" << rtcg::PRINT_COLOR::ENDCOLOR << std::endl)
+      break;
+    default:
+      RTCG_INFO_STREAM("  {{ . }} = unknown" << std::endl)
+      break;
+  }
 {{-   end }}
 {{- end }}
 }

@@ -69,12 +69,33 @@ namespace rtcg
   protected:
     Status status_ = Status::WAIT_START; // Current status of the test.
   };
+
+  // Defining your own ROS stream color
+  // Source: https://gist.github.com/artivis/51c6c9436481b16cab2f
+  
+  enum PRINT_COLOR
+  {
+    BLACK,
+    RED,
+    GREEN,
+    YELLOW,
+    BLUE,
+    MAGENTA,
+    CYAN,
+    WHITE,
+    ENDCOLOR
+  };
+
 }
+
+std::ostream& operator<<(std::ostream& os, rtcg::PRINT_COLOR c);
 
 // Overloads stream output for Status (using rtcg::status::explain).
 std::ostream& operator<<(std::ostream& stm, rtcg::Status o);
 
 // Overloads stream output for Outcome (using rtcg::outstr).
 std::ostream& operator<<(std::ostream& stm, rtcg::Outcome o);
+
+#define RTCG_INFO_STREAM(x) std::cout << "[ INFO] [" << ros::Time::now() << "]: " << x << std::endl;
 
 #endif // RTCG_H_DEFINED

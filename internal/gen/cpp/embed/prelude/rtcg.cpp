@@ -61,6 +61,24 @@ const char* rtcg::status::explain(rtcg::Status s)
   }
 }
 
+std::ostream& operator<<(std::ostream& os, rtcg::PRINT_COLOR c)
+{
+  switch(c)
+  {
+    case rtcg::PRINT_COLOR::BLACK    : os << "\033[1;30m"; break;
+    case rtcg::PRINT_COLOR::RED      : os << "\033[1;31m"; break;
+    case rtcg::PRINT_COLOR::GREEN    : os << "\033[1;32m"; break;
+    case rtcg::PRINT_COLOR::YELLOW   : os << "\033[1;33m"; break;
+    case rtcg::PRINT_COLOR::BLUE     : os << "\033[1;34m"; break;
+    case rtcg::PRINT_COLOR::MAGENTA  : os << "\033[1;35m"; break;
+    case rtcg::PRINT_COLOR::CYAN     : os << "\033[1;36m"; break;
+    case rtcg::PRINT_COLOR::WHITE    : os << "\033[1;37m"; break;
+    case rtcg::PRINT_COLOR::ENDCOLOR : os << "\033[0m";    break;
+    default       : os << "\033[1;37m";
+  }
+  return os;
+}
+
 std::ostream& operator<<(std::ostream& stm, rtcg::Status o)
 {
   return stm << rtcg::status::explain(o);
