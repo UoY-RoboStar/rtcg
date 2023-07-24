@@ -13,13 +13,19 @@
                 <depend>roscpp</depend>
                 <depend>std_msgs</depend>
                 <depend>sensor_msgs</depend>
+                <depend>battery_monitor</depend>
             </package>
         </catkin>
 
         <include src="std_msgs/Float32.h" />
         <include src="sensor_msgs/BatteryState.h" />
+        <include src="battery_monitor/BatteryStatus.h" />
+        <include src="battery_monitor/InputAccepted.h" />
 
         <!-- Tell the generator that this channel maps non-trivially to a ROS type: -->
-        <channel name="batteryInfo" type="sensor_msgs::BatteryState" />
+        <channel name="batteryInfo" type="sensor_msgs::BatteryState" topic="/fcs/battery_state" />
+        <channel name="batteryStatus" type="battery_monitor::BatteryStatus" topic="/battery_monitor/battery_status" />
+        <channel name="inputAccepted" type="battery_monitor::InputAccepted" topic="/battery_monitor/input_accepted" />
+
     </cpp>
 </rtcg-gen>

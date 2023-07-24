@@ -12,6 +12,7 @@ type Context struct {
 	Includes      []Include              // Includes contains the user-configured includes.
 	ChannelTypes  map[string]ChannelType // ChannelTypes contains the calculated channel types.
 	HasConversion bool                   // HasConversion is true if there is a convert.cpp file.
+	ChannelTopics map[string]string		 // Mapping from channel name to topic.
 }
 
 // Process processes a config into a Context.
@@ -20,6 +21,7 @@ func (c *Config) Process(types stm.TypeMap) Context {
 	ctx := Context{
 		Includes:      c.Includes,
 		ChannelTypes:  make(map[string]ChannelType, len(types)),
+		ChannelTopics: c.ChannelTopicMap(),
 		HasConversion: false,
 	}
 

@@ -52,6 +52,18 @@ func (c *Config) ChannelMap() map[string]string {
 	return cmap
 }
 
+// ChannelTopicMap gets the Channels field of this Config as a map from channel names to topic overrides.
+func (c *Config) ChannelTopicMap() map[string]string {
+	cmap := make(map[string]string, len(c.Channels))
+
+	for _, over := range c.Channels {
+		cmap[over.Name] = over.Topic
+	}
+
+	return cmap
+}
+
+
 // Include captures a custom include header.
 type Include struct {
 	Src      string `xml:"src,attr"`    // Src is the source to include.
@@ -66,4 +78,5 @@ type Include struct {
 type Channel struct {
 	Name string `xml:"name,attr"` // Name is the name of the affected channel.
 	Type string `xml:"type,attr"` // Type is the C++ value type of the channel.
+	Topic string `xml:"topic,attr"` // Topic is the ROS topic related to that channel.
 }

@@ -4,6 +4,7 @@ The top-level ROS1 template.
 This overrides and implements various parts of the base C++ template to use
 ROS primitives and concepts, then delegates to that template.
 */ -}}
+{{- $ctype := $.ChannelTypes }}
 
 {{- define "system_includes" }}
 #include "ros/ros.h"
@@ -41,7 +42,7 @@ const int INPUT_DELAY_SEC = 3;
 
 {{- /* Returns the argument set of an input-accepted callback. */ -}}
 {{- define "in_callback_args" -}}
-  const std_msgs::Bool::ConstPtr& msg
+  const battery_monitor::InputAccepted::ConstPtr& msg
 {{- end -}}
 
 {{/* ROS initialisation code. */}}
@@ -51,17 +52,17 @@ const int INPUT_DELAY_SEC = 3;
 
   // Publishers
 {{-   range .Transitions.In }}
-  auto {{ template "publisher_name" . }} = nh.advertise<{{ cppChannelValueType .Channel.Name }}>("{{ template "topic_name" . }}", 1000);
+  auto {{ template "publisher_name" . }} = nh.advertise<{{ cppChannelValueType .Channel.Name }}>("{{ cppChannelTopicName $.ChannelTopics .Channel.Name }}", 1000);
 {{-   end }}
 {{- end }}
 
 {{- define "init" }}
   // Subscribers
 {{-   if .Transitions.HasIn }}
-  auto input_accepted_sub = nh.subscribe("input_accepted", 10, &StateMachine::inputAcceptedCallback, &stm);
+  auto input_accepted_sub = nh.subscribe("{{ cppChannelTopicName $.ChannelTopics "inputAccepted" }}", 10, &StateMachine::inputAcceptedCallback, &stm);
 {{-   end }}
 {{   range .Transitions.Out }}
-  auto {{ template "subscriber_name" . }} = nh.subscribe("{{ template "topic_name" . }}", 10, &StateMachine::{{ cppCallbackName .Channel.Name }}, &stm);
+  auto {{ template "subscriber_name" . }} = nh.subscribe("{{ cppChannelTopicName $.ChannelTopics .Channel.Name }}", 10, &StateMachine::{{ cppCallbackName .Channel.Name }}, &stm);
 {{-   end }}
 
   // Timers

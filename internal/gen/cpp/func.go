@@ -17,6 +17,7 @@ func Funcs() template.FuncMap {
 		"cppCallbackName":     CallbackName,
 		"cppChannelMsgType":   ChannelMsgType,
 		"cppChannelValueType": ChannelValueType,
+		"cppChannelTopicName": ChannelTopicName,
 		"cppConvertFrom":      ConvertFrom,
 		"cppConvertTo":        ConvertTo,
 		"cppEnumField":        EnumField,
@@ -44,6 +45,15 @@ func ChannelMsgType(cha string) string {
 // This is usually a pointer to the value type.
 func ChannelValueType(cha string) string {
 	return strmanip.UpcaseFirst(cha) + "Val"
+}
+
+func ChannelTopicName(m map[string]string, cha string) string {
+	val, ok := m[cha]
+	if ok {
+		return val
+	} else {
+		return strmanip.ToLowerUnderscored(cha)
+	}
 }
 
 // ConvertTo gets the to-conversion function name for the channel with name cha.

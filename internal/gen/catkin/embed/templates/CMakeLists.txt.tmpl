@@ -31,13 +31,17 @@ include_directories(
     ../rtcg/
 )
 
-add_library(convert
-    ../convert/convert.cpp
-)
+if (NOT TARGET convert)
+    add_library(convert
+        ../convert/convert.cpp
+    )
+endif()
 
-add_library(rtcg
-    ../rtcg/rtcg.cpp
-)
+if (NOT TARGET rtcg)
+    add_library(rtcg
+        ../rtcg/rtcg.cpp
+    )
+endif()
 
 add_executable(${PROJECT_NAME}_node
     src/main.cpp
