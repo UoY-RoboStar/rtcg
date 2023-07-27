@@ -28,6 +28,9 @@ public:
 {{- range .Transitions.Out }}
   void {{ cppCallbackName .Channel.Name }}(const {{ cppChannelMsgType .Channel.Name }} msg);
 {{- end }}
+{{- range cppOtherOutChannels .Transitions.Out .Channels }}
+  void {{ cppCallbackName .Name }}(const {{ cppChannelMsgType .Name }} msg);
+{{- end }}
 private:
   Verdict verdict_;
   State state_ = {{ (index .Stm.States 0).ID | cppStateEnum }};
@@ -131,6 +134,14 @@ void StateMachine::{{ cppCallbackName .Channel.Name }}(const {{ cppChannelMsgTyp
 }
 {{- end }}
 
+{{- range cppOtherOutChannels .Transitions.Out .Channels }}
+
+void StateMachine::{{ cppCallbackName .Name }}(const {{ cppChannelMsgType .Name }} msg)
+{
+  ROS_INFO_STREAM("Unexpected message for {{ . }}." << std::endl);
+  end(rtcg::Status::OFF_SCRIPT);
+}
+{{- end }}
 
 //
 // State machine entry functions

@@ -5,10 +5,12 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/UoY-RoboStar/rtcg/internal/stm/transition"
 	"github.com/UoY-RoboStar/rtcg/internal/strmanip"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang/rstype"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang/value"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/channel"
 )
 
 // Funcs gets the C++ function map.
@@ -18,6 +20,7 @@ func Funcs() template.FuncMap {
 		"cppChannelMsgType":   ChannelMsgType,
 		"cppChannelValueType": ChannelValueType,
 		"cppChannelTopicName": ChannelTopicName,
+		"cppOtherOutChannels": OtherOutChannels,
 		"cppConvertFrom":      ConvertFrom,
 		"cppConvertTo":        ConvertTo,
 		"cppEnumField":        EnumField,
@@ -136,3 +139,27 @@ const (
 	testEnumName    = "Test"    // testEnumName is the name in the C++ code for the test enum.
 	outcomeEnumName = "Outcome" // outcomeEnumName is the name in the C++ code for the outcome enum.
 )
+
+func OtherOutChannels(tagg []transition.AggregateSet, channels []channel.Channel) []channel.Channel {
+
+	var carray []channel.Channel
+
+	for _, c := range channels {
+
+		if (c.IsOut()) {
+			var inside = false
+
+			for _, t := range tagg {
+				if t.Channel == c {
+					inside = true
+				}
+			}
+			
+			if !inside {
+				carray = append(carray, c)
+			}
+		}
+	}
+
+	return carray
+}

@@ -3,6 +3,7 @@ package cpp
 import (
 	"github.com/UoY-RoboStar/rtcg/internal/stm"
 	"github.com/UoY-RoboStar/rtcg/internal/testlang/rstype"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/channel"
 )
 
 // Context contains any context derived from the C++ generator config.
@@ -10,9 +11,11 @@ import (
 // This is common to multiple different generators that consider C++ config.
 type Context struct {
 	Includes      []Include              // Includes contains the user-configured includes.
+	Channels 	  []channel.Channel 	 // All channels
 	ChannelTypes  map[string]ChannelType // ChannelTypes contains the calculated channel types.
 	HasConversion bool                   // HasConversion is true if there is a convert.cpp file.
 	ChannelTopics map[string]string		 // Mapping from channel name to topic.
+	// ChannelIO 	  map[string]			 // Indicates whether a channel is input or output.
 }
 
 // Process processes a config into a Context.
@@ -20,9 +23,11 @@ type Context struct {
 func (c *Config) Process(types stm.TypeMap) Context {
 	ctx := Context{
 		Includes:      c.Includes,
+		Channels: 	   c.getChannels(),
 		ChannelTypes:  make(map[string]ChannelType, len(types)),
 		ChannelTopics: c.ChannelTopicMap(),
 		HasConversion: false,
+//		ChannelIO: c.ChannelIO(),
 	}
 
 	overrides := c.ChannelMap()
@@ -50,3 +55,11 @@ type ChannelType struct {
 func (t ChannelType) HasOverride() bool {
 	return t.Override != ""
 }
+
+// // ChannelIO defines whether a channel is input or output
+// type ChannelIO uint8
+
+// const (
+// 	input ChannelIO = iota
+// 	utput ChannelIO = iota
+// )

@@ -64,6 +64,9 @@ const int INPUT_DELAY_SEC = 3;
 {{   range .Transitions.Out }}
   auto {{ template "subscriber_name" . }} = nh.subscribe("{{ cppChannelTopicName $.ChannelTopics .Channel.Name }}", 10, &StateMachine::{{ cppCallbackName .Channel.Name }}, &stm);
 {{-   end }}
+{{- range cppOtherOutChannels .Transitions.Out .Channels }}
+  auto {{ toLowerUnderscored .Name }}_sub = nh.subscribe("{{ cppChannelTopicName $.ChannelTopics .Name }}", 10, &StateMachine::{{ cppCallbackName .Name }}, &stm);
+{{-   end }}
 
   // Timers
   auto timeout_timer = nh.createTimer(ros::Duration(TIMEOUT_SEC), &StateMachine::timeoutCallback, &stm);

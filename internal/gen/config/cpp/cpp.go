@@ -4,6 +4,7 @@ package cpp
 import (
 	"github.com/UoY-RoboStar/rtcg/internal/gen/config/catkin"
 	"github.com/UoY-RoboStar/rtcg/internal/gen/config/makefile"
+	"github.com/UoY-RoboStar/rtcg/internal/testlang/channel"
 )
 
 // Config contains configuration for a C++ generator.
@@ -41,12 +42,35 @@ func WithChannel(name, ty string) Option {
 	}
 }
 
+func (c *Config) getChannels() []channel.Channel {
+
+	//carray := make([]channel.Channel, len(c.Channels))
+	var carray []channel.Channel
+
+	for _, chi := range c.Channels {
+		ach := new(channel.Channel)
+		err := ach.UnmarshalText([]byte(chi.Name))
+		if (err == nil) {
+			carray = append(carray, *ach)
+		}
+	}
+
+	return carray
+}
+
 // ChannelMap gets the Channels field of this Config as a map from channel names to type overrides.
 func (c *Config) ChannelMap() map[string]string {
 	cmap := make(map[string]string, len(c.Channels))
 
 	for _, over := range c.Channels {
-		cmap[over.Name] = over.Type
+
+		// Create object and parse
+		chp := new(channel.Channel)
+		err := chp.UnmarshalText([]byte(over.Name))
+
+		if err == nil {
+			cmap[chp.Name] = over.Type
+		}
 	}
 
 	return cmap
@@ -57,11 +81,22 @@ func (c *Config) ChannelTopicMap() map[string]string {
 	cmap := make(map[string]string, len(c.Channels))
 
 	for _, over := range c.Channels {
-		cmap[over.Name] = over.Topic
+
+		// Create object and parse
+		chp := new(channel.Channel)
+		err := chp.UnmarshalText([]byte(over.Name))
+		
+		if err == nil {
+			cmap[chp.Name] = over.Topic
+		} else {
+			cmap[over.Name] = over.Topic
+		}
 	}
 
 	return cmap
 }
+
+// ChannelIO gets the Channel types
 
 
 // Include captures a custom include header.

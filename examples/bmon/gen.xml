@@ -4,7 +4,7 @@
         <makefile />
 
         <!-- Tell the generator that this channel maps to a float: -->
-        <channel name="batteryInfo" type="float" />
+        <!--<channel name="batteryInfo" type="float" />-->
     </cpp>
     <cpp variant="ros">
         <catkin>
@@ -23,8 +23,8 @@
         <include src="battery_monitor/InputAccepted.h" />
 
         <!-- Tell the generator that this channel maps non-trivially to a ROS type: -->
-        <channel name="batteryInfo" type="sensor_msgs::BatteryState" topic="/fcs/battery_state" />
-        <channel name="batteryStatus" type="battery_monitor::BatteryStatus" topic="/battery_monitor/battery_status" />
+        <channel name="batteryInfo.in" type="sensor_msgs::BatteryState" topic="/fcs/battery_state" />
+        <channel name="batteryStatus.out" type="battery_monitor::BatteryStatus" topic="/battery_monitor/battery_status" />
         <channel name="inputAccepted" type="battery_monitor::InputAccepted" topic="/battery_monitor/input_accepted" />
 
     </cpp>
