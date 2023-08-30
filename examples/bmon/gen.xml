@@ -18,14 +18,15 @@
         </catkin>
 
         <include src="std_msgs/Float32.h" />
-        <include src="sensor_msgs/BatteryState.h" />
+        <!--<include src="sensor_msgs/BatteryState.h" />-->
+        <include src="battery_monitor/BatteryState.h" />
         <include src="battery_monitor/BatteryStatus.h" />
         <include src="battery_monitor/InputAccepted.h" />
 
         <!-- Tell the generator that this channel maps non-trivially to a ROS type: -->
-        <channel name="batteryInfo.in" type="sensor_msgs::BatteryState" topic="/fcs/battery_state" />
-        <channel name="batteryStatus.out" type="battery_monitor::BatteryStatus" topic="/battery_monitor/battery_status" />
-        <channel name="inputAccepted" type="battery_monitor::InputAccepted" topic="/battery_monitor/input_accepted" />
+        <channel name="batteryInfo.in" type="battery_monitor::BatteryState" topic="/battery_state" />
+        <channel name="batteryStatus.out" type="battery_monitor::BatteryStatus" topic="/battery_status" />
+        <channel name="inputAccepted" type="battery_monitor::InputAccepted" topic="/input_accepted" />
 
     </cpp>
 </rtcg-gen>

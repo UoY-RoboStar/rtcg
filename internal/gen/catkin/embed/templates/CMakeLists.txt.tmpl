@@ -35,6 +35,9 @@ if (NOT TARGET convert)
     add_library(convert
         ../convert/convert.cpp
     )
+    add_dependencies(convert
+        battery_monitor_generate_messages_cpp
+    )
 endif()
 
 if (NOT TARGET rtcg)
